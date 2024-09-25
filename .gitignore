@@ -363,6 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 /sets/booking-key.pem
-/conf.d/nginx.conf
 /docker-compose.yml
 /Booking.Api/appsettings.json
