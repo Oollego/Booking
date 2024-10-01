@@ -27,22 +27,26 @@ namespace Booking.DAL.Configurations
                 new NearStationName()
                 {
                     Id = 1,
-                    Name = "airport"
+                    Name = "airport",
+
                 },
                 new NearStationName()
                 {
                     Id = 2,
-                    Name = "railway station"
+                    Name = "railway station",
+
                 },
                 new NearStationName()
                 {
                     Id = 3,
-                    Name = "bus station"
+                    Name = "bus station",
+
                 },
                 new NearStationName()
                 {
                     Id = 4,
-                    Name = "the city center"
+                    Name = "the city center",
+
                 }
             });
         }

@@ -20,6 +20,7 @@ using Booking.Domain.Dto.RoomImage;
 using Booking.Domain.Dto.Bed;
 using Booking.Domain.Dto.RoomComfort;
 using Booking.Domain.Dto.Hotel;
+using Booking.Domain.Interfaces.Converters;
 
 namespace Booking.Application.Services
 {
@@ -30,16 +31,18 @@ namespace Booking.Application.Services
         private readonly IRoomValidator _roomValidator;
         private readonly IMapper _mapper;
         private readonly ILogger _logger = null!;
+        private readonly IImageToLinkConverter _imageToLinkConverter;
 
 
-        public RoomService(IBaseRepository<Room> roomRepository, ILogger logger, 
-            IBaseRepository<Hotel> hotelRepository, IRoomValidator roomValidator, IMapper mapper)
+        public RoomService(IBaseRepository<Room> roomRepository, ILogger logger,
+            IBaseRepository<Hotel> hotelRepository, IRoomValidator roomValidator, IMapper mapper, IImageToLinkConverter imageToLinkConverter)
         {
             _roomRepository = roomRepository;
             _logger = logger;
             _hotelRepository = hotelRepository;
             _roomValidator = roomValidator;
             _mapper = mapper;
+            _imageToLinkConverter = imageToLinkConverter;
         }
 
         /// < inheritdoc />
@@ -145,7 +148,7 @@ namespace Booking.Application.Services
                    Images = x.RoomImages.Select(x => new RoomImageDto
                    {
                        Id = x.Id,
-                       ImageName = x.ImageName
+                       ImageName = _imageToLinkConverter.ConvertImageToLink(x.ImageName, ImageBucket.Hotels.ToString())
                    }).ToList(),
                    Beds = x.BedTypes.Select(x => new BedDto
                    {
@@ -157,7 +160,7 @@ namespace Booking.Application.Services
                    RoomComforts = x.RoomComfortIconTypes.Select(x => new RoomComfortDto
                    {
                        Id = x.Id,
-                       ComfortIcon = x.ComfortIcon,
+                       ComfortIcon = _imageToLinkConverter.ConvertImageToLink(x.ComfortIcon, ImageBucket.RoomComfort.ToString()),
                        ComfortName = x.ComfortName
                    }).ToList()
                })
@@ -215,7 +218,7 @@ namespace Booking.Application.Services
                     Images = x.RoomImages.Select(x => new RoomImageDto
                     { 
                         Id = x.Id, 
-                        ImageName = x.ImageName
+                        ImageName = _imageToLinkConverter.ConvertImageToLink(x.ImageName, ImageBucket.Hotels.ToString()) 
                     }).ToList(),
                     Beds = x.BedTypes.Select(x => new BedDto 
                     { 
@@ -227,7 +230,7 @@ namespace Booking.Application.Services
                     RoomComforts = x.RoomComfortIconTypes.Select(x => new RoomComfortDto 
                     { 
                         Id = x.Id, 
-                        ComfortIcon = x.ComfortIcon, 
+                        ComfortIcon = _imageToLinkConverter.ConvertImageToLink(x.ComfortIcon, ImageBucket.RoomComfort.ToString()),
                         ComfortName = x.ComfortName 
                     }).ToList()
                 })

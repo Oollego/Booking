@@ -4,6 +4,7 @@ using Booking.Domain.Dto.Hotel;
 using Booking.Domain.Dto.SearchFilter;
 using Booking.Domain.Entity;
 using Booking.Domain.Enum;
+using Booking.Domain.Interfaces.Converters;
 using Booking.Domain.Interfaces.Repositories;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Result;
@@ -21,11 +22,13 @@ namespace Booking.Application.Services
     {
         private readonly IBaseRepository<Hotel> _hotelRepository = null!;
         private readonly ILogger _logger = null!;
+        private readonly IImageToLinkConverter _imageToLinkConverter = null!;
 
-        public FacilityService(IBaseRepository<Hotel> facilityRepository, ILogger logger)
+        public FacilityService(IBaseRepository<Hotel> facilityRepository, ILogger logger, IImageToLinkConverter imageToLinkConverter)
         {
             _hotelRepository = facilityRepository;
             _logger = logger;
+            _imageToLinkConverter = imageToLinkConverter;
         }
 
         public async Task<CollectionResult<FacilityInfoDto>> GetHotelFacilitiesAsync(long hotelId)
@@ -48,7 +51,7 @@ namespace Booking.Application.Services
                     .Select(g => new FacilityInfoDto
                     {
                         GroupName = g.Key.FacilityGroupName,
-                        GroupIcon = g.Key.FacilityGroupIcon ?? "",
+                        GroupIcon =  _imageToLinkConverter.ConvertImageToLink(g.Key.FacilityGroupIcon ?? "", ImageBucket.Facilities.ToString()),
                         Facilities = g.Select(f => f.FacilityName).OrderBy(f => f).ToList()
                     }).OrderBy(g => g.GroupName).ToList()
                 ).FirstOrDefaultAsync();

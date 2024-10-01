@@ -5,17 +5,26 @@ using System.Net;
 
 namespace Booking.Api.Middlewares
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next = null!;
         private readonly Serilog.ILogger _logger;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ExceptionHandlingMiddleware(RequestDelegate next, Serilog.ILogger logger)
         {
             _next = next;
             _logger = logger;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public async Task InvokeAsync(HttpContext httpContext)
         {
             try

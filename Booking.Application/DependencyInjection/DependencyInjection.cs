@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Booking.Application.Converters;
 using Booking.Application.Mapping;
 using Booking.Application.Services;
 using Booking.Application.Validations;
 using Booking.Application.Validations.FluentValidations;
 using Booking.Domain.Dto.Room;
+using Booking.Domain.Interfaces.Converters;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Interfaces.Validations;
 using FluentValidation;
@@ -24,6 +26,10 @@ namespace Booking.Application.DependencyInjection
             string login      = emailOptions["Login"] ?? "";
             string password   = emailOptions["Password"] ?? "";
 
+            var domainName = configuration.GetSection("DomainName").Value ?? "";
+
+            services.AddScoped<IImageToLinkConverter, ImageToLinkConverter>(x => new ImageToLinkConverter(domainName));
+
             services.AddScoped<IEmailService, EmailService>( x => 
                     new EmailService(smtpServer, smtpPort, useSsl, login, password)
                 );
@@ -35,6 +41,7 @@ namespace Booking.Application.DependencyInjection
 
         public static void InitServices(this IServiceCollection services) 
         {
+
             services.AddScoped<IHashService, HashService>();
            
             services.AddScoped<IRoomService, RoomService>();

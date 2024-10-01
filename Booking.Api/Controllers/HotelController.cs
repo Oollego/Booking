@@ -73,6 +73,8 @@ namespace Booking.Api.Controllers
             return BadRequest(response);
         }
 
+
+
         /// <summary>
         /// Поиск отелей.
         /// </summary>
@@ -108,6 +110,22 @@ namespace Booking.Api.Controllers
             }
             return BadRequest(response);
         }
+
+        //[HttpPatch("info/hotels_by_city")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public async Task<ActionResult<BaseResult<InfoHotelDto>>> GetHotelsByCity(long id)
+        //{
+
+        //    var response = await _hotelService;
+
+        //    if (response.IsSuccess)
+        //    {
+        //        return Ok(response);
+        //    }
+        //    return BadRequest(response);
+            
+        //}
 
         /// <summary>
         /// Получить отель по HotelId.

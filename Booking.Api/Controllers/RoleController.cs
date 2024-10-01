@@ -12,6 +12,9 @@ using System.Net.Mime;
 
 namespace Booking.Api.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Consumes(MediaTypeNames.Application.Json)]
     [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
@@ -20,6 +23,9 @@ namespace Booking.Api.Controllers
     {
         private readonly IRoleService _roleService = null!;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public RoleController(IRoleService roleService)
         {
             _roleService = roleService;

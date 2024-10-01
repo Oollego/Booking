@@ -8,6 +8,9 @@ using Booking.Application.Services;
 
 namespace Booking.Api.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase

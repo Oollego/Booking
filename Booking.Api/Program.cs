@@ -5,12 +5,15 @@ using Booking.Api;
 using Booking.Domain.Settings;
 using Booking.Api.Middlewares;
 using Microsoft.AspNetCore.HttpOverrides;
+using Amazon.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSection));
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(nameof(EmailSettings)));
 
+
+builder.Services.AddS3AWS(builder);
 // Add services to the container.
 
 builder.Services.AddControllers();

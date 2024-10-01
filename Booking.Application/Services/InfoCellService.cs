@@ -4,6 +4,7 @@ using Booking.Domain.Dto.Hotel;
 using Booking.Domain.Dto.HotelInfoCell;
 using Booking.Domain.Entity;
 using Booking.Domain.Enum;
+using Booking.Domain.Interfaces.Converters;
 using Booking.Domain.Interfaces.Repositories;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Result;
@@ -21,11 +22,13 @@ namespace Booking.Application.Services
     {
         private readonly IBaseRepository<Hotel> _hotelRepository = null!;
         private readonly ILogger _logger = null!;
+        private readonly IImageToLinkConverter _imageToLinkConverter = null!;
 
-        public InfoCellService(IBaseRepository<Hotel> facilityRepository, ILogger logger)
+        public InfoCellService(IBaseRepository<Hotel> facilityRepository, ILogger logger, IImageToLinkConverter imageToLinkConverter)
         {
             _hotelRepository = facilityRepository;
             _logger = logger;
+            _imageToLinkConverter = imageToLinkConverter;
         }
 
         public async Task<CollectionResult<HotelInfoCellDto>> GetHotelInfoCellsAsync(long hotelId)
@@ -43,11 +46,11 @@ namespace Booking.Application.Services
                 .Where(x => x.Id == hotelId)
                 .Include(x => x.HotelInfoCells).ThenInclude(x => x.InfoIcon)
                 .Select(x => x.HotelInfoCells.Select(x => new HotelInfoCellDto
-                    {
-                        TextLine_1 = x.TextLine_1,
-                        TextLine_2 = x.TextLine_2,
-                        InfoIcon = x.InfoIcon!.IconFileName
-                    }).ToList()
+                {
+                    TextLine_1 = x.TextLine_1,
+                    TextLine_2 = x.TextLine_2,
+                    InfoIcon = _imageToLinkConverter.ConvertImageToLink(x.InfoIcon!.IconFileName, ImageBucket.Info.ToString())
+                }).ToList()
                 ).FirstOrDefaultAsync();
  
 

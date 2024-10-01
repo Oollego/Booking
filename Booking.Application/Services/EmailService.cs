@@ -15,7 +15,7 @@ namespace Booking.Application.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly string _smtpServer = null!;
+        private readonly string _smtpServer;
         private readonly int _smtpPort;
         private readonly bool _useSsl;
         private readonly string _login;

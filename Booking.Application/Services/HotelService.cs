@@ -8,6 +8,7 @@ using Booking.Domain.Dto.Review;
 using Booking.Domain.Dto.SearchFilter;
 using Booking.Domain.Entity;
 using Booking.Domain.Enum;
+using Booking.Domain.Interfaces.Converters;
 using Booking.Domain.Interfaces.Repositories;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Interfaces.UnitsOfWork;
@@ -35,12 +36,13 @@ namespace Booking.Application.Services
         private readonly IMapper _mapper = null!;
         private readonly IHotelUnitOfWork _hotelUnitOfWork = null!;
         private readonly IHotelCreateUpdateValidator _hotelCreateUpdateValidator = null!;
+        private readonly IImageToLinkConverter _imageToLinkConverter = null!;
 
         private readonly ILogger _logger = null!;
 
         public HotelService(IBaseRepository<Hotel> hotelRepository, IBaseRepository<User> userRepository,
-            IBaseRepository<Room> roomRepository, IMapper mapper, IHotelUnitOfWork hotelUnitOfWork, ILogger logger, 
-            IHotelCreateUpdateValidator hotelCreateUpdateValidator)
+            IBaseRepository<Room> roomRepository, IMapper mapper, IHotelUnitOfWork hotelUnitOfWork, ILogger logger,
+            IHotelCreateUpdateValidator hotelCreateUpdateValidator, IImageToLinkConverter imageToLinkConverter)
         {
             _hotelRepository = hotelRepository;
             _userRepository = userRepository;
@@ -49,6 +51,7 @@ namespace Booking.Application.Services
             _hotelUnitOfWork = hotelUnitOfWork;
             _logger = logger;
             _hotelCreateUpdateValidator = hotelCreateUpdateValidator;
+            _imageToLinkConverter = imageToLinkConverter;
         }
 
 
@@ -125,6 +128,8 @@ namespace Booking.Application.Services
                 }
             }
 
+            hotel.Images = _imageToLinkConverter.ConvertImagesToLink(hotel.Images, ImageBucket.Hotels.ToString());
+
             return new BaseResult<InfoHotelDto>()
             {
                 Data = hotel,
@@ -159,7 +164,7 @@ namespace Booking.Application.Services
                     Stars = h.Stars,
                     MinPrice =
                       h.Rooms.Min(x => x.RoomPrice),
-                    HotelImage = h.HotelImage,
+                    HotelImage = _imageToLinkConverter.ConvertImageToLink(h.HotelImage, ImageBucket.Hotels.ToString()),
                     DistanceToCityCenter = h.NearStations.FirstOrDefault()!.Distance,
                     DistanceMetric = h.NearStations.FirstOrDefault()!.DistanceMetric
 
@@ -345,7 +350,7 @@ namespace Booking.Application.Services
                     HotelLabels = x.HotelLabelTypes.Select(hct => new HotelInfoLabelDto
                     {
                         LabelName = hct.LabelName,
-                        LabelIcon = hct.LabelIcon
+                        LabelIcon = _imageToLinkConverter.ConvertImageToLink(hct.LabelIcon, ImageBucket.Label.ToString())
                     }).ToList(),
                     NearPlaces = x.NearStations.Select(s => new NearStationDto
                     {
@@ -353,7 +358,7 @@ namespace Booking.Application.Services
                         StationName = s.NearStationName.Name,
                         Distance = s.Distance,
                         DistanceMetric = s.DistanceMetric,
-                        StationIcon = s.NearStationName.Icon!
+                        StationIcon = _imageToLinkConverter.ConvertImageToLink(s.NearStationName.Icon!, ImageBucket.Label.ToString())
                     }).ToList(),
                 }).OrderBy(h => h.HotelName);
             //var hotels = await queryHotels.ToListAsync();
@@ -580,5 +585,11 @@ namespace Booking.Application.Services
                 Data = _mapper.Map<CreateUpdateHotelDto>(updatedHotel)
             };
         }
+
+        //public async Task<CollectionResult<TopHotelDto>> GeеHotelsByCityAsync(int qty, int avgReview)
+        //private string ImageToLinkConverter(string ImageName, string folder)
+        //{
+        //   return AppSource.ServerDomain + "/api/Images?key=" + folder + "/" + ImageName;
+        //}
     }
 }
