@@ -19,5 +19,6 @@ namespace Booking.Domain.Interfaces.Services
         Task<BaseResult<CreateUpdateHotelDto>> CreateHotelAsync(CreateHotelDto dto);
         Task<BaseResult<SearchFilterResponseDto>> GetSearchFiltersAsync(SearchFilterDto dto);
         Task<BaseResult<CreateUpdateHotelDto>> UpdateHotelAsync(CreateUpdateHotelDto dto);
+        Task<CollectionResult<TopHotelDto>> GetHotelsByCityNameAsync(int qty, string cityName);
     }
 }

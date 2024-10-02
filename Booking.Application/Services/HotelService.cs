@@ -3,7 +3,7 @@ using Booking.Application.Resources;
 using Booking.Domain.Dto.City;
 using Booking.Domain.Dto.Hotel;
 using Booking.Domain.Dto.HotelComfort;
-using Booking.Domain.Dto.NearStation;
+using Booking.Domain.Dto.NearObject;
 using Booking.Domain.Dto.Review;
 using Booking.Domain.Dto.SearchFilter;
 using Booking.Domain.Entity;
@@ -135,6 +135,74 @@ namespace Booking.Application.Services
                 Data = hotel,
             };
         }
+
+        public async Task<CollectionResult<TopHotelDto>> GetHotelsByCityNameAsync(int qty, string cityName)
+        {
+            if (cityName == null || cityName == "" || qty < 1)
+            {
+                return new CollectionResult<TopHotelDto>()
+                {
+                    ErrorMessage = ErrorMessage.InvalidParameters,
+                    ErrorCode = (int)ErrorCodes.InvalidParameters
+                };
+            }
+
+            var hotels = await _hotelRepository.GetAll()
+                .Include(rev => rev.Reviews)
+                .Include(city => city.City).ThenInclude(city => city.Country)
+                .Where(h => h.City.CityName == cityName)
+                .Include(place => place.NearObjects.Where(np => np.NearObjectNameId == 4)).ThenInclude(pln => pln.NearObjectName)
+                .Include(room => room.Rooms)
+                .Select(h => new TopHotelDto
+                {
+                    HotelId = h.Id,
+                    Rating =
+                        Math.Round(h.Reviews.Average(g =>
+                        (g.FacilityScore + g.StaffScore + g.CleanlinessScore + g.ComfortScore + g.LocationScore + g.ValueScore) / 6), 1),
+                    ReviewsQt = h.Reviews.Count(),
+                    HotelName = h.HotelName,
+                    HotelCity = h.City.CityName,
+                    HotelCountry = h.City.Country.CountryName,
+                    Stars = h.Stars,
+                    MinPrice =
+                      h.Rooms.Min(x => x.RoomPrice),
+                    HotelImage = _imageToLinkConverter.ConvertImageToLink(h.HotelImage, ImageBucket.Hotels.ToString()),
+                    DistanceToCityCenter = h.NearObjects.Where(no => no.NearObjectName.Name == "the city center").FirstOrDefault()!.Distance,
+                    DistanceMetric = h.NearObjects.Where(no => no.NearObjectName.Name == "the city center").FirstOrDefault()!.DistanceMetric
+
+                })
+                .OrderByDescending(x => x.ReviewsQt)
+                .Take(qty)
+                .ToListAsync();
+
+
+            if (hotels.Count == 0)
+            {
+                _logger.Warning(ErrorMessage.HotelNotFound, hotels.Count);
+                return new CollectionResult<TopHotelDto>()
+                {
+                    ErrorMessage = ErrorMessage.HotelNotFound,
+                    ErrorCode = (int)ErrorCodes.HotelNotFound
+                };
+            }
+
+            if (hotels == null)
+            {
+                _logger.Warning(ErrorMessage.HotelNotFound);
+                return new CollectionResult<TopHotelDto>()
+                {
+                    ErrorMessage = ErrorMessage.HotelNotFound,
+                    ErrorCode = (int)ErrorCodes.HotelNotFound
+                };
+            }
+
+            return new CollectionResult<TopHotelDto>()
+            {
+                Data = hotels,
+                Count = hotels.Count
+            };
+        }
+
         public async Task<CollectionResult<TopHotelDto>> GetTopHotelsAsync(int qty, int avgReview)
         {
             if (avgReview < 1 || avgReview > 10 || qty < 1 )
@@ -149,7 +217,7 @@ namespace Booking.Application.Services
             var hotels = await _hotelRepository.GetAll()
                 .Include(rev => rev.Reviews)
                 .Include(city => city.City).ThenInclude(city => city.Country)
-                .Include(place => place.NearStations.Where(np => np.NearPlaceNameId == 4)).ThenInclude(pln => pln.NearStationName)
+                .Include(place => place.NearObjects.Where(np => np.NearObjectNameId == 4)).ThenInclude(pln => pln.NearObjectName)
                 .Include(room => room.Rooms)
                 .Select(h => new TopHotelDto
                 {
@@ -165,8 +233,8 @@ namespace Booking.Application.Services
                     MinPrice =
                       h.Rooms.Min(x => x.RoomPrice),
                     HotelImage = _imageToLinkConverter.ConvertImageToLink(h.HotelImage, ImageBucket.Hotels.ToString()),
-                    DistanceToCityCenter = h.NearStations.FirstOrDefault()!.Distance,
-                    DistanceMetric = h.NearStations.FirstOrDefault()!.DistanceMetric
+                    DistanceToCityCenter = h.NearObjects.Where(no => no.NearObjectName.Name == "the city center").FirstOrDefault()!.Distance,
+                    DistanceMetric = h.NearObjects.Where(no => no.NearObjectName.Name == "the city center").FirstOrDefault()!.DistanceMetric
 
                 })
                 .OrderByDescending(x => x.ReviewsQt)
@@ -221,8 +289,8 @@ namespace Booking.Application.Services
                   .ThenInclude(c => c.Country)
               .Include(h => h.HotelData)
               .Include(h => h.HotelLabelTypes)
-              .Include(h => h.NearStations)
-                  .ThenInclude(ns => ns.NearStationName)
+              .Include(h => h.NearObjects)
+                  .ThenInclude(ns => ns.NearObjectName)
                .Where(h =>
                   (dto.Place == null || dto.Place == "" || h.City.CityName == dto.Place || h.City.Country.CountryName == dto.Place) &&
                   h.Rooms.Any(r =>
@@ -253,8 +321,8 @@ namespace Booking.Application.Services
                     Matches = g.Count()
                 }).OrderByDescending(x => x.Star).ToListAsync();
 
-            var nearPlaces = await queryHotels.SelectMany(h => h.NearStations)
-                .GroupBy(ns => ns.NearStationName.Name)
+            var nearPlaces = await queryHotels.SelectMany(h => h.NearObjects)
+                .GroupBy(ns => ns.NearObjectName.Name)
                 .Select(g => new NearPlaceFilterDto
                 {
                     PlaceName = g.Key,
@@ -319,8 +387,8 @@ namespace Booking.Application.Services
                     .ThenInclude(c => c.Country)
                 .Include(h => h.HotelData)
                 .Include(h => h.HotelLabelTypes)
-                .Include(h => h.NearStations)
-                    .ThenInclude(ns => ns.NearStationName)
+                .Include(h => h.NearObjects)
+                    .ThenInclude(ns => ns.NearObjectName)
                  .Where(h =>
                     (dto.Place == null || dto.Place == "" || h.City.CityName == dto.Place || h.City.Country.CountryName == dto.Place) &&
                     h.Rooms.Any(r =>
@@ -330,7 +398,7 @@ namespace Booking.Application.Services
                  .Where(h => (dto.Stars == null || dto.Stars.Count == 0 || dto.Stars[0] == 0 || dto.Stars.Contains(h.Stars)))
                  .Where(h => dto.Facilities == null || dto.Facilities.Count == 0 || dto.Facilities[0] == 0 || h.Facilities.Any(f => dto.Facilities.Contains(f.Id)))
                  .Where(h => dto.Rating == null || dto.Rating.Count == 0 || dto.Rating[0] == 0 || (h.HotelData != null && dto.Rating.Contains(Math.Floor(h.HotelData.Rating))))
-                 .Where(h => dto.NearPlaces == null || dto.NearPlaces.Count == 0 || dto.NearPlaces[0] == 0 || h.NearStations.Any(s => dto.NearPlaces.Contains(s.NearPlaceNameId)))
+                 .Where(h => dto.NearPlaces == null || dto.NearPlaces.Count == 0 || dto.NearPlaces[0] == 0 || h.NearObjects.Any(s => dto.NearPlaces.Contains(s.NearObjectNameId)))
                  .Where(h => dto.HotelTypes == null || dto.HotelTypes.Count == 0 || dto.HotelTypes[0] == 0 || dto.HotelTypes.Any(t => t == h.HotelTypeId))
                  .Where(h => dto.HotelChains == null || dto.HotelChains.Count == 0 || dto.HotelChains[0] == 0 || dto.HotelChains.Any(c => c == h.HotelChainId))
                  .Where(h => dto.HotelLabels == null || dto.HotelLabels.Count == 0 || dto.HotelLabels[0] == 0 || h.HotelLabelTypes.Any(f => dto.HotelLabels.All(x => x == h.Id))
@@ -352,13 +420,13 @@ namespace Booking.Application.Services
                         LabelName = hct.LabelName,
                         LabelIcon = _imageToLinkConverter.ConvertImageToLink(hct.LabelIcon, ImageBucket.Label.ToString())
                     }).ToList(),
-                    NearPlaces = x.NearStations.Select(s => new NearStationDto
+                    NearObjects = x.NearObjects.Select(s => new NearObjectDto
                     {
                         Id = s.Id,
-                        StationName = s.NearStationName.Name,
+                        StationName = s.NearObjectName.Name,
                         Distance = s.Distance,
                         DistanceMetric = s.DistanceMetric,
-                        StationIcon = _imageToLinkConverter.ConvertImageToLink(s.NearStationName.Icon!, ImageBucket.Label.ToString())
+                        StationIcon = _imageToLinkConverter.ConvertImageToLink(s.NearObjectName.Icon!, ImageBucket.Label.ToString())
                     }).ToList(),
                 }).OrderBy(h => h.HotelName);
             //var hotels = await queryHotels.ToListAsync();

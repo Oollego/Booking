@@ -9,40 +9,40 @@ using System.Threading.Tasks;
 
 namespace Booking.DAL.Configurations
 {
-    internal class NearStationNameConfiguration : IEntityTypeConfiguration<NearStationName>
+    internal class NearObjectNameConfiguration : IEntityTypeConfiguration<NearObjectName>
     {
-        public void Configure(EntityTypeBuilder<NearStationName> builder)
+        public void Configure(EntityTypeBuilder<NearObjectName> builder)
         {
-            builder.ToTable("near_place_names");
+            builder.ToTable("near_object_names");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(254);
             builder.Property(x => x.Icon).HasMaxLength(254);
 
-            builder.HasMany<NearStation>(x => x.NearStations)
-             .WithOne(x => x.NearStationName)
-             .HasForeignKey(x => x.NearPlaceNameId)
+            builder.HasMany<NearObject>(x => x.NearObjects)
+             .WithOne(x => x.NearObjectName)
+             .HasForeignKey(x => x.NearObjectNameId)
              .HasPrincipalKey(x => x.Id);
-            builder.HasData(new List<NearStationName>()
+            builder.HasData(new List<NearObjectName>()
             {
-                new NearStationName()
+                new NearObjectName()
                 {
                     Id = 1,
                     Name = "airport",
 
                 },
-                new NearStationName()
+                new NearObjectName()
                 {
                     Id = 2,
                     Name = "railway station",
 
                 },
-                new NearStationName()
+                new NearObjectName()
                 {
                     Id = 3,
                     Name = "bus station",
 
                 },
-                new NearStationName()
+                new NearObjectName()
                 {
                     Id = 4,
                     Name = "the city center",

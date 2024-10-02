@@ -9,22 +9,22 @@ using System.Threading.Tasks;
 
 namespace Booking.DAL.Configurations
 {
-    internal class NearStationConfiguration : IEntityTypeConfiguration<NearStation>
+    internal class NearObjectConfiguration : IEntityTypeConfiguration<NearObject>
     {
-        public void Configure(EntityTypeBuilder<NearStation> builder)
+        public void Configure(EntityTypeBuilder<NearObject> builder)
         {
-            builder.ToTable("near_stations");
+            builder.ToTable("near_objects");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Distance).IsRequired();
             builder.Property(x => x.DistanceMetric).HasDefaultValue(false);
-            builder.Property(x => x.NearPlaceNameId).IsRequired();
+            builder.Property(x => x.NearObjectNameId).IsRequired();
 
             builder.HasData(GenerateNearPlaceData());
         }
 
-        private List<NearStation> GenerateNearPlaceData()
+        private List<NearObject> GenerateNearPlaceData()
         {
-            var nearPlaces = new List<NearStation>();
+            var nearPlaces = new List<NearObject>();
  
             long idCounter = 1;
 
@@ -35,13 +35,13 @@ namespace Booking.DAL.Configurations
                     bool isMetric = (idCounter % 2 == 0);
                     int distance = isMetric ? new Random().Next(1, 11) : new Random().Next(300, 801);
 
-                    nearPlaces.Add(new NearStation()
+                    nearPlaces.Add(new NearObject()
                     {
                         Id = idCounter++,
                         Distance = distance,
                         DistanceMetric = isMetric,
                         HotelId = i,
-                        NearPlaceNameId = j
+                        NearObjectNameId = j
                     });
                 }
             }

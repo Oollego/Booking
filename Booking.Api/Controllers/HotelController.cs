@@ -153,6 +153,22 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
+        /// Получить отели по названию города.
+        /// </summary>
+        [HttpGet("info/hotels_by_city")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<TopHotelDto>>> GetHotelsByCityName(int qty, string cityName)
+        {
+            var response = await _hotelService.GetHotelsByCityNameAsync(qty, cityName);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+        /// <summary>
         /// Поучить удобства отеля по HotelId.
         /// </summary>
         [HttpGet("info/facilities/{id}")]

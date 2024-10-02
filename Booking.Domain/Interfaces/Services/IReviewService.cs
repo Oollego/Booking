@@ -12,5 +12,6 @@ namespace Booking.Domain.Interfaces.Services
     public interface IReviewService
     {
         Task<CollectionResult<HotelReviewDto>> GetHotelReviewsAsync(long hotelId, int qty);
+        Task<CollectionResult<HotelReviewDto>> GetLastReviewsAsync(int qty);
     }
 }

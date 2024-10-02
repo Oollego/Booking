@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Booking.Domain.Dto.NearStation
+﻿
+namespace Booking.Domain.Dto.NearObject
 {
-    public class NearStationDto
+    public class NearObjectDto
     {
         public long Id { get; set; }
         public string StationName { get; set; } = null!;

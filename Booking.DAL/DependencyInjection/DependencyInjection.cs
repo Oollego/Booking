@@ -39,7 +39,7 @@ namespace Booking.DAL.DependencyInjection
             services.AddScoped<IBaseRepository<Review>, BaseRepository<Review>>();
             services.AddScoped<IBaseRepository<City>, BaseRepository<City>>();
             services.AddScoped<IBaseRepository<Country>, BaseRepository<Country>>();
-            services.AddScoped<IBaseRepository<NearStation>, BaseRepository<NearStation>>();
+            services.AddScoped<IBaseRepository<NearObject>, BaseRepository<NearObject>>();
             services.AddScoped<IBaseRepository<HotelData>, BaseRepository<HotelData>>();
             services.AddScoped<IBaseRepository<Facility>, BaseRepository<Facility>>();
 
