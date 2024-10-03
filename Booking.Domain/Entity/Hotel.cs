@@ -23,6 +23,7 @@ namespace Booking.Domain.Entity
         public List<Room> Rooms { get; set; } = null!;
         public List<HotelInfoCell> HotelInfoCells { get; set; } = null!;
         public List<NearObject> NearObjects { get; set; } = null!;
+        public List<NearPlace> NearPlaces { get; set; } = null!;
         public List<Review> Reviews { get; set; } = null!;
         public List<Facility> Facilities { get; set; } = null!;
         public List<HotelLabelType> HotelLabelTypes { get; set; } = null!;

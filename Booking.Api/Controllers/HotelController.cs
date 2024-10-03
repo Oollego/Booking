@@ -3,6 +3,7 @@ using Booking.Application.Services;
 using Booking.Domain.Dto.Facility;
 using Booking.Domain.Dto.Hotel;
 using Booking.Domain.Dto.HotelInfoCell;
+using Booking.Domain.Dto.Place;
 using Booking.Domain.Dto.Review;
 using Booking.Domain.Dto.Room;
 using Booking.Domain.Dto.SearchFilter;
@@ -25,18 +26,20 @@ namespace Booking.Api.Controllers
         private IReviewService _reviewService;
         private IFacilityService _facilityService;
         private IInfoCellService _infoCellService;
+        private IPlaceService _placeService;
 
         /// <summary>
         /// 
         /// </summary>
-        public HotelController(IHotelService hotelService, IRoomService roomService, IReviewService reviewService, 
-            IFacilityService facilityService, IInfoCellService infoCellService)
+        public HotelController(IHotelService hotelService, IRoomService roomService, IReviewService reviewService,
+            IFacilityService facilityService, IInfoCellService infoCellService, IPlaceService placeService)
         {
             _hotelService = hotelService;
             _roomService = roomService;
             _reviewService = reviewService;
             _facilityService = facilityService;
             _infoCellService = infoCellService;
+            _placeService = placeService;
         }
 
         /// <summary>
@@ -73,7 +76,22 @@ namespace Booking.Api.Controllers
             return BadRequest(response);
         }
 
+        /// <summary>
+        /// Получить места, которые рядом с отелем по HotelId.
+        /// </summary>
+        [HttpGet("info/near_places/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<NearPlaceGroupDto>>> GetHotelNearPlacesRooms(long id)
+        {
+            var response = await _placeService.GetHotelPlacesAsync(id);
 
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
 
         /// <summary>
         /// Поиск отелей.

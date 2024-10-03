@@ -54,6 +54,7 @@ namespace Booking.Application.DependencyInjection
             services.AddScoped<IInfoCellService, InfoCellService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
+            services.AddScoped<IPlaceService, PlaceService>();
         }
 
         public static void InitMapping(this IServiceCollection services)

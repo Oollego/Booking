@@ -43,7 +43,8 @@ namespace Booking.Domain.Enum
 
         RoomsNotFound = 101,
         RoomNotFound = 102,
-        RoomAlreadyExists = 103
+        RoomAlreadyExists = 103,
 
+        NearPlaceNotFound = 111
     }
 }

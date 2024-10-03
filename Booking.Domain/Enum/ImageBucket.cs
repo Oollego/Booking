@@ -13,6 +13,7 @@ namespace Booking.Domain.Enum
         Info = 3,
         Label = 4,
         RoomComfort = 5,
-        Avatar = 6
+        Avatar = 6,
+        Places =7
     }
 }

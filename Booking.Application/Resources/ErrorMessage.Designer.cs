@@ -178,6 +178,15 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Near place not found.
+        /// </summary>
+        public static string NearPlaceNotFound {
+            get {
+                return ResourceManager.GetString("NearPlaceNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password is wrong.
         /// </summary>
         public static string PasswordIsWrong {

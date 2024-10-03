@@ -156,6 +156,9 @@
   <data name="InvalidToken" xml:space="preserve">
     <value>Invalid token</value>
   </data>
+  <data name="NearPlaceNotFound" xml:space="preserve">
+    <value>Near place not found</value>
+  </data>
   <data name="PasswordIsWrong" xml:space="preserve">
     <value>Password is wrong</value>
   </data>
