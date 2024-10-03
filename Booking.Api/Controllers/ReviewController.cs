@@ -27,7 +27,7 @@ namespace Booking.Api.Controllers
         /// <summary>
         /// Получить последние отзывы.
         /// </summary>
-        [HttpGet("/last_reviews")]
+        [HttpGet("last_reviews")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<HotelReviewDto>>> GetLastReviews(int qty)
