@@ -48,7 +48,7 @@ namespace Booking.Application.Services
             .Select(p => new NearPlaceGroupDto()
             {
                 GroupName = p.Key.PlaceGroupName,
-                GroupIcon = p.Key.GroupIcon!,
+                GroupIcon =  _imageToLinkConverter.ConvertImageToLink(p.Key.GroupIcon!, ImageBucket.Places.ToString()),
                 NearPlaces = p.Key.NearPlaces.Select(x => new NearPlaceDto()
                 {
                     PlaceName = x.PlaceName,
