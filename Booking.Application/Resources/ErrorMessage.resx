@@ -165,6 +165,12 @@
   <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
     <value>Password and password confirm is not equal</value>
   </data>
+  <data name="ReasonAlreadyExists" xml:space="preserve">
+    <value>Reason already exists</value>
+  </data>
+  <data name="ReasonNotFound" xml:space="preserve">
+    <value>Reason not found</value>
+  </data>
   <data name="RegistrationCodeNotFound" xml:space="preserve">
     <value>Registration code not found</value>
   </data>
@@ -185,6 +191,15 @@
   </data>
   <data name="RoomsNotFound" xml:space="preserve">
     <value>Rooms not found</value>
+  </data>
+  <data name="StorageServerError" xml:space="preserve">
+    <value>Storage server error</value>
+  </data>
+  <data name="TopicAlreadyExists" xml:space="preserve">
+    <value>Topic already exists</value>
+  </data>
+  <data name="TopicNotFound" xml:space="preserve">
+    <value>Topic not found</value>
   </data>
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>User already exists</value>

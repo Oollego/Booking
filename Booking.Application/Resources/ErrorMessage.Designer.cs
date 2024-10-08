@@ -205,6 +205,24 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reason already exists.
+        /// </summary>
+        public static string ReasonAlreadyExists {
+            get {
+                return ResourceManager.GetString("ReasonAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reason not found.
+        /// </summary>
+        public static string ReasonNotFound {
+            get {
+                return ResourceManager.GetString("ReasonNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Registration code not found.
         /// </summary>
         public static string RegistrationCodeNotFound {
@@ -264,6 +282,33 @@ namespace Booking.Application.Resources {
         public static string RoomsNotFound {
             get {
                 return ResourceManager.GetString("RoomsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storage server error.
+        /// </summary>
+        public static string StorageServerError {
+            get {
+                return ResourceManager.GetString("StorageServerError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Topic already exists.
+        /// </summary>
+        public static string TopicAlreadyExists {
+            get {
+                return ResourceManager.GetString("TopicAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Topic not found.
+        /// </summary>
+        public static string TopicNotFound {
+            get {
+                return ResourceManager.GetString("TopicNotFound", resourceCulture);
             }
         }
         

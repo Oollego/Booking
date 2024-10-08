@@ -22,14 +22,14 @@ namespace Booking.Application.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class AppSource {
+    internal class S3Folders {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AppSource() {
+        internal S3Folders() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Booking.Application.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Booking.Application.Resources.AppSource", typeof(AppSource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Booking.Application.Resources.S3Folders", typeof(S3Folders).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,65 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to booking-img.
+        ///   Looks up a localized string similar to Facilities.
         /// </summary>
-        internal static string ImgBucket {
+        internal static string FacilitiesImg {
             get {
-                return ResourceManager.GetString("ImgBucket", resourceCulture);
+                return ResourceManager.GetString("FacilitiesImg", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://localhost.
+        ///   Looks up a localized string similar to Hotels.
         /// </summary>
-        internal static string ServerDomain {
+        internal static string HotelsImg {
             get {
-                return ResourceManager.GetString("ServerDomain", resourceCulture);
+                return ResourceManager.GetString("HotelsImg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        internal static string InfoImg {
+            get {
+                return ResourceManager.GetString("InfoImg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        internal static string LabelImg {
+            get {
+                return ResourceManager.GetString("LabelImg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Places.
+        /// </summary>
+        internal static string PlacesImg {
+            get {
+                return ResourceManager.GetString("PlacesImg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RoomComfort.
+        /// </summary>
+        internal static string RoomComfortImg {
+            get {
+                return ResourceManager.GetString("RoomComfortImg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Topic.
+        /// </summary>
+        internal static string TopicImg {
+            get {
+                return ResourceManager.GetString("TopicImg", resourceCulture);
             }
         }
     }

@@ -22,6 +22,17 @@ namespace Booking.DAL.Configurations
                .WithOne(x => x.TravelReason)
                .HasForeignKey(x => x.TravelReasonId)
                .HasPrincipalKey(x => x.Id);
+
+            builder.HasData(
+                new TravelReason { Id = 1, Reason = "Business" },
+                new TravelReason { Id = 2, Reason = "Vacation" },
+                new TravelReason { Id = 3, Reason = "Family Visit" },
+                new TravelReason { Id = 4, Reason = "Medical" },
+                new TravelReason { Id = 5, Reason = "Education" },
+                new TravelReason { Id = 6, Reason = "Work Assignment" },
+                new TravelReason { Id = 7, Reason = "Relocation" },
+                new TravelReason { Id = 8, Reason = "Other" }
+            );
         }
     }
 }

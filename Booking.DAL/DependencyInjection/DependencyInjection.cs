@@ -1,4 +1,7 @@
-﻿using Booking.DAL.Interceptors;
+﻿using Amazon;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.S3;
+using Booking.DAL.Interceptors;
 using Booking.DAL.Repositories;
 using Booking.DAL.UnitOfWork;
 using Booking.Domain.Entity;
@@ -17,13 +20,15 @@ namespace Booking.DAL.DependencyInjection
    
             var connectionString = configuration.GetConnectionString("MySQL") ?? "";
 
-            services.AddSingleton<DateInterceptor>();
-
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseMySQL(connectionString);
             });
- 
+
+            services.AddSingleton<DateInterceptor>();
+
+            services.AddAws3S(configuration);
+
             services.InitRepositories();
         }
 
@@ -43,9 +48,32 @@ namespace Booking.DAL.DependencyInjection
             services.AddScoped<IBaseRepository<HotelData>, BaseRepository<HotelData>>();
             services.AddScoped<IBaseRepository<Facility>, BaseRepository<Facility>>();
             services.AddScoped<IBaseRepository<NearPlace>,  BaseRepository<NearPlace>>();
+            services.AddScoped<IBaseRepository<TravelReason>, BaseRepository<TravelReason>>();
+            services.AddScoped<IBaseRepository<Topic>,  BaseRepository<Topic>>();
 
             services.AddScoped<IRoleUnitOfWork, RoleUnitOfWork>();
             services.AddScoped<IHotelUnitOfWork, HotelUnitOfWork>();
+
+            services.AddScoped<IS3BucketRepository, S3BucketRepository>();
+        }
+
+        private static void AddAws3S(this IServiceCollection services, IConfiguration configuration)
+        {
+            var awsOption = configuration.GetSection("AWS");
+            var accessKey = awsOption["AccessKey"];
+            var secretKey = awsOption["SecretKey"];
+            var region = awsOption["Region"];
+
+            // Manually configure AWS options with the access key, secret key, and region
+            var awsOptions = new AWSOptions
+            {
+                Credentials = new Amazon.Runtime.BasicAWSCredentials(accessKey, secretKey),
+                Region = RegionEndpoint.GetBySystemName(region)
+            };
+
+            // Register AWS services with the configured AWS options
+            services.AddDefaultAWSOptions(awsOptions);
+            services.AddAWSService<IAmazonS3>();
         }
     }
 }

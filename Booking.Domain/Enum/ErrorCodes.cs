@@ -9,6 +9,7 @@ namespace Booking.Domain.Enum
     public enum ErrorCodes
     {
         InternalServerError = 0,
+        StorageServerError = 1,
 
         UserNotFound = 11,
         UserAlreadyExists = 12,
@@ -45,6 +46,12 @@ namespace Booking.Domain.Enum
         RoomNotFound = 102,
         RoomAlreadyExists = 103,
 
-        NearPlaceNotFound = 111
+        NearPlaceNotFound = 111,
+
+        ReasonAlreadyExists = 121,
+        ReasonNotFound = 122,
+
+        TopicAlreadyExists = 131,
+        TopicNotFound = 132
     }
 }

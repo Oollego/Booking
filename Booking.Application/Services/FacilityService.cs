@@ -35,6 +35,7 @@ namespace Booking.Application.Services
         {
             if (hotelId < 0 )
             {
+                _logger.Warning(ErrorMessage.InvalidParameters);
                 return new CollectionResult<FacilityInfoDto>()
                 {
                     ErrorCode = (int)ErrorCodes.InvalidParameters,

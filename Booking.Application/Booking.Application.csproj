@@ -33,6 +33,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ErrorMessage.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\S3Folders.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>S3Folders.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +48,10 @@
     <EmbeddedResource Update="Resources\ErrorMessage.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\S3Folders.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>S3Folders.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

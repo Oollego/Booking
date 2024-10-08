@@ -8,6 +8,7 @@ using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Result;
 using Microsoft.EntityFrameworkCore;
 using MimeKit.Cryptography;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,13 @@ namespace Booking.Application.Services
     {
         private readonly IBaseRepository<Country> _countryRepository = null!;
         private readonly IMapper _mapper = null!;
+        private readonly ILogger _logger = null!;
 
-        public CountryService(IBaseRepository<Country> countryRepository, IMapper mapper)
+        public CountryService(IBaseRepository<Country> countryRepository, IMapper mapper, ILogger logger)
         {
             _countryRepository = countryRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
 
@@ -33,6 +36,7 @@ namespace Booking.Application.Services
         {
             if (dto == null || dto.Name == null)
             {
+                _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<CountryDto>
                 {
                      ErrorCode = (int)ErrorCodes.InvalidParameters,
@@ -46,6 +50,7 @@ namespace Booking.Application.Services
 
             if (country != null)
             {
+                _logger.Warning(ErrorMessage.CountryAlreadyExists);
                 return new BaseResult<CountryDto>
                 {
                     ErrorCode = (int)ErrorCodes.CountryAlreadyExists,
@@ -73,6 +78,7 @@ namespace Booking.Application.Services
         {
            if(id <= 0)
             {
+                _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<CountryDto>
                 {
                     ErrorCode = (int)ErrorCodes.InvalidParameters,
@@ -84,6 +90,7 @@ namespace Booking.Application.Services
 
             if (country == null)
             {
+                _logger.Warning(ErrorMessage.CountryNotFound);
                 return new BaseResult<CountryDto>
                 {
                     ErrorCode = (int)ErrorCodes.CountryNotFound,
@@ -112,6 +119,7 @@ namespace Booking.Application.Services
 
             if (countries == null || countries.Count == 0)
             {
+                _logger.Warning(ErrorMessage.CountryNotFound);
                 return new CollectionResult<CountryDto>
                 {
                     ErrorCode = (int)ErrorCodes.CountryNotFound,
@@ -130,6 +138,7 @@ namespace Booking.Application.Services
         {
             if(id <= 0)
             {
+                _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<CountryDto>
                 {
                     ErrorCode = (int)ErrorCodes.InvalidParameters,
@@ -148,6 +157,7 @@ namespace Booking.Application.Services
 
             if (country == null)
             {
+                _logger.Warning(ErrorMessage.CountryNotFound);
                 return new BaseResult<CountryDto>
                 {
                     ErrorCode = (int)ErrorCodes.CountryNotFound,
@@ -165,6 +175,7 @@ namespace Booking.Application.Services
         {
             if(dto == null || dto.Id <=0 || dto.CountryName == null)
             {
+                _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<CountryDto>
                 {
                     ErrorMessage = ErrorMessage.InvalidParameters,
@@ -177,6 +188,7 @@ namespace Booking.Application.Services
 
             if (country == null) 
             {
+                _logger.Warning(ErrorMessage.CountryNotFound);
                 return new BaseResult<CountryDto>
                 {
                     ErrorMessage = ErrorMessage.CountryNotFound,

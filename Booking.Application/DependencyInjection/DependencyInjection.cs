@@ -55,6 +55,8 @@ namespace Booking.Application.DependencyInjection
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<IPlaceService, PlaceService>();
+            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IFileService, FileService>();
         }
 
         public static void InitMapping(this IServiceCollection services)
@@ -66,7 +68,9 @@ namespace Booking.Application.DependencyInjection
                     typeof(RoleMapping), 
                     typeof(UserMapping),
                     typeof(CountryMapping),
-                    typeof(CityMapping)
+                    typeof(CityMapping),
+                    typeof(ReasonMapping),
+                    typeof(TopicMapping)
                 );
         }
 

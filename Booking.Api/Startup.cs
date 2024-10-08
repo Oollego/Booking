@@ -17,26 +17,6 @@ namespace Booking.Api
     public static class Startup
     {
         /// <summary>
-        /// 
-        /// </summary>
-        public static void AddS3AWS(this IServiceCollection service, WebApplicationBuilder builder)
-        {
-            var accessKey = builder.Configuration["AWS:AccessKey"];
-            var secretKey = builder.Configuration["AWS:SecretKey"];
-            var region = builder.Configuration["AWS:Region"];
-
-            // Manually configure AWS options with the access key, secret key, and region
-            var awsOptions = new AWSOptions
-            {
-                Credentials = new Amazon.Runtime.BasicAWSCredentials(accessKey, secretKey),
-                Region = RegionEndpoint.GetBySystemName(region)
-            };
-
-            // Register AWS services with the configured AWS options
-            service.AddDefaultAWSOptions(awsOptions);
-            service.AddAWSService<IAmazonS3>();
-        }
-        /// <summary>
         /// Authentication and Authorization
         /// </summary>
         public static void AddAuthenticationAndAuthorization(this IServiceCollection service, WebApplicationBuilder builder)
