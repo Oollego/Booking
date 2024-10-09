@@ -7,24 +7,99 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class TopicController : ControllerBase
     {
 
         private readonly ITopicService _topicService;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public TopicController(ITopicService topicService)
         {
             _topicService = topicService;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<TopicDto>>> CreateTopic([FromForm] CreateTopicDto dto)
         {
             var response = await _topicService.CreatTopicAsync(dto);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [HttpPut()]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<TopicDto>>> UpdateTopic([FromForm] UpdateTopicDto dto)
+        {
+            var response = await _topicService.UpdateTopicAsync(dto);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<TopicDto>>> GetTopicById(long id)
+        {
+            var response = await _topicService.GetTopicByIdAsync(id);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [HttpGet("topics")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CollectionResult<TopicDto>>> GetAllTopics()
+        {
+            var response = await _topicService.GetAllTopicsAsync();
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CollectionResult<TopicDto>>> DeleteTopic(long id)
+        {
+            var response = await _topicService.DeleteTopicAsync(id);
 
             if (response.IsSuccess)
             {

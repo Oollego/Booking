@@ -14,6 +14,6 @@ namespace Booking.Domain.Interfaces.Services
         Task<CollectionResult<TopicDto>> GetAllTopicsAsync();
         Task<BaseResult<TopicDto>> CreatTopicAsync(CreateTopicDto dto);
         Task<BaseResult<TopicDto>> DeleteTopicAsync(long id);
-        Task<BaseResult<TopicDto>> UpdateTopicAsync(TopicDto dto);
+        Task<BaseResult<TopicDto>> UpdateTopicAsync(UpdateTopicDto dto);
     }
 }
