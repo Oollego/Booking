@@ -63,9 +63,9 @@ namespace Booking.Domain.Resources {
         /// <summary>
         ///   Looks up a localized string similar to ₴.
         /// </summary>
-        internal static string CurrancyCharUAH {
+        internal static string DefaultCurrancyChar {
             get {
-                return ResourceManager.GetString("CurrancyCharUAH", resourceCulture);
+                return ResourceManager.GetString("DefaultCurrancyChar", resourceCulture);
             }
         }
     }

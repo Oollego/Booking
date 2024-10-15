@@ -14,8 +14,23 @@ namespace Booking.DAL.Configurations
         public void Configure(EntityTypeBuilder<UserProfileTopic> builder)
         {
             builder.ToTable("user_topics");
+
+           
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.UserProfileId).IsRequired();
             builder.Property(x => x.TopicId).IsRequired();
+
+            //builder.HasOne<UserProfile>()
+            //   .WithMany(up => up.UserProfileTopics)
+            //   .HasForeignKey(x => x.UserProfileId)
+            //   .HasPrincipalKey(up => up.Id)
+            //   .OnDelete(DeleteBehavior.Cascade);
+
+            //builder.HasOne<Topic>()
+            //       .WithMany(t => t.UserProfileTopics)
+            //       .HasForeignKey(x => x.TopicId)
+            //       .HasPrincipalKey(x => x.Id)
+            //       .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

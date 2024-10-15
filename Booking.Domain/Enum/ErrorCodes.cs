@@ -10,6 +10,7 @@ namespace Booking.Domain.Enum
     {
         InternalServerError = 0,
         StorageServerError = 1,
+        AuthenticationRequired = 2,
 
         UserNotFound = 11,
         UserAlreadyExists = 12,
@@ -52,6 +53,15 @@ namespace Booking.Domain.Enum
         ReasonNotFound = 122,
 
         TopicAlreadyExists = 131,
-        TopicNotFound = 132
+        TopicNotFound = 132,
+
+        CurrencyAlreadyExists = 141,
+        CurrencyNotFound = 142,
+
+        CardTypeAlreadyExists = 151,
+        CardTypeNotFound = 152,
+
+        PayMethodAlreadyExists = 161,
+        PayMethodNotFound = 162
     }
 }

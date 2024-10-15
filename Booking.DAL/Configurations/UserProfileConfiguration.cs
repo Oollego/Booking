@@ -24,6 +24,11 @@ namespace Booking.DAL.Configurations
               .WithOne(x => x.UserProfile)
               .HasForeignKey<UserProfile>(x => x.UserId);
 
+            builder.HasMany<UserProfileTopic>(x => x.UserProfileTopics)
+                .WithOne(x => x.UserProfile)
+                .HasForeignKey(x => x.UserProfileId)
+                .HasPrincipalKey(x => x.Id);
+
             builder.HasMany(x => x.Facilities)
              .WithMany(x => x.UserProfiles)
              .UsingEntity<UserProfileFacility>(

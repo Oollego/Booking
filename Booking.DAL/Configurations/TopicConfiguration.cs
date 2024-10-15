@@ -18,12 +18,18 @@ namespace Booking.DAL.Configurations
             //builder.HasMany<UserProfile>(x => x.UserProfiles)
             //   .WithMany(x => x.Topics)
             //   .UsingEntity(x => x.ToTable("UsersTopics"));
-            builder.HasMany(x => x.UserProfiles)
-            .WithMany(x => x.Topics)
-            .UsingEntity<UserProfileTopic>(
-            l => l.HasOne<UserProfile>().WithMany().HasForeignKey(x => x.UserProfileId),
-            l => l.HasOne<Topic>().WithMany().HasForeignKey(x => x.TopicId)
-            );
+
+            //builder.HasMany(x => x.UserProfiles)
+            //.WithMany(x => x.Topics)
+            //.UsingEntity<UserProfileTopic>(
+            //l => l.HasOne<UserProfile>().WithMany().HasForeignKey(x => x.UserProfileId),
+            //l => l.HasOne<Topic>().WithMany().HasForeignKey(x => x.TopicId)
+            //);
+
+            builder.HasMany<UserProfileTopic>(x => x.UserProfileTopics)
+               .WithOne(x => x.Topic)
+               .HasForeignKey(x => x.TopicId)
+               .HasPrincipalKey(x => x.Id);
 
             builder.HasData( new List<Topic>
             {

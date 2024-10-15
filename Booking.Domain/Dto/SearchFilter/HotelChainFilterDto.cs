@@ -8,6 +8,7 @@ namespace Booking.Domain.Dto.SearchFilter
 {
     public class HotelChainFilterDto
     {
+        public long Id { get; set; }
         public string ChainName { get; set; } = null!;
         public int Matches { get; set; }
     }

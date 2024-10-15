@@ -9,7 +9,10 @@ namespace Booking.Domain.Entity
 {
     public class UserProfileTopic
     {
+        public long Id { get; set; }
         public long UserProfileId { get; set; }
         public long TopicId { get; set; }
+        public UserProfile UserProfile { get; set; } = null!;
+        public Topic Topic { get; set; } = null!;
     }
 }

@@ -18,7 +18,7 @@ namespace Booking.Domain.Dto.Hotel
         public string Description { get; set; } = null!;
         public int ReviewQty { get; set; }
         public double Rating { get; set; }
-        public string CurrencyChar { get; set; } = DefaultValues.CurrancyCharUAH;
+        public string CurrencyChar { get; set; } = DefaultValues.DefaultCurrancyChar;
         public decimal CheapestRoom { get; set; }
         public List<HotelInfoLabelDto> HotelLabels { get; set; } = null!;
         public ScoreDto Score { get; set; } = null!;

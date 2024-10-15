@@ -7,6 +7,7 @@ using Booking.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Booking.Api.Controllers
 {
@@ -38,7 +39,9 @@ namespace Booking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<RoomDto>>> GetRoom(long id)
         {
-            var response = await _roomService.GetRoomByIdAsync(id);
+            var email = GetUserEmail();
+
+            var response = await _roomService.GetRoomByIdAsync(id, email);
 
             if (response.IsSuccess)
             { 
@@ -96,6 +99,18 @@ namespace Booking.Api.Controllers
                 return Ok(response);
             }
             return BadRequest(response);
+        }
+
+        private string? GetUserEmail()
+        {
+            var user = HttpContext.User.Identity as ClaimsIdentity;
+            string? email = null;
+
+            if (user is not null && user.IsAuthenticated)
+            {
+                email = user.Claims.First().Value;
+            }
+            return email;
         }
     }
 }

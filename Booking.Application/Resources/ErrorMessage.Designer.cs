@@ -61,6 +61,33 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authentication required.
+        /// </summary>
+        public static string AuthenticationRequired {
+            get {
+                return ResourceManager.GetString("AuthenticationRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Card type already exists.
+        /// </summary>
+        public static string CardTypeAlreadyExists {
+            get {
+                return ResourceManager.GetString("CardTypeAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Card type not found.
+        /// </summary>
+        public static string CardTypeNotFound {
+            get {
+                return ResourceManager.GetString("CardTypeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to City already exists.
         /// </summary>
         public static string CityAlreadyExists {
@@ -93,6 +120,24 @@ namespace Booking.Application.Resources {
         public static string CountryNotFound {
             get {
                 return ResourceManager.GetString("CountryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currency already exists.
+        /// </summary>
+        public static string CurrencyAlreadyExists {
+            get {
+                return ResourceManager.GetString("CurrencyAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currency not found.
+        /// </summary>
+        public static string CurrencyNotFound {
+            get {
+                return ResourceManager.GetString("CurrencyNotFound", resourceCulture);
             }
         }
         
@@ -201,6 +246,24 @@ namespace Booking.Application.Resources {
         public static string PasswordNotEqualsPasswordConfirm {
             get {
                 return ResourceManager.GetString("PasswordNotEqualsPasswordConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PayMethod Already Exists.
+        /// </summary>
+        public static string PayMethodAlreadyExists {
+            get {
+                return ResourceManager.GetString("PayMethodAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PayMethod not found.
+        /// </summary>
+        public static string PayMethodNotFound {
+            get {
+                return ResourceManager.GetString("PayMethodNotFound", resourceCulture);
             }
         }
         

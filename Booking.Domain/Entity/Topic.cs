@@ -12,7 +12,7 @@ namespace Booking.Domain.Entity
         public string TopicTitel { get; set; } = null!;
         public string TopicText { get; set; } = null!;
         public string TopicImage { get; set; } = null!;
-        public List<UserProfile> UserProfiles { get; set; } = null!;
+        public List<UserProfileTopic> UserProfileTopics { get; set; } = null!;
 
     }
 }

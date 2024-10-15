@@ -21,6 +21,7 @@ using Booking.Domain.Dto.Bed;
 using Booking.Domain.Dto.RoomComfort;
 using Booking.Domain.Dto.Hotel;
 using Booking.Domain.Interfaces.Converters;
+using Booking.Application.Services.ServiceEntity;
 
 namespace Booking.Application.Services
 {
@@ -28,6 +29,7 @@ namespace Booking.Application.Services
     {
         private readonly IBaseRepository<Room> _roomRepository = null!;
         private readonly IBaseRepository<Hotel> _hotelRepository = null!;
+        private readonly IBaseRepository<User> _userRepository = null!;
         private readonly IRoomValidator _roomValidator;
         private readonly IMapper _mapper;
         private readonly ILogger _logger = null!;
@@ -35,7 +37,8 @@ namespace Booking.Application.Services
 
 
         public RoomService(IBaseRepository<Room> roomRepository, ILogger logger,
-            IBaseRepository<Hotel> hotelRepository, IRoomValidator roomValidator, IMapper mapper, IImageToLinkConverter imageToLinkConverter)
+            IBaseRepository<Hotel> hotelRepository, IRoomValidator roomValidator, IMapper mapper, 
+            IImageToLinkConverter imageToLinkConverter, IBaseRepository<User> userRepository)
         {
             _roomRepository = roomRepository;
             _logger = logger;
@@ -43,6 +46,7 @@ namespace Booking.Application.Services
             _roomValidator = roomValidator;
             _mapper = mapper;
             _imageToLinkConverter = imageToLinkConverter;
+            _userRepository = userRepository;
         }
 
         /// < inheritdoc />
@@ -121,7 +125,7 @@ namespace Booking.Application.Services
             };
         }
 
-        public async Task<BaseResult<RoomDto>> GetRoomByIdAsync(long roomId)
+        public async Task<BaseResult<RoomDto>> GetRoomByIdAsync(long roomId, string? email)
         {
             if(roomId < 0)
             {
@@ -184,6 +188,18 @@ namespace Booking.Application.Services
                 };
             }
 
+            if (email != null)
+            {
+                var currancy = await GetUserCurrencyAsync(email);
+
+                if (currancy != null)
+                {
+                    room.CancelationPrice = Math.Round(room.CancelationPrice / (decimal)currancy.ExchangeRate);
+                    room.Price = Math.Round(room.Price / (decimal)currancy.ExchangeRate);
+                    room.CurrencyChar = currancy.CurrencyChar;
+                }
+            }
+
             return new BaseResult<RoomDto>()
             {
                 Data = room
@@ -196,9 +212,16 @@ namespace Booking.Application.Services
         }
 
         /// < inheritdoc />
-        public async Task<CollectionResult<RoomDto>> GetRoomsAsync(long hotelId)
+        public async Task<CollectionResult<RoomDto>> GetRoomsAsync(long hotelId, string? email)
         {
-
+            if (hotelId < 1)
+            {
+                return new CollectionResult<RoomDto>()
+                {
+                    ErrorMessage = ErrorMessage.InvalidParameters,
+                    ErrorCode = (int)ErrorCodes.InvalidParameters
+                };
+            }
             //var rooms = await _roomRepository.GetAll().Where(x => x.Hotel.Id == hotelId)
             //    .Include(x => x.)
 
@@ -250,6 +273,30 @@ namespace Booking.Application.Services
                     ErrorCode = (int)ErrorCodes.RoomsNotFound
                 };
             }
+            if (rooms == null)
+            {
+                _logger.Warning(ErrorMessage.RoomsNotFound);
+                return new CollectionResult<RoomDto>()
+                {
+                    ErrorMessage = ErrorMessage.RoomsNotFound,
+                    ErrorCode = (int)ErrorCodes.RoomsNotFound
+                };
+            }
+
+            if (email != null)
+            {
+                var currancy = await GetUserCurrencyAsync(email);
+
+                if (currancy != null)
+                {
+                    rooms.ForEach(x =>
+                    {
+                        x.CancelationPrice = Math.Round(x.CancelationPrice / (decimal)currancy.ExchangeRate);
+                        x.Price = Math.Round(x.Price / (decimal)currancy.ExchangeRate);
+                        x.CurrencyChar = currancy.CurrencyChar;
+                    });
+                }
+            }
 
             return new CollectionResult<RoomDto>()
             {
@@ -284,6 +331,26 @@ namespace Booking.Application.Services
             {
                 Data = _mapper.Map<RoomResponseDto>(updatedRoom)
             };
+        }
+
+        private async Task<UserCurrency?> GetUserCurrencyAsync(string? email)
+        {
+            if (email != null)
+            {
+                var currancy = await _userRepository.GetAll()
+                   .Where(u => u.UserEmail == email)
+                   .Include(x => x.UserProfile).ThenInclude(x => x.Currency)
+                   .Select(x => new UserCurrency
+                   {
+                       CurrencyChar = x.UserProfile.Currency!.CurrencyChar,
+                       ExchangeRate = x.UserProfile.Currency.ExchangeRate
+                   })
+                   .FirstOrDefaultAsync();
+
+                return currancy;
+            }
+
+            return null;
         }
     }
 }

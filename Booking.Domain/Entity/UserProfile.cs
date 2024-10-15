@@ -20,7 +20,7 @@ namespace Booking.Domain.Entity
         public User User {  get; set; } = null!;
         public string CurrencyCodeId { get; set; } = null!;
         public Currency? Currency { get; set; } = null!;
-        public List<Topic>? Topics { get; set; } = null!;
+        public List<UserProfileTopic>? UserProfileTopics { get; set; } = null!;
         public long? TravelReasonId {  get; set; }
         public TravelReason? TravelReason { get; set; } = null!;
         public long? PayMethodId { get; set; }

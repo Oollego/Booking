@@ -57,6 +57,10 @@ namespace Booking.Application.DependencyInjection
             services.AddScoped<IPlaceService, PlaceService>();
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IReasonService, ReasonService>();
+            services.AddScoped<IUserTopicService, UserTopicService>();
+            services.AddScoped<ICurrencyService, CurrencyService>();
+            services.AddScoped<ICardTypeService, CardTypeService>();
         }
 
         public static void InitMapping(this IServiceCollection services)
@@ -70,7 +74,9 @@ namespace Booking.Application.DependencyInjection
                     typeof(CountryMapping),
                     typeof(CityMapping),
                     typeof(ReasonMapping),
-                    typeof(TopicMapping)
+                    typeof(TopicMapping),
+                    typeof(CurrencyMapping),
+                    typeof(PayMethodMapping)
                 );
         }
 

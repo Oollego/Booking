@@ -1,4 +1,6 @@
-﻿namespace Booking.Domain.Dto.Hotel
+﻿using Booking.Domain.Resources;
+
+namespace Booking.Domain.Dto.Hotel
 {
     public class TopHotelDto
     {
@@ -13,5 +15,6 @@
         public int ReviewsQt { get; set; }
         public double Rating { get; set; }
         public decimal MinPrice { get; set; }
+        public string CurrencyChar { get; set; } = DefaultValues.DefaultCurrancyChar;
     }
 }

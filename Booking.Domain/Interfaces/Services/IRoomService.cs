@@ -10,14 +10,14 @@ namespace Booking.Domain.Interfaces.Services
         /// </summary>
         /// <param name="hotelId"></param>
         /// <returns></returns>
-        Task<CollectionResult<RoomDto>> GetRoomsAsync(long hotelId);
+        Task<CollectionResult<RoomDto>> GetRoomsAsync(long hotelId, string? email);
 
         /// <summary>
         /// Get room by Id
         /// </summary>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        Task<BaseResult<RoomDto>> GetRoomByIdAsync(long roomId);
+        Task<BaseResult<RoomDto>> GetRoomByIdAsync(long roomId, string? email);
 
         /// <summary>
         /// Create new Room

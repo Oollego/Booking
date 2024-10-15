@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Domain.Dto.SearchFilter
+namespace Booking.Domain.Dto.CardType
 {
-    public class LabelFilterDto
+    public class CardTypeDto
     {
         public long Id { get; set; }
-        public string LabelName { get; set; } = null!;
-        public int Matches { get; set; }
+        public string CardName { get; set; } = null!;
     }
 }

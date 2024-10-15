@@ -1,6 +1,7 @@
 ﻿using Booking.Domain.Dto.Bed;
 using Booking.Domain.Dto.RoomComfort;
 using Booking.Domain.Dto.RoomImage;
+using Booking.Domain.Resources;
 
 namespace Booking.Domain.Dto.Room
 {
@@ -10,6 +11,7 @@ namespace Booking.Domain.Dto.Room
         public string RoomName { get; set; } = null!;
         public decimal Price { get; set; }
         public decimal CancelationPrice { get; set; }
+        public string CurrencyChar { get; set; } = DefaultValues.DefaultCurrancyChar;
         public int Adults { get; set; }
         public int Children {  get; set; }
         public List<RoomImageDto> Images { get; set; } = null!;

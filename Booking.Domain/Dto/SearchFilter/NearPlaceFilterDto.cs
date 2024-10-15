@@ -8,6 +8,7 @@ namespace Booking.Domain.Dto.SearchFilter
 {
     public class NearPlaceFilterDto
     {
+        public long Id { get; set; }
         public string PlaceName { get; set; } = null!;
         public int Matches { get; set; }
     }

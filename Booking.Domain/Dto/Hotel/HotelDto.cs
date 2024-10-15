@@ -1,6 +1,7 @@
 ﻿
 using Booking.Domain.Dto.HotelComfort;
 using Booking.Domain.Dto.NearObject;
+using Booking.Domain.Resources;
 
 namespace Booking.Domain.Dto.Hotel
 {
@@ -17,6 +18,7 @@ namespace Booking.Domain.Dto.Hotel
         public double Rating { get; set; }
         public int ReviewQty { get; set; }
         public decimal MinRoomPrice { get; set; }
+        public string CurrencyChar { get; set; } = DefaultValues.DefaultCurrancyChar;
         public List<HotelInfoLabelDto> HotelLabels { get; set; } = null!;
         public List<NearObjectDto> NearObjects { get; set; } = null!;
     }

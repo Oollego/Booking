@@ -50,7 +50,9 @@ namespace Booking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<TopHotelDto>>> GetTopHotel(int qty, int rating)
         {
-            var response = await _hotelService.GetTopHotelsAsync(qty, rating);
+            var email = GetUserEmail();
+
+            var response = await _hotelService.GetTopHotelsAsync(qty, rating, email);
 
             if (response.IsSuccess)
             {
@@ -67,7 +69,9 @@ namespace Booking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<RoomDto>>> GetHotelRooms(long id)
         {
-            var response = await _roomService.GetRoomsAsync(id);
+            var email = GetUserEmail();
+
+            var response = await _roomService.GetRoomsAsync(id, email);
 
             if (response.IsSuccess)
             {
@@ -101,8 +105,9 @@ namespace Booking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<HotelDto>>> SearchHotels([FromBody] SearchHotelDto dto)
         {
+            var email = GetUserEmail();
 
-            var response = await _hotelService.SearchHotelAsync(dto);
+            var response = await _hotelService.SearchHotelAsync(dto, email);
 
             if (response.IsSuccess)
             {
@@ -153,13 +158,7 @@ namespace Booking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<InfoHotelDto>>> GetHotelInfo(long id)
         {
-            var user = HttpContext.User.Identity as ClaimsIdentity;
-            string? email = null;
-
-            if (user is not null && user.IsAuthenticated)
-            {
-                 email = user.Claims.First().Value;
-            }
+            var email = GetUserEmail();
 
             var response = await _hotelService.GetHotelInfoAsync(id, email);
 
@@ -178,7 +177,9 @@ namespace Booking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<TopHotelDto>>> GetHotelsByCityName(int qty, string cityName)
         {
-            var response = await _hotelService.GetHotelsByCityNameAsync(qty, cityName);
+            var email = GetUserEmail();
+
+            var response = await _hotelService.GetHotelsByCityNameAsync(qty, cityName, email);
 
             if (response.IsSuccess)
             {
@@ -270,6 +271,18 @@ namespace Booking.Api.Controllers
                 return Ok(response);
             }
             return BadRequest(response);
+        }
+
+        private string? GetUserEmail()
+        {
+            var user = HttpContext.User.Identity as ClaimsIdentity;
+            string? email = null;
+
+            if (user is not null && user.IsAuthenticated)
+            {
+                email = user.Claims.First().Value;
+            }
+            return email;
         }
     }
 }

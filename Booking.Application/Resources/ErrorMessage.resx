@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AuthenticationRequired" xml:space="preserve">
+    <value>Authentication required</value>
+  </data>
+  <data name="CardTypeAlreadyExists" xml:space="preserve">
+    <value>Card type already exists</value>
+  </data>
+  <data name="CardTypeNotFound" xml:space="preserve">
+    <value>Card type not found</value>
+  </data>
   <data name="CityAlreadyExists" xml:space="preserve">
     <value>City already exists</value>
   </data>
@@ -128,6 +137,12 @@
   </data>
   <data name="CountryNotFound" xml:space="preserve">
     <value>Country not found</value>
+  </data>
+  <data name="CurrencyAlreadyExists" xml:space="preserve">
+    <value>Currency already exists</value>
+  </data>
+  <data name="CurrencyNotFound" xml:space="preserve">
+    <value>Currency not found</value>
   </data>
   <data name="EmailIsNotCorrect" xml:space="preserve">
     <value>Email is not correct</value>
@@ -164,6 +179,12 @@
   </data>
   <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
     <value>Password and password confirm is not equal</value>
+  </data>
+  <data name="PayMethodAlreadyExists" xml:space="preserve">
+    <value>PayMethod Already Exists</value>
+  </data>
+  <data name="PayMethodNotFound" xml:space="preserve">
+    <value>PayMethod not found</value>
   </data>
   <data name="ReasonAlreadyExists" xml:space="preserve">
     <value>Reason already exists</value>

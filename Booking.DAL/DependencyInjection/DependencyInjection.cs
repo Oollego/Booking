@@ -17,18 +17,9 @@ namespace Booking.DAL.DependencyInjection
     {
         public static void AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
         {
-   
-            var connectionString = configuration.GetConnectionString("MySQL") ?? "";
-
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseMySQL(connectionString);
-            });
-
+            services.AddDbMySQL(configuration);
             services.AddSingleton<DateInterceptor>();
-
             services.AddAws3S(configuration);
-
             services.InitRepositories();
         }
 
@@ -50,11 +41,27 @@ namespace Booking.DAL.DependencyInjection
             services.AddScoped<IBaseRepository<NearPlace>,  BaseRepository<NearPlace>>();
             services.AddScoped<IBaseRepository<TravelReason>, BaseRepository<TravelReason>>();
             services.AddScoped<IBaseRepository<Topic>,  BaseRepository<Topic>>();
+            services.AddScoped<IBaseRepository<UserProfileTopic>, BaseRepository<UserProfileTopic>>();
+            services.AddScoped<IBaseRepository<UserProfile>, BaseRepository<UserProfile>>();
+            services.AddScoped<IBaseRepository<Currency>, BaseRepository<Currency>>();
+            services.AddScoped<IBaseRepository<CardType>, BaseRepository<CardType>>();
+            services.AddScoped<IBaseRepository<PayMethod>, BaseRepository<PayMethod>>();
+
 
             services.AddScoped<IRoleUnitOfWork, RoleUnitOfWork>();
             services.AddScoped<IHotelUnitOfWork, HotelUnitOfWork>();
 
             services.AddScoped<IS3BucketRepository, S3BucketRepository>();
+        }
+
+        private static void AddDbMySQL(this IServiceCollection services, IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("MySQL") ?? "";
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseMySQL(connectionString);
+            });
         }
 
         private static void AddAws3S(this IServiceCollection services, IConfiguration configuration)
@@ -64,7 +71,7 @@ namespace Booking.DAL.DependencyInjection
             var secretKey = awsOption["SecretKey"];
             var region = awsOption["Region"];
 
-            // Manually configure AWS options with the access key, secret key, and region
+            // Configure AWS options with the access key, secret key, and region
             var awsOptions = new AWSOptions
             {
                 Credentials = new Amazon.Runtime.BasicAWSCredentials(accessKey, secretKey),
