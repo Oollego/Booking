@@ -12,7 +12,8 @@ namespace Booking.Domain.Entity
         public string CardNumber { get; set; } = null!;
         public DateTime CardDate { get; set; }
         public long CardTypeId { get; set; }
+        public long UserProfileId { get; set; }
+        public UserProfile UserProfile { get; set; } = null!;
         public CardType CardType { get; set; } = null!;
-        public List<UserProfile> UserProfiles { get; set; } = null!;
-    }
+     }
 }

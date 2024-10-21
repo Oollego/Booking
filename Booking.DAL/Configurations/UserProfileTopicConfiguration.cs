@@ -15,8 +15,9 @@ namespace Booking.DAL.Configurations
         {
             builder.ToTable("user_topics");
 
-           
+
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.UserProfileId).IsRequired();
             builder.Property(x => x.TopicId).IsRequired();
 

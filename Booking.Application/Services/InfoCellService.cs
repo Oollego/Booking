@@ -49,7 +49,7 @@ namespace Booking.Application.Services
                 {
                     TextLine_1 = x.TextLine_1,
                     TextLine_2 = x.TextLine_2,
-                    InfoIcon = _imageToLinkConverter.ConvertImageToLink(x.InfoIcon!.IconFileName, ImageBucket.Info.ToString())
+                    InfoIcon = _imageToLinkConverter.ConvertImageToLink(x.InfoIcon!.IconFileName, S3Folders.InfoImg)
                 }).ToList()
                 ).FirstOrDefaultAsync();
  

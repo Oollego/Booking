@@ -13,9 +13,9 @@ namespace Booking.Domain.Interfaces.Services
     public interface IPayMethodService
     {
         Task<CollectionResult<PayMethodDto>> GetAllUserPayMethodAsync(string? email);
-        Task<BaseResult<PayMethodDto>> GetUserPayMethodByIdAsync(long id, string? email);
+        Task<BaseResult<PayMethodDto>> GetUserPayMethodByIdAsync(long methodId, string? email);
         Task<BaseResult<PayMethodDto>> CreatUserPayMethodAsync(CreatePayMethodDto dto, string? email);
-        Task<BaseResult<PayMethodDto>> DeleteUserUserPayMethodAsync(long id, string? email);
+        Task<BaseResult<PayMethodDto>> DeleteUserPayMethodAsync(long methodId, string? email);
         Task<BaseResult<PayMethodDto>> UpdatePayMethodAsync(PayMethodDto dto, string? email);
     }
 }

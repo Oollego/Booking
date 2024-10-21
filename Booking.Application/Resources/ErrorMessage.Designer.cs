@@ -151,11 +151,11 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fasility Not Found.
+        ///   Looks up a localized string similar to Facility Not Found.
         /// </summary>
-        public static string FasilityNotFound {
+        public static string FacilityNotFound {
             get {
-                return ResourceManager.GetString("FasilityNotFound", resourceCulture);
+                return ResourceManager.GetString("FacilityNotFound", resourceCulture);
             }
         }
         
@@ -349,6 +349,15 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Some of facilities not found.
+        /// </summary>
+        public static string SomeOfFacilitiesNotFound {
+            get {
+                return ResourceManager.GetString("SomeOfFacilitiesNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Storage server error.
         /// </summary>
         public static string StorageServerError {
@@ -408,6 +417,24 @@ namespace Booking.Application.Resources {
         public static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User profile already exists.
+        /// </summary>
+        public static string UserProfileAlreadyExists {
+            get {
+                return ResourceManager.GetString("UserProfileAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User profile not found.
+        /// </summary>
+        public static string UserProfileNotFound {
+            get {
+                return ResourceManager.GetString("UserProfileNotFound", resourceCulture);
             }
         }
         

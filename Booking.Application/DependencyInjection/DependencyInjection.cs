@@ -61,6 +61,9 @@ namespace Booking.Application.DependencyInjection
             services.AddScoped<IUserTopicService, UserTopicService>();
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<ICardTypeService, CardTypeService>();
+            services.AddScoped<IPayMethodService, PayMethodService>();
+            services.AddScoped<IUserProfileFacilityService, UserProfileFacilityService>();
+            services.AddScoped<IUserProfileService, UserProfileService>();
         }
 
         public static void InitMapping(this IServiceCollection services)
@@ -76,7 +79,8 @@ namespace Booking.Application.DependencyInjection
                     typeof(ReasonMapping),
                     typeof(TopicMapping),
                     typeof(CurrencyMapping),
-                    typeof(PayMethodMapping)
+                    typeof(PayMethodMapping),
+                    typeof(UserProfileMapping)
                 );
         }
 
@@ -86,6 +90,7 @@ namespace Booking.Application.DependencyInjection
             services.AddScoped<IHotelCreateUpdateValidator, HotelCreateUpdateValidator>();
             services.AddScoped<IValidator<CreateRoomDto>, CreateRoomValidator>();
             services.AddScoped<IValidator<UpdateRoomDto>, UpdateRoomValidator>();
+            services.AddScoped<IUserProfileValidator, UserProfileValidator>();
         }
     }
 

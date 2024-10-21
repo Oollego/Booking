@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Amazon.S3.Util.S3EventNotification;
 
 namespace Booking.DAL.Repositories
 {
@@ -50,6 +51,36 @@ namespace Booking.DAL.Repositories
             _dbContext.Remove(entity);
            
             return entity;
+        }
+
+        public IEnumerable<TEntity> RemoveRange(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException("Entity is null - " + nameof(entities));
+
+            _dbContext.RemoveRange(entities);
+
+            return entities;
+        }
+
+        public IEnumerable<TEntity> UpdateRange(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException("Entity is null - " + nameof(entities));
+
+            _dbContext.UpdateRange(entities);
+
+            return entities;
+        }
+
+        public async Task<IEnumerable<TEntity>> CreateRangeAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException("Entity is null - " + nameof(entities));
+
+           await _dbContext.AddRangeAsync(entities);
+
+            return entities;
         }
 
         public async Task<int> SaveChangesAsync()

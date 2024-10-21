@@ -14,8 +14,24 @@ namespace Booking.DAL.Configurations
         public void Configure(EntityTypeBuilder<UserProfileFacility> builder)
         {
             builder.ToTable("user_profile_facilities");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.UserProfileId).IsRequired();
             builder.Property(x => x.FacilityId).IsRequired();
+
+            builder.HasData(AddFasility());
+        }
+
+        private List<UserProfileFacility> AddFasility()
+        {
+            var list = new List<UserProfileFacility>();
+
+            for (int i = 1; i < 36; i++)
+            {
+                list.Add(new UserProfileFacility { Id = i, FacilityId = i, UserProfileId = 1 });
+            }
+
+            return list;
         }
     }
 }

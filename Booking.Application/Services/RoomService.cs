@@ -152,7 +152,7 @@ namespace Booking.Application.Services
                    Images = x.RoomImages.Select(x => new RoomImageDto
                    {
                        Id = x.Id,
-                       ImageName = _imageToLinkConverter.ConvertImageToLink(x.ImageName, ImageBucket.Hotels.ToString())
+                       ImageName = _imageToLinkConverter.ConvertImageToLink(x.ImageName, S3Folders.HotelsImg)
                    }).ToList(),
                    Beds = x.BedTypes.Select(x => new BedDto
                    {
@@ -164,7 +164,7 @@ namespace Booking.Application.Services
                    RoomComforts = x.RoomComfortIconTypes.Select(x => new RoomComfortDto
                    {
                        Id = x.Id,
-                       ComfortIcon = _imageToLinkConverter.ConvertImageToLink(x.ComfortIcon, ImageBucket.RoomComfort.ToString()),
+                       ComfortIcon = _imageToLinkConverter.ConvertImageToLink(x.ComfortIcon, S3Folders.RoomComfortImg),
                        ComfortName = x.ComfortName
                    }).ToList()
                })
@@ -241,7 +241,7 @@ namespace Booking.Application.Services
                     Images = x.RoomImages.Select(x => new RoomImageDto
                     { 
                         Id = x.Id, 
-                        ImageName = _imageToLinkConverter.ConvertImageToLink(x.ImageName, ImageBucket.Hotels.ToString()) 
+                        ImageName = _imageToLinkConverter.ConvertImageToLink(x.ImageName, S3Folders.HotelsImg) 
                     }).ToList(),
                     Beds = x.BedTypes.Select(x => new BedDto 
                     { 
@@ -253,7 +253,7 @@ namespace Booking.Application.Services
                     RoomComforts = x.RoomComfortIconTypes.Select(x => new RoomComfortDto 
                     { 
                         Id = x.Id, 
-                        ComfortIcon = _imageToLinkConverter.ConvertImageToLink(x.ComfortIcon, ImageBucket.RoomComfort.ToString()),
+                        ComfortIcon = _imageToLinkConverter.ConvertImageToLink(x.ComfortIcon, S3Folders.RoomComfortImg),
                         ComfortName = x.ComfortName 
                     }).ToList()
                 })

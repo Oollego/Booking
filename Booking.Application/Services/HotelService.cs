@@ -57,8 +57,6 @@ namespace Booking.Application.Services
             _imageToLinkConverter = imageToLinkConverter;
         }
 
-
-
         public async Task<BaseResult<InfoHotelDto>> GetHotelInfoAsync(long hotelId, string? email)
         {
             if (hotelId < 1)
@@ -128,7 +126,7 @@ namespace Booking.Application.Services
                 }
             }
 
-            hotel.Images = _imageToLinkConverter.ConvertImagesToLink(hotel.Images, ImageBucket.Hotels.ToString());
+            hotel.Images = _imageToLinkConverter.ConvertImagesToLink(hotel.Images, S3Folders.HotelsImg);
 
             return new BaseResult<InfoHotelDto>()
             {
@@ -165,7 +163,7 @@ namespace Booking.Application.Services
                     Stars = h.Stars,
                     MinPrice =
                       h.Rooms.Min(x => x.RoomPrice),
-                    HotelImage = _imageToLinkConverter.ConvertImageToLink(h.HotelImage, ImageBucket.Hotels.ToString()),
+                    HotelImage = _imageToLinkConverter.ConvertImageToLink(h.HotelImage, S3Folders.HotelsImg),
                     DistanceToCityCenter = h.NearObjects.Where(no => no.NearObjectName.Name == "the city center").FirstOrDefault()!.Distance,
                     DistanceMetric = h.NearObjects.Where(no => no.NearObjectName.Name == "the city center").FirstOrDefault()!.DistanceMetric
 
@@ -244,7 +242,7 @@ namespace Booking.Application.Services
                     Stars = h.Stars,
                     MinPrice =
                       h.Rooms.Min(x => x.RoomPrice),
-                    HotelImage = _imageToLinkConverter.ConvertImageToLink(h.HotelImage, ImageBucket.Hotels.ToString()),
+                    HotelImage = _imageToLinkConverter.ConvertImageToLink(h.HotelImage, S3Folders.HotelsImg),
                     DistanceToCityCenter = h.NearObjects.Where(no => no.NearObjectName.Name == "the city center").FirstOrDefault()!.Distance,
                     DistanceMetric = h.NearObjects.Where(no => no.NearObjectName.Name == "the city center").FirstOrDefault()!.DistanceMetric
 
@@ -468,7 +466,7 @@ namespace Booking.Application.Services
                     HotelLabels = x.HotelLabelTypes.Select(hct => new HotelInfoLabelDto
                     {
                         LabelName = hct.LabelName,
-                        LabelIcon = _imageToLinkConverter.ConvertImageToLink(hct.LabelIcon, ImageBucket.Label.ToString())
+                        LabelIcon = _imageToLinkConverter.ConvertImageToLink(hct.LabelIcon, S3Folders.LabelImg)
                     }).ToList(),
                     NearObjects = x.NearObjects.Select(s => new NearObjectDto
                     {
@@ -476,7 +474,7 @@ namespace Booking.Application.Services
                         StationName = s.NearObjectName.Name,
                         Distance = s.Distance,
                         DistanceMetric = s.DistanceMetric,
-                        StationIcon = _imageToLinkConverter.ConvertImageToLink(s.NearObjectName.Icon!, ImageBucket.Label.ToString())
+                        StationIcon = _imageToLinkConverter.ConvertImageToLink(s.NearObjectName.Icon!, S3Folders.LabelImg)
                     }).ToList(),
                 }).OrderBy(h => h.HotelName);
 
@@ -663,10 +661,5 @@ namespace Booking.Application.Services
             return null;
          }
 
-        //public async Task<CollectionResult<TopHotelDto>> GeеHotelsByCityAsync(int qty, int avgReview)
-        //private string ImageToLinkConverter(string ImageName, string folder)
-        //{
-        //   return AppSource.ServerDomain + "/api/Images?key=" + folder + "/" + ImageName;
-        //}
     }
 }

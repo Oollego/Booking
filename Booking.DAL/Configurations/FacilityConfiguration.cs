@@ -19,6 +19,12 @@ namespace Booking.DAL.Configurations
             builder.Property(x => x.FacilityName).HasMaxLength(254).IsRequired();
             builder.Property(x => x.FacilityGroupId).IsRequired();
 
+            builder.HasMany<UserProfileFacility>(x => x.UserProfileFacilities)
+                .WithOne(x => x.Facility)
+                .HasForeignKey(x => x.FacilityId)
+                .HasPrincipalKey(x => x.Id);
+            
+
             builder.HasData(new List<Facility>()
             {
                 new Facility()

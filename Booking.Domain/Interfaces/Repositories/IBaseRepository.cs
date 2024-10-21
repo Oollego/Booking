@@ -14,6 +14,9 @@ namespace Booking.Domain.Interfaces.Repositories
         Task<TEntity> CreateAsync(TEntity entity);
         TEntity Update(TEntity entity);
         TEntity Remove(TEntity entity);
+        IEnumerable<TEntity> RemoveRange(IEnumerable<TEntity> entities);
+        IEnumerable<TEntity> UpdateRange(IEnumerable<TEntity> entities);
+        Task<IEnumerable<TEntity>> CreateRangeAsync(IEnumerable<TEntity> entities);
         IQueryable<TEntity> FromSqlRaw(string sql, params object[] parameters);
         IQueryable<TEntity> GetAllAsSplitQuery();
     }

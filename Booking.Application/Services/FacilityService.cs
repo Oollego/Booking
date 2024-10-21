@@ -52,28 +52,28 @@ namespace Booking.Application.Services
                     .Select(g => new FacilityInfoDto
                     {
                         GroupName = g.Key.FacilityGroupName,
-                        GroupIcon =  _imageToLinkConverter.ConvertImageToLink(g.Key.FacilityGroupIcon ?? "", ImageBucket.Facilities.ToString()),
+                        GroupIcon =  _imageToLinkConverter.ConvertImageToLink(g.Key.FacilityGroupIcon ?? "", S3Folders.FacilitiesImg),
                         Facilities = g.Select(f => f.FacilityName).OrderBy(f => f).ToList()
                     }).OrderBy(g => g.GroupName).ToList()
                 ).FirstOrDefaultAsync();
 
             if (fasilities == null)
             {
-                _logger.Warning(ErrorMessage.FasilityNotFound);
+                _logger.Warning(ErrorMessage.FacilityNotFound);
                 return new CollectionResult<FacilityInfoDto>()
                 {
-                    ErrorMessage = ErrorMessage.FasilityNotFound,
-                    ErrorCode = (int)ErrorCodes.FasilityNotFound
+                    ErrorMessage = ErrorMessage.FacilityNotFound,
+                    ErrorCode = (int)ErrorCodes.FacilityNotFound
                 };
             }
 
             if (fasilities.Count() == 0)
             {
-                _logger.Warning(ErrorMessage.FasilityNotFound, fasilities.Count());
+                _logger.Warning(ErrorMessage.FacilityNotFound, fasilities.Count());
                 return new CollectionResult<FacilityInfoDto>()
                 {
-                    ErrorMessage = ErrorMessage.FasilityNotFound,
-                    ErrorCode = (int)ErrorCodes.FasilityNotFound
+                    ErrorMessage = ErrorMessage.FacilityNotFound,
+                    ErrorCode = (int)ErrorCodes.FacilityNotFound
                 };
             }
 

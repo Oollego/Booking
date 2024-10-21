@@ -29,12 +29,22 @@ namespace Booking.DAL.Configurations
                 .HasForeignKey(x => x.UserProfileId)
                 .HasPrincipalKey(x => x.Id);
 
-            builder.HasMany(x => x.Facilities)
-             .WithMany(x => x.UserProfiles)
-             .UsingEntity<UserProfileFacility>(
-             l => l.HasOne<Facility>().WithMany().HasForeignKey(x => x.FacilityId),
-             l => l.HasOne<UserProfile>().WithMany().HasForeignKey(x => x.UserProfileId)
-             );
+            builder.HasMany<PayMethod>(x => x.PayMethods)
+                .WithOne(x => x.UserProfile)
+                .HasForeignKey(x => x.UserProfileId)
+                .HasPrincipalKey(x => x.Id);
+
+            builder.HasMany<UserProfileFacility>(x => x.UserProfileFacilities)
+                .WithOne(x => x.UserProfile)
+                .HasForeignKey(x => x.UserProfileId)
+                .HasPrincipalKey(x => x.Id);
+
+            //builder.HasMany(x => x.Facilities)
+            // .WithMany(x => x.UserProfiles)
+            // .UsingEntity<UserProfileFacility>(
+            // l => l.HasOne<Facility>().WithMany().HasForeignKey(x => x.FacilityId),
+            // l => l.HasOne<UserProfile>().WithMany().HasForeignKey(x => x.UserProfileId)
+            // );
 
             builder.HasData(new List<UserProfile>
         {
@@ -47,7 +57,6 @@ namespace Booking.DAL.Configurations
                 UserPhone = "+1234567890",
                 UserId = 1,
                 CityId = 189,
-                PayMethodId = 1,
                 CurrencyCodeId = "USD"
             },
             new UserProfile
@@ -59,7 +68,6 @@ namespace Booking.DAL.Configurations
                 UserPhone = "+0987654321",
                 UserId = 2,
                 CityId = 179,
-                PayMethodId = 2,
                 CurrencyCodeId = "GBP"
 
             },
@@ -82,7 +90,6 @@ namespace Booking.DAL.Configurations
                 UserPhone = "+2233445566",
                 UserId = 4,
                 CityId = 70,
-                PayMethodId = 3
             },
             new UserProfile
             {

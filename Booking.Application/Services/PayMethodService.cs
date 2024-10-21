@@ -29,7 +29,7 @@ namespace Booking.Application.Services
         public async Task<BaseResult<PayMethodDto>> CreatUserPayMethodAsync(CreatePayMethodDto dto, string? email)
         {
 
-            if (dto.CardDate < DateTime.UtcNow || dto.CardNumber.Length != 19 || dto.CardTypeId <= 0)
+            if (dto.CardDate < DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId <= 0)
             {
                 _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<PayMethodDto>
@@ -39,23 +39,11 @@ namespace Booking.Application.Services
                 };
             }
 
-            var user = await GetUserEmailAsync(email);
-
-            if (user == null)
-            {
-                _logger.Warning(ErrorMessage.AuthenticationRequired);
-                return new BaseResult<PayMethodDto>
-                {
-                    ErrorCode = (int)ErrorCodes.AuthenticationRequired,
-                    ErrorMessage = ErrorMessage.AuthenticationRequired
-                };
-            }
-
+           
             var userPayMethod = await _payMethodRepository.GetAll()
-                .Include(pm => pm.UserProfiles)
+                .Include(pm => pm.UserProfile)
                     .ThenInclude(up => up.User)
-                .Where(up => up.UserProfiles.Any(x => x.User.UserEmail == email))
-                .Where(up => up.CardNumber == dto.CardNumber)
+                .Where(up => up.UserProfile.User.UserEmail == email && up.CardNumber == dto.CardNumber)
                 .FirstOrDefaultAsync();
 
             if (userPayMethod != null)
@@ -65,6 +53,18 @@ namespace Booking.Application.Services
                 {
                     ErrorCode = (int)ErrorCodes.PayMethodAlreadyExists,
                     ErrorMessage = ErrorMessage.PayMethodAlreadyExists
+                };
+            }
+
+            var user = await GetUserByEmailAsync(email);
+
+            if (user == null)
+            {
+                _logger.Warning(ErrorMessage.AuthenticationRequired);
+                return new BaseResult<PayMethodDto>
+                {
+                    ErrorCode = (int)ErrorCodes.AuthenticationRequired,
+                    ErrorMessage = ErrorMessage.AuthenticationRequired
                 };
             }
 
@@ -84,9 +84,9 @@ namespace Booking.Application.Services
             };
         }
 
-        public async Task<BaseResult<PayMethodDto>> DeleteUserUserPayMethodAsync(long id, string? email)
+        public async Task<BaseResult<PayMethodDto>> DeleteUserPayMethodAsync(long methodId, string? email)
         {
-            if (id <= 0)
+            if (methodId <= 0)
             {
                 _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<PayMethodDto>
@@ -96,7 +96,7 @@ namespace Booking.Application.Services
                 };
             }
 
-            var user = await GetUserEmailAsync(email);
+            var user = await GetUserByEmailAsync(email);
 
             if (user == null)
             {
@@ -108,7 +108,7 @@ namespace Booking.Application.Services
                 };
             }
 
-            var userPayMethod = await GetPayMethodAsync(id, email);
+            var userPayMethod = await GetPayMethodAsync(methodId, email);
 
             if (userPayMethod == null)
             {
@@ -132,9 +132,9 @@ namespace Booking.Application.Services
         public async Task<CollectionResult<PayMethodDto>> GetAllUserPayMethodAsync(string? email)
         {
             var payMethods = await _payMethodRepository.GetAll()
-                .Include(pm => pm.UserProfiles)
+                .Include(pm => pm.UserProfile)
                     .ThenInclude(up => up.User)
-                .Where(up => up.UserProfiles.Any(up => up.User.UserEmail == email))
+                .Where(up => up.UserProfile.User.UserEmail == email)
                 .Select(pm => new PayMethodDto()
                 {
                     Id = pm.Id,
@@ -162,9 +162,9 @@ namespace Booking.Application.Services
 
         }
 
-        public async Task<BaseResult<PayMethodDto>> GetUserPayMethodByIdAsync(long id, string? email)
+        public async Task<BaseResult<PayMethodDto>> GetUserPayMethodByIdAsync(long methodId, string? email)
         {
-            if (id <= 0)
+            if (methodId <= 0)
             {
                 _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<PayMethodDto>
@@ -175,10 +175,10 @@ namespace Booking.Application.Services
             }
 
             var payMethod = await _payMethodRepository.GetAll()
-               .Include(pm => pm.UserProfiles)
+               .Include(pm => pm.UserProfile)
                    .ThenInclude(up => up.User)
-               .Where(pm => pm.Id == id)
-               .Where(up => up.UserProfiles.Any(up => up.User.UserEmail == email))
+               .Where(pm => pm.Id == methodId)
+               .Where(up => up.UserProfile.User.UserEmail == email)
                .Select(pm => new PayMethodDto()
                {
                    Id = pm.Id,
@@ -206,7 +206,7 @@ namespace Booking.Application.Services
 
         public async Task<BaseResult<PayMethodDto>> UpdatePayMethodAsync(PayMethodDto dto, string? email)
         {
-            if (dto.CardDate < DateTime.UtcNow || dto.CardNumber.Length != 19 || dto.CardTypeId <= 0 || dto.Id <= 0)
+            if (dto.CardDate < DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId <= 0 || dto.Id <= 0)
             {
                 _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<PayMethodDto>
@@ -216,7 +216,7 @@ namespace Booking.Application.Services
                 };
             }
 
-            var user = await GetUserEmailAsync(email);
+            var user = await GetUserByEmailAsync(email);
 
             if (user == null)
             {
@@ -240,7 +240,7 @@ namespace Booking.Application.Services
                 };
             }
 
-            userPayMethod.CardDate = dto.CardDate;
+            userPayMethod.CardDate = dto.CardDate.Date;
             userPayMethod.CardTypeId = dto.CardTypeId;
             userPayMethod.CardNumber = dto.CardNumber;
 
@@ -253,22 +253,23 @@ namespace Booking.Application.Services
             };
         }
 
-        private async Task<User?> GetUserEmailAsync(string? email)
+        private async Task<User?> GetUserByEmailAsync(string? email)
         {
             var user = await _userRepository.GetAll()
-            .Where(u => u.UserEmail == email)
-            .FirstOrDefaultAsync();
+                .Include(ur => ur.UserProfile)
+                .Where(u => u.UserEmail == email)
+                .FirstOrDefaultAsync();
 
             return user;
         }
 
-        private async Task<PayMethod?> GetPayMethodAsync( long id, string? email)
+        private async Task<PayMethod?> GetPayMethodAsync( long methodId, string? email)
         {
             var userPayMethod = await _payMethodRepository.GetAll()
-             .Include(pm => pm.UserProfiles)
+             .Include(pm => pm.UserProfile)
                  .ThenInclude(up => up.User)
-             .Where(up => up.UserProfiles.Any(x => x.User.UserEmail == email))
-             .Where(up => up.Id == id)
+             .Where(up => up.UserProfile.User.UserEmail == email)
+             .Where(up => up.Id == methodId)
              .FirstOrDefaultAsync();
 
             return userPayMethod;

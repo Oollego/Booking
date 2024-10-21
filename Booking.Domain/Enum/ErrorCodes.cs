@@ -33,7 +33,8 @@ namespace Booking.Domain.Enum
 
         ReviewNotFound = 51,
 
-        FasilityNotFound = 61,
+        FacilityNotFound = 61,
+        SomeOfFacilitiesNotFound = 62,
 
         InfoCellNotFound = 71,
 
@@ -62,6 +63,9 @@ namespace Booking.Domain.Enum
         CardTypeNotFound = 152,
 
         PayMethodAlreadyExists = 161,
-        PayMethodNotFound = 162
+        PayMethodNotFound = 162,
+
+        UserProfileAlreadyExists = 171,
+        UserProfileNotFound = 172
     }
 }

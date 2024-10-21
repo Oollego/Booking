@@ -61,6 +61,15 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Avatar.
+        /// </summary>
+        internal static string AvatarImg {
+            get {
+                return ResourceManager.GetString("AvatarImg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Facilities.
         /// </summary>
         internal static string FacilitiesImg {

@@ -147,8 +147,8 @@
   <data name="EmailIsNotCorrect" xml:space="preserve">
     <value>Email is not correct</value>
   </data>
-  <data name="FasilityNotFound" xml:space="preserve">
-    <value>Fasility Not Found</value>
+  <data name="FacilityNotFound" xml:space="preserve">
+    <value>Facility Not Found</value>
   </data>
   <data name="HotelAlreadyExists" xml:space="preserve">
     <value>Hotel already exists</value>
@@ -213,6 +213,9 @@
   <data name="RoomsNotFound" xml:space="preserve">
     <value>Rooms not found</value>
   </data>
+  <data name="SomeOfFacilitiesNotFound" xml:space="preserve">
+    <value>Some of facilities not found</value>
+  </data>
   <data name="StorageServerError" xml:space="preserve">
     <value>Storage server error</value>
   </data>
@@ -233,6 +236,12 @@
   </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>User not found</value>
+  </data>
+  <data name="UserProfileAlreadyExists" xml:space="preserve">
+    <value>User profile already exists</value>
+  </data>
+  <data name="UserProfileNotFound" xml:space="preserve">
+    <value>User profile not found</value>
   </data>
   <data name="UserWasntCreated" xml:space="preserve">
     <value>User wasn't created</value>

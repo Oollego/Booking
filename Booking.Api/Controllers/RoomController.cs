@@ -108,7 +108,7 @@ namespace Booking.Api.Controllers
 
             if (user is not null && user.IsAuthenticated)
             {
-                email = user.Claims.First().Value;
+                email = user.Claims.Where(x => x.Type.Contains("emailaddress")).Select(x => x.Value).FirstOrDefault();
             }
             return email;
         }

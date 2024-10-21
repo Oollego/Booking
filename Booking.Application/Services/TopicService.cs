@@ -20,12 +20,12 @@ namespace Booking.Application.Services
 {
     public class TopicService : ITopicService
     {
-        private readonly ILogger _logger = null!;
-        private readonly IMapper _mapper = null!;
-        private readonly IBaseRepository<Topic> _topicRepository = null!;
-        private readonly IS3BucketRepository _bucketRepository = null!;
-        private readonly IFileService _fileService = null!;
-        private readonly IImageToLinkConverter _imageToLinkConverter = null!;
+        private readonly ILogger _logger;
+        private readonly IMapper _mapper;
+        private readonly IBaseRepository<Topic> _topicRepository;
+        private readonly IS3BucketRepository _bucketRepository;
+        private readonly IFileService _fileService;
+        private readonly IImageToLinkConverter _imageToLinkConverter;
 
         public TopicService(ILogger logger, IMapper mapper, IBaseRepository<Topic> topicRepository, 
             IS3BucketRepository bucketRepository, IFileService fileService, IImageToLinkConverter imageToLinkConverter)
@@ -148,7 +148,7 @@ namespace Booking.Application.Services
                 Id = x.Id,
                 TopicTitel = x.TopicTitel,
                 TopicText = x.TopicText,
-                TopicImage = _imageToLinkConverter.ConvertImageToLink(x.TopicImage, ImageBucket.Topic.ToString())
+                TopicImage = _imageToLinkConverter.ConvertImageToLink(x.TopicImage, S3Folders.TopicImg)
             }).ToListAsync();
 
             if (topics == null || topics.Count == 0)
@@ -183,7 +183,7 @@ namespace Booking.Application.Services
                 Id = x.Id,
                 TopicTitel = x.TopicTitel,
                 TopicText = x.TopicText,
-                TopicImage = _imageToLinkConverter.ConvertImageToLink(x.TopicImage, ImageBucket.Topic.ToString())
+                TopicImage = _imageToLinkConverter.ConvertImageToLink(x.TopicImage, S3Folders.TopicImg)
             }).FirstOrDefaultAsync();
 
             if (topic == null)

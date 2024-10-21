@@ -46,6 +46,8 @@ namespace Booking.DAL.DependencyInjection
             services.AddScoped<IBaseRepository<Currency>, BaseRepository<Currency>>();
             services.AddScoped<IBaseRepository<CardType>, BaseRepository<CardType>>();
             services.AddScoped<IBaseRepository<PayMethod>, BaseRepository<PayMethod>>();
+            services.AddScoped<IBaseRepository<UserProfileFacility>,  BaseRepository<UserProfileFacility>>();
+            services.AddScoped<IBaseRepository<Facility>, BaseRepository<Facility>>();
 
 
             services.AddScoped<IRoleUnitOfWork, RoleUnitOfWork>();
