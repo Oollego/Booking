@@ -323,12 +323,15 @@ namespace Booking.Application.Services
                   h.Rooms.Count(r => !r.Books.Any(b => dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)) >= dto.Rooms
                );
 
-            var price = await queryHotels.Select(x => new
-            {
-                MinPrice = x.Rooms.Any() ? x.Rooms.Min(r => (decimal?)r.RoomPrice) : null,
-                MaxPrice = x.Rooms.Any() ? x.Rooms.Max(r => (decimal?)r.RoomPrice) : null
-            }).FirstOrDefaultAsync();
+            //var price = await queryHotels.Select(x => new
+            //{
+            //    MinPrice = x.Rooms.Any() ? x.Rooms.Min(r => (decimal?)r.RoomPrice) : null,
+            //    MaxPrice = x.Rooms.Any() ? x.Rooms.Max(r => (decimal?)r.RoomPrice) : null
+            //}).FirstOrDefaultAsync();
 
+            var minPrice = await queryHotels.Select(h => h.Rooms.Min(r => r.RoomPrice)).MinAsync();
+            var maxPrice = await queryHotels.Select(h => h.Rooms.Max(r => r.RoomPrice)).MaxAsync();
+ 
             var rating = await queryHotels.GroupBy(h => Math.Floor(h.HotelData.Rating))
                 .Select(g => new RatingFilterDto
                 {
@@ -388,12 +391,15 @@ namespace Booking.Application.Services
 
             var filters = new SearchFilterResponseDto();
 
-            if (price != null)
-            {
-                filters.MinPrice = Math.Round(price.MinPrice ?? 0, 2);
-                filters.MaxPrice = Math.Round(price.MaxPrice ?? 0, 2);
-            }
-           
+
+            //    filters.MinPrice = Math.Round(price.MinPrice ?? 0, 2);
+            //    filters.MaxPrice = Math.Round(price.MaxPrice ?? 0, 2);
+
+
+            filters.MinPrice = Math.Round(minPrice, 2);
+            filters.MaxPrice = Math.Round(maxPrice, 2);
+
+
             filters.Ratings = rating;
             filters.Labels = labels;
             filters.NearPlaces = nearPlaces;

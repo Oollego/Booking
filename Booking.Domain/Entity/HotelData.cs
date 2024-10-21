@@ -11,6 +11,7 @@ namespace Booking.Domain.Entity
         public long Id { get; set; }
         public int ReviewCount { get; set; }
         public decimal HotelMinRoomPrice { get; set; }
+        public decimal HotelMaxRoomPrice { get; set; }
         public double Rating { get; set; }
         public long HotelId { get; set; }
         public Hotel? Hotel { get; set; } = null!;

@@ -36,14 +36,27 @@ namespace Booking.DAL.Interceptors
                     .Select(r => (decimal?)r.RoomPrice)
                     .MinAsync(cancellationToken);
 
+                var roomMaxPrice = await context.Set<Room>()
+                    .Where(r => r.HotelId == hotelId)
+                    .Select(r => (decimal?)r.RoomPrice)
+                    .MaxAsync(cancellationToken);
+
                 if (roomMinPrice == null)
                 {
                     roomMinPrice = hotelRooms.Key.Rooms?.First().RoomPrice ?? 0;
                 }
 
+                if (roomMinPrice == null)
+                {
+                    roomMaxPrice = hotelRooms.Key.Rooms?.First().RoomPrice ?? 0;
+                }
+
                 await context.Set<HotelData>()
                     .Where(hd => hd.HotelId == hotelId)
-                    .ExecuteUpdateAsync(hd => hd.SetProperty(x => x.HotelMinRoomPrice, roomMinPrice), cancellationToken);
+                    .ExecuteUpdateAsync(hd => hd
+                        .SetProperty(x => x.HotelMinRoomPrice, roomMinPrice)
+                        .SetProperty(x => x.HotelMaxRoomPrice, roomMaxPrice),
+                    cancellationToken);
             }
 
             return saveResult;
