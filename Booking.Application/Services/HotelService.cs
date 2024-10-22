@@ -81,7 +81,7 @@ namespace Booking.Application.Services
                     HotelAddress = x.HotelAddress,
                     HotelPhone = x.HotelPhone,
                     Stars = x.Stars,
-                    HotelImage = x.HotelImage,
+                    HotelImage = _imageToLinkConverter.ConvertImageToLink(x.HotelImage, S3Folders.HotelsImg),
                     Description = x.Description,
                     ReviewQty = x.Reviews.Count(),
                     CheapestRoom = x.Rooms.Min(x => x.RoomPrice),
@@ -430,61 +430,125 @@ namespace Booking.Application.Services
             {
                 dto.MaxPrice = int.MaxValue;
             }
-
-            var queryHotels = _hotelRepository.GetAllAsSplitQuery().AsNoTracking()
-                .Include(h => h.Rooms)
-                    .ThenInclude(r => r.BedTypes)
-                .Include(h => h.Rooms)
-                    .ThenInclude(r => r.Books)
-                .Include(h => h.City)
+            var queryHotels = _roomRepository.GetAllAsSplitQuery().AsNoTracking()
+                .Include(r => r.BedTypes)
+                .Include(b => b.Books)
+                .Include(r => r.Hotel)
+                    .ThenInclude(h => h.City)
                     .ThenInclude(c => c.Country)
-                .Include(h => h.HotelData)
-                .Include(h => h.HotelLabelTypes)
-                .Include(h => h.NearObjects)
-                    .ThenInclude(ns => ns.NearObjectName)
-                 .Where(h =>
-                    (dto.Place == null || dto.Place == "" || h.City.CityName == dto.Place || h.City.Country.CountryName == dto.Place) &&
-                    h.Rooms.Any(r =>
-                        (r.BedTypes.Sum(bd => bd.Adult) >= dto.Adults && r.BedTypes.Sum(bd => bd.Children) >= dto.Children) ||
-                        r.BedTypes.Sum(bd => bd.Adult) >= (dto.Adults + dto.Children)) &&
-                    h.Rooms.Count(r => !r.Books.Any(b => dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)) >= dto.Rooms)
-                 .Where(h => (dto.Stars == null || dto.Stars.Count == 0 || dto.Stars[0] == 0 || dto.Stars.Contains(h.Stars)))
-                 .Where(h => dto.Facilities == null || dto.Facilities.Count == 0 || dto.Facilities[0] == 0 || h.Facilities.Any(f => dto.Facilities.Contains(f.Id)))
-                 .Where(h => dto.Rating == null || dto.Rating.Count == 0 || dto.Rating[0] == 0 || (h.HotelData != null && dto.Rating.Contains(Math.Floor(h.HotelData.Rating))))
-                 .Where(h => dto.NearPlaces == null || dto.NearPlaces.Count == 0 || dto.NearPlaces[0] == 0 || h.NearObjects.Any(s => dto.NearPlaces.Contains(s.NearObjectNameId)))
-                 .Where(h => dto.HotelTypes == null || dto.HotelTypes.Count == 0 || dto.HotelTypes[0] == 0 || dto.HotelTypes.Any(t => t == h.HotelTypeId))
-                 .Where(h => dto.HotelChains == null || dto.HotelChains.Count == 0 || dto.HotelChains[0] == 0 || dto.HotelChains.Any(c => c == h.HotelChainId))
-                 .Where(h => dto.HotelLabels == null || dto.HotelLabels.Count == 0 || dto.HotelLabels[0] == 0 || h.HotelLabelTypes.Any(f => dto.HotelLabels.All(x => x == h.Id)))
-                 .Where(h => dto.MinPrice == 0 || dto.MaxPrice == 0 || (h.HotelData.HotelMinRoomPrice >= dto.MinPrice && h.HotelData.HotelMinRoomPrice <= dto.MaxPrice))
-                 .Select(x => new HotelDto
-                 {
-                    Id = x.Id,
-                    HotelName = x.HotelName,
-                    HotelAddress = x.HotelAddress,
-                    HotelPhone = x.HotelPhone,
-                    HotelImage = x.HotelImage,
-                    Description = x.Description,
-                    FixedDays = x.FixedDays,
-                    Star = x.Stars,
-                    Rating = x.HotelData.Rating,
-                    ReviewQty = x.HotelData.ReviewCount,
-                    MinRoomPrice = x.HotelData.HotelMinRoomPrice,
-                    HotelLabels = x.HotelLabelTypes.Select(hct => new HotelInfoLabelDto
-                    {
-                        LabelName = hct.LabelName,
-                        LabelIcon = _imageToLinkConverter.ConvertImageToLink(hct.LabelIcon, S3Folders.LabelImg)
-                    }).ToList(),
-                    NearObjects = x.NearObjects.Select(s => new NearObjectDto
-                    {
-                        Id = s.Id,
-                        StationName = s.NearObjectName.Name,
-                        Distance = s.Distance,
-                        DistanceMetric = s.DistanceMetric,
-                        StationIcon = _imageToLinkConverter.ConvertImageToLink(s.NearObjectName.Icon!, S3Folders.LabelImg)
-                    }).ToList(),
-                }).OrderBy(h => h.HotelName);
+                .Include(r => r.Hotel)
+                    .ThenInclude(h => h.HotelData)
+                .Include(r => r.Hotel)
+                    .ThenInclude(h => h.HotelLabelTypes)
+                .Include(r => r.Hotel)
+                    .ThenInclude(h => h.NearObjects)
+                    .ThenInclude(no => no.NearObjectName)
+                .Where(r =>
+                     (dto.Place == null || dto.Place == "" || r.Hotel.City.CityName == dto.Place || r.Hotel.City.Country.CountryName == dto.Place))
+                .Where(r => (r.BedTypes.Sum(bd => bd.Adult) >= dto.Adults && r.BedTypes.Sum(bd => bd.Children) >= dto.Children) ||
+                     r.BedTypes.Sum(bd => bd.Adult) >= (dto.Adults + dto.Children))
+                .Where(r => (r.RoomQuantity - r.Books.Count(b => b.RoomId == r.Id && dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)) >= dto.Rooms)
+                .Where(r => (dto.Stars == null || dto.Stars.Count == 0 || dto.Stars[0] == 0 || dto.Stars.Contains(r.Hotel.Stars)))
+                .Where(r => dto.Facilities == null || dto.Facilities.Count == 0 || dto.Facilities[0] == 0 || r.Hotel.Facilities.Any(f => dto.Facilities.Contains(f.Id)))
+                .Where(r => dto.Rating == null || dto.Rating.Count == 0 || dto.Rating[0] == 0 || (r.Hotel.HotelData != null && dto.Rating.Contains(Math.Floor(r.Hotel.HotelData.Rating))))
+                .Where(r => dto.NearPlaces == null || dto.NearPlaces.Count == 0 || dto.NearPlaces[0] == 0 || r.Hotel.NearObjects.Any(s => dto.NearPlaces.Contains(s.NearObjectNameId)))
+                .Where(r => dto.HotelTypes == null || dto.HotelTypes.Count == 0 || dto.HotelTypes[0] == 0 || dto.HotelTypes.Any(t => t == r.Hotel.HotelTypeId))
+                .Where(r => dto.HotelChains == null || dto.HotelChains.Count == 0 || dto.HotelChains[0] == 0 || dto.HotelChains.Any(c => c == r.Hotel.HotelChainId))
+                .Where(r => dto.MinPrice == 0 || dto.MaxPrice == 0 || (r.Hotel.HotelData.HotelMinRoomPrice >= dto.MinPrice && r.Hotel.HotelData.HotelMinRoomPrice <= dto.MaxPrice))
+                .Where(r => dto.HotelLabels == null || dto.HotelLabels.Count == 0 || dto.HotelLabels[0] == 0 || r.Hotel.HotelLabelTypes.Any(f => dto.HotelLabels.Contains(f.Id)))
+        //.ToListAsync();
+
+        //var hotelsDto = queryHotels.Where(r => dto.HotelLabels == null || dto.HotelLabels.Count == 0 || dto.HotelLabels[0] == 0 || r.Hotel.HotelLabelTypes.Any(f => dto.HotelLabels.Contains(f.Id)))
+        //    var hotelsDto = queryHotels.Where(r => dto.HotelLabels == null || dto.HotelLabels.Count == 0 || dto.HotelLabels[0] == 0 || r.Hotel.HotelLabelTypes.Any(f => dto.HotelLabels.All(x => x == f.Id)))
+        //// var hotelsDto = queryHotels.Where(r => dto.HotelLabels == null || dto.HotelLabels.Count == 0 || dto.HotelLabels[0] == 0 || r.Hotel.HotelLabelTypes.Any(f => dto.HotelLabels.All(x => x == r.HotelId)))
+        .Select(r => new HotelDto
+        {
+            Id = r.HotelId,
+            HotelName = r.Hotel.HotelName,
+            HotelAddress = r.Hotel.HotelAddress,
+            HotelPhone = r.Hotel.HotelPhone,
+            HotelImage = _imageToLinkConverter.ConvertImageToLink(r.Hotel.HotelImage, S3Folders.HotelsImg),
+            Description = r.Hotel.Description,
+            FixedDays = r.Hotel.FixedDays,
+            Star = r.Hotel.Stars,
+            Rating = r.Hotel.HotelData.Rating,
+            ReviewQty = r.Hotel.HotelData.ReviewCount,
+            RoomPrice = r.RoomPrice,
+            RoomQty = r.RoomQuantity,
+            FreeRoomQty = r.RoomQuantity - r.Books.Count(b => b.RoomId == r.Id && dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn),
+            HotelLabels = r.Hotel.HotelLabelTypes.Select(hct => new HotelInfoLabelDto
+            {
+                LabelName = hct.LabelName,
+                LabelIcon = _imageToLinkConverter.ConvertImageToLink(hct.LabelIcon, S3Folders.LabelImg)
+            }).ToList(),
+            NearObjects = r.Hotel.NearObjects.Select(s => new NearObjectDto
+            {
+                Id = s.Id,
+                StationName = s.NearObjectName.Name,
+                Distance = s.Distance,
+                DistanceMetric = s.DistanceMetric,
+                StationIcon = _imageToLinkConverter.ConvertImageToLink(s.NearObjectName.Icon!, S3Folders.LabelImg)
+            }).ToList(),
+        }).OrderByDescending(h => h.Rating)
+                 .ThenBy(h => h.RoomPrice);
 
             var hotels = await queryHotels.Skip((dto.Page - 1) * dto.HotelQty).Take(dto.HotelQty).ToListAsync();
+
+
+            //var queryHotels = _hotelRepository.GetAllAsSplitQuery().AsNoTracking()
+            //    .Include(h => h.Rooms)
+            //        .ThenInclude(r => r.BedTypes)
+            //    .Include(h => h.Rooms)
+            //        .ThenInclude(r => r.Books)
+            //    .Include(h => h.City)
+            //        .ThenInclude(c => c.Country)
+            //    .Include(h => h.HotelData)
+            //    .Include(h => h.HotelLabelTypes)
+            //    .Include(h => h.NearObjects)
+            //        .ThenInclude(ns => ns.NearObjectName)
+            //     .Where(h =>
+            //        (dto.Place == null || dto.Place == "" || h.City.CityName == dto.Place || h.City.Country.CountryName == dto.Place) &&
+            //        h.Rooms.Any(r =>
+            //            (r.BedTypes.Sum(bd => bd.Adult) >= dto.Adults && r.BedTypes.Sum(bd => bd.Children) >= dto.Children) ||
+            //            r.BedTypes.Sum(bd => bd.Adult) >= (dto.Adults + dto.Children)) &&
+            //        h.Rooms.Count(r => !r.Books.Any(b => dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)) >= dto.Rooms)
+            //     .Where(h => (dto.Stars == null || dto.Stars.Count == 0 || dto.Stars[0] == 0 || dto.Stars.Contains(h.Stars)))
+            //     .Where(h => dto.Facilities == null || dto.Facilities.Count == 0 || dto.Facilities[0] == 0 || h.Facilities.Any(f => dto.Facilities.Contains(f.Id)))
+            //     .Where(h => dto.Rating == null || dto.Rating.Count == 0 || dto.Rating[0] == 0 || (h.HotelData != null && dto.Rating.Contains(Math.Floor(h.HotelData.Rating))))
+            //     .Where(h => dto.NearPlaces == null || dto.NearPlaces.Count == 0 || dto.NearPlaces[0] == 0 || h.NearObjects.Any(s => dto.NearPlaces.Contains(s.NearObjectNameId)))
+            //     .Where(h => dto.HotelTypes == null || dto.HotelTypes.Count == 0 || dto.HotelTypes[0] == 0 || dto.HotelTypes.Any(t => t == h.HotelTypeId))
+            //     .Where(h => dto.HotelChains == null || dto.HotelChains.Count == 0 || dto.HotelChains[0] == 0 || dto.HotelChains.Any(c => c == h.HotelChainId))
+            //     .Where(h => dto.HotelLabels == null || dto.HotelLabels.Count == 0 || dto.HotelLabels[0] == 0 || h.HotelLabelTypes.Any(f => dto.HotelLabels.All(x => x == h.Id)))
+            //     .Where(h => dto.MinPrice == 0 || dto.MaxPrice == 0 || (h.HotelData.HotelMinRoomPrice >= dto.MinPrice && h.HotelData.HotelMinRoomPrice <= dto.MaxPrice))
+            //     .Select(x => new HotelDto
+            //     {
+            //        Id = x.Id,
+            //        HotelName = x.HotelName,
+            //        HotelAddress = x.HotelAddress,
+            //        HotelPhone = x.HotelPhone,
+            //        HotelImage = x.HotelImage,
+            //        Description = x.Description,
+            //        FixedDays = x.FixedDays,
+            //        Star = x.Stars,
+            //        Rating = x.HotelData.Rating,
+            //        ReviewQty = x.HotelData.ReviewCount,
+            //        MinRoomPrice = x.HotelData.HotelMinRoomPrice,
+            //        HotelLabels = x.HotelLabelTypes.Select(hct => new HotelInfoLabelDto
+            //        {
+            //            LabelName = hct.LabelName,
+            //            LabelIcon = _imageToLinkConverter.ConvertImageToLink(hct.LabelIcon, S3Folders.LabelImg)
+            //        }).ToList(),
+            //        NearObjects = x.NearObjects.Select(s => new NearObjectDto
+            //        {
+            //            Id = s.Id,
+            //            StationName = s.NearObjectName.Name,
+            //            Distance = s.Distance,
+            //            DistanceMetric = s.DistanceMetric,
+            //            StationIcon = _imageToLinkConverter.ConvertImageToLink(s.NearObjectName.Icon!, S3Folders.LabelImg)
+            //        }).ToList(),
+            //    }).OrderBy(h => h.HotelName);
+
+            //var hotels = await queryHotels.Skip((dto.Page - 1) * dto.HotelQty).Take(dto.HotelQty).ToListAsync();
 
             if (hotels.Count == 0)
             {
@@ -515,7 +579,7 @@ namespace Booking.Application.Services
                 {
                     hotels.ForEach(x =>
                     {
-                        x.MinRoomPrice = Math.Round(x.MinRoomPrice / (decimal)currancy.ExchangeRate);
+                        x.RoomPrice = Math.Round(x.RoomPrice / (decimal)currancy.ExchangeRate);
                         x.CurrencyChar = currancy.CurrencyChar;
                     });
                 }
@@ -524,8 +588,8 @@ namespace Booking.Application.Services
             SearchHotelResponseDto hotelResponse = new SearchHotelResponseDto
             {
                 Matches = queryHotels.Count(),
-                Hotels = hotels,
-                Count = hotels.Count()
+                Count = hotels.Count(),
+                Hotels = hotels
             };
 
 

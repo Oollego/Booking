@@ -27,7 +27,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить все виды валют.
         /// </summary>
         [HttpGet("currencies")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -45,7 +45,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить валюту по коду валюты (код валюты это индекс).
         /// </summary>
         [HttpGet("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -63,7 +63,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Удалить валюту.
         /// </summary>
         [HttpDelete("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -81,7 +81,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Изменить валюту.
         /// </summary>
         [HttpPut()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -99,7 +99,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Добавить валюту.
         /// </summary>
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]

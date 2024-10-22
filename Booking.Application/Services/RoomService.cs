@@ -149,6 +149,7 @@ namespace Booking.Application.Services
                    CancelationPrice = x.Cancellation,
                    Adults = x.BedTypes.Sum(x => x.Adult),
                    Children = x.BedTypes.Sum(x => x.Children),
+                   RoomsQuantity = x.RoomQuantity,
                    Images = x.RoomImages.Select(x => new RoomImageDto
                    {
                        Id = x.Id,
@@ -211,6 +212,97 @@ namespace Booking.Application.Services
             //});
         }
 
+        public async Task<CollectionResult<RoomsDateResponseDto>> GetRoomsForDatesByHotelId(RoomDateDto dto ,string? email)
+        {
+            if (dto.CheckIn.Date < DateTime.UtcNow.Date || dto.CheckIn > dto.CheckOut || dto.HotelId <= 0)
+            {
+                return new CollectionResult<RoomsDateResponseDto>()
+                {
+                    ErrorMessage = ErrorMessage.InvalidParameters,
+                    ErrorCode = (int)ErrorCodes.InvalidParameters
+                };
+            }
+
+            var rooms = await _roomRepository.GetAll()
+                 .Where(x => x.HotelId == dto.HotelId)
+                 .Include(x => x.RoomComfortIconTypes)
+                 .Include(x => x.Books)
+                 .Include(x => x.RoomImages)
+                 .Include(x => x.BedTypes)
+                 .Select(x => new RoomsDateResponseDto
+                 {
+                     Id = x.Id,
+                     RoomName = x.RoomName,
+                     Price = x.RoomPrice,
+                     CancelationPrice = x.Cancellation,
+                     Adults = x.BedTypes.Sum(x => x.Adult),
+                     Children = x.BedTypes.Sum(x => x.Children),
+                     RoomsQuantity = x.RoomQuantity,
+                     FreeRoomsQuantity = x.RoomQuantity - x.Books.Count(b => b.RoomId == x.Id && dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn),
+                     Images = x.RoomImages.Select(x => new RoomImageDto
+                     {
+                         Id = x.Id,
+                         ImageName = _imageToLinkConverter.ConvertImageToLink(x.ImageName, S3Folders.HotelsImg)
+                     }).ToList(),
+                     Beds = x.BedTypes.Select(x => new BedDto
+                     {
+                         Id = x.Id,
+                         BedName = x.BedTypeName,
+                         Adult = x.Adult,
+                         Children = x.Children
+                     }).ToList(),
+                     RoomComforts = x.RoomComfortIconTypes.Select(x => new RoomComfortDto
+                     {
+                         Id = x.Id,
+                         ComfortIcon = _imageToLinkConverter.ConvertImageToLink(x.ComfortIcon, S3Folders.RoomComfortImg),
+                         ComfortName = x.ComfortName
+                     }).ToList()
+                 })
+                 .ToListAsync();
+
+            if (rooms.Count == 0)
+            {
+                _logger.Warning(ErrorMessage.RoomsNotFound, rooms!.Count);
+                return new CollectionResult<RoomsDateResponseDto>()
+                {
+                    ErrorMessage = ErrorMessage.RoomsNotFound,
+                    ErrorCode = (int)ErrorCodes.RoomsNotFound
+                };
+            }
+            if (rooms == null)
+            {
+                _logger.Warning(ErrorMessage.RoomsNotFound);
+                return new CollectionResult<RoomsDateResponseDto>()
+                {
+                    ErrorMessage = ErrorMessage.RoomsNotFound,
+                    ErrorCode = (int)ErrorCodes.RoomsNotFound
+                };
+            }
+
+            rooms.ForEach(r => r.FreeRoomsQuantity = r.FreeRoomsQuantity < 0 ? 0 : r.FreeRoomsQuantity);
+
+            if (email != null)
+            {
+                var currancy = await GetUserCurrencyAsync(email);
+
+                if (currancy != null)
+                {
+                    rooms.ForEach(x =>
+                    {
+                        x.CancelationPrice = Math.Round(x.CancelationPrice / (decimal)currancy.ExchangeRate);
+                        x.Price = Math.Round(x.Price / (decimal)currancy.ExchangeRate);
+                        x.CurrencyChar = currancy.CurrencyChar;
+                    });
+                }
+            }
+
+            return new CollectionResult<RoomsDateResponseDto>()
+            {
+                Data = rooms,
+                Count = rooms.Count
+            };
+        }
+
         /// < inheritdoc />
         public async Task<CollectionResult<RoomDto>> GetRoomsAsync(long hotelId, string? email)
         {
@@ -238,6 +330,7 @@ namespace Booking.Application.Services
                     CancelationPrice = x.Cancellation,
                     Adults = x.BedTypes.Sum(x => x.Adult),
                     Children = x.BedTypes.Sum( x => x.Children ),
+                    RoomsQuantity = x.RoomQuantity,
                     Images = x.RoomImages.Select(x => new RoomImageDto
                     { 
                         Id = x.Id, 

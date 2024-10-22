@@ -24,7 +24,7 @@ namespace Booking.Api.Controllers
             _topicService = topicService;
         }
         /// <summary>
-        /// 
+        /// Добавить тему новостей.
         /// </summary>
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -41,7 +41,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Изменить тему новостей.
         /// </summary>
         [HttpPut()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -58,7 +58,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить тему новостей по Id.
         /// </summary>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -75,7 +75,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить все темы новостей.
         /// </summary>
         [HttpGet("topics")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -92,7 +92,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Удалить тему новостей.
         /// </summary>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

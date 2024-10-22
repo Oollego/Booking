@@ -1,5 +1,6 @@
 ﻿using Booking.Domain.Dto.Hotel;
 using Booking.Domain.Dto.Review;
+using Booking.Domain.Dto.Room;
 using Booking.Domain.Dto.SearchFilter;
 using Booking.Domain.Dto.User;
 using Booking.Domain.Result;

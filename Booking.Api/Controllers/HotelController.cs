@@ -81,6 +81,25 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
+        /// Получить комнаты отеля по HotelId и проверить на свободные комнаты в указаные даты.
+        /// </summary>
+        [HttpPatch("info/rooms")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CollectionResult<RoomsDateResponseDto>>> GetHotelRoomsByDate(RoomDateDto dto)
+        {
+            var email = GetUserEmail();
+
+            var response = await _roomService.GetRoomsForDatesByHotelId(dto, email);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
         /// Получить места, которые рядом с отелем по HotelId.
         /// </summary>
         [HttpGet("info/near_places/{id}")]

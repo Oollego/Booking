@@ -25,7 +25,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить все типы карт.
         /// </summary>
         [HttpGet("card_types")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить тип карты по Id.
         /// </summary>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -61,7 +61,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Создать тип карты.
         /// </summary>
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -79,7 +79,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Удалить тип карты.
         /// </summary>
         [HttpDelete()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -97,7 +97,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Изменить тип карты.
         /// </summary>
         [HttpPut()]
         [ProducesResponseType(StatusCodes.Status200OK)]

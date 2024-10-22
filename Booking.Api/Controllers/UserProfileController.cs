@@ -39,7 +39,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Добавить профиль пользователя. (Аватар добавлять не обязательно, обязательные поля Имя и Фамилия.)
         /// </summary>
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -64,7 +64,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Изменить профиль пользователя. Аватар добавлять не обязательно. Обязательные поля Имя и Фамилия. Если какое-то поле будет null, то в базе будет null (Кроме аватар, если аватар будет null – то в базе будет старый. 
         /// </summary>
         [HttpPut()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -89,7 +89,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить профиль пользователя.
         /// </summary>
         [HttpGet()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -114,7 +114,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Добавить новостную тему для пользователя.
         /// </summary>
         [HttpPost("info/user_topic")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -139,7 +139,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Удалить новостную тему.
         /// </summary>
         [HttpDelete("info/user_topic/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -164,7 +164,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить все новостные темы пользователя.
         /// </summary>
         [HttpGet("info/user_topics")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -189,7 +189,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить новостную тему.
         /// </summary>
         [HttpGet("info/user_topic")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -214,7 +214,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить удобства пользователя.
         /// </summary>
         [HttpGet("info/user_facilities")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -239,7 +239,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить удобство по Id.
         /// </summary>
         [HttpGet("info/user_facility/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -264,7 +264,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Удалить удобства у пользователя.
         /// </summary>
         [HttpDelete("info/user_facility")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -289,7 +289,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Добавить удобства для пользователя.
         /// </summary>
         [HttpPost("info/user_facility")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -314,7 +314,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить все методы оплаты пользователя.
         /// </summary>
         [HttpGet("info/pay_methods")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -339,7 +339,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить метод оплаты пользователя по Id.
         /// </summary>
         [HttpGet("info/pay_method/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -364,7 +364,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Добавить метод оплаты.
         /// </summary>
         [HttpPost("info/pay_method")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -389,7 +389,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Изменить метод оплаты.
         /// </summary>
         [HttpPut("info/pay_method")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -414,7 +414,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Удалить метод оплаты.
         /// </summary>
         [HttpDelete("info/pay_method/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

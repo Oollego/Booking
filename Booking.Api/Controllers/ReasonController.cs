@@ -26,7 +26,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Добавить причину путешествия.
         /// </summary>
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить все причины путешествия.
         /// </summary>
         [HttpGet("reasons")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -60,7 +60,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Получить причину путешествия по Id.
         /// </summary>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -77,7 +77,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Изменить причину путешествия.
         /// </summary>
         [HttpPut()]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -94,7 +94,7 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Удалить причину путешествия.
         /// </summary>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

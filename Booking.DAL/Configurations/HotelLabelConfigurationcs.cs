@@ -19,7 +19,7 @@ namespace Booking.DAL.Configurations
 
             builder.HasData(new List<HotelLabel>
             {
-                new HotelLabel { HotelId = 1, HotelLabelTypeId = 1 }, 
+                 
                 new HotelLabel { HotelId = 1, HotelLabelTypeId = 2 }, 
                 new HotelLabel { HotelId = 1, HotelLabelTypeId = 3 },
                 new HotelLabel { HotelId = 1, HotelLabelTypeId = 4 },
@@ -28,7 +28,6 @@ namespace Booking.DAL.Configurations
                 new HotelLabel { HotelId = 2, HotelLabelTypeId = 3 }, 
                                                  
                 new HotelLabel { HotelId = 3, HotelLabelTypeId = 2 }, 
-                new HotelLabel { HotelId = 3, HotelLabelTypeId = 3 }, 
                 new HotelLabel { HotelId = 3, HotelLabelTypeId = 1 },
                 new HotelLabel { HotelId = 3, HotelLabelTypeId = 4 },
 
@@ -43,7 +42,6 @@ namespace Booking.DAL.Configurations
                 new HotelLabel { HotelId = 6, HotelLabelTypeId = 3 }, 
                                                   
                 new HotelLabel { HotelId = 7, HotelLabelTypeId = 2 }, 
-                new HotelLabel { HotelId = 7, HotelLabelTypeId = 3 }, 
                 new HotelLabel { HotelId = 7, HotelLabelTypeId = 1 },
                 new HotelLabel { HotelId = 7, HotelLabelTypeId = 4 },
 

@@ -17,7 +17,9 @@ namespace Booking.Domain.Dto.Hotel
         public int FixedDays { get; set; }
         public double Rating { get; set; }
         public int ReviewQty { get; set; }
-        public decimal MinRoomPrice { get; set; }
+        public decimal RoomPrice { get; set; }
+        public int RoomQty { get; set; }
+        public int FreeRoomQty { get; set; }
         public string CurrencyChar { get; set; } = DefaultValues.DefaultCurrancyChar;
         public List<HotelInfoLabelDto> HotelLabels { get; set; } = null!;
         public List<NearObjectDto> NearObjects { get; set; } = null!;
