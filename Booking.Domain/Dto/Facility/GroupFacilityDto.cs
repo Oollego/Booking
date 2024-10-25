@@ -11,6 +11,6 @@ namespace Booking.Domain.Dto.Facility
         public long GroupId { get; set; }
         public string GroupName { get; set; } = null!;
         public string GroupIcon { get; set; } = null!;
-        public FacilityDto Facilities { get; set; } = null!;
+        public UserFacilityDto Facility { get; set; } = null!;
     }
 }

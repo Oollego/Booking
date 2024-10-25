@@ -151,6 +151,33 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Facility already exists .
+        /// </summary>
+        public static string FacilityAlreadyExists {
+            get {
+                return ResourceManager.GetString("FacilityAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Facility group already exists.
+        /// </summary>
+        public static string FacilityGroupAlreadyExists {
+            get {
+                return ResourceManager.GetString("FacilityGroupAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Facility group not fsound.
+        /// </summary>
+        public static string FacilityGroupNotFound {
+            get {
+                return ResourceManager.GetString("FacilityGroupNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Facility Not Found.
         /// </summary>
         public static string FacilityNotFound {

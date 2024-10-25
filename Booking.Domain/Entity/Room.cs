@@ -13,6 +13,7 @@ namespace Booking.Domain.Entity
         public string RoomName { get; set; } = null!;
         public decimal RoomPrice { get; set; }
         public int RoomQuantity { get; set; }
+        public int FixedDays { get; set; }
         public decimal Cancellation { get; set; }
         public long HotelId { get; set; }
         public Hotel Hotel { get; set; } = null!;

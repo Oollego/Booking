@@ -147,6 +147,15 @@
   <data name="EmailIsNotCorrect" xml:space="preserve">
     <value>Email is not correct</value>
   </data>
+  <data name="FacilityAlreadyExists" xml:space="preserve">
+    <value>Facility already exists </value>
+  </data>
+  <data name="FacilityGroupAlreadyExists" xml:space="preserve">
+    <value>Facility group already exists</value>
+  </data>
+  <data name="FacilityGroupNotFound" xml:space="preserve">
+    <value>Facility group not fsound</value>
+  </data>
   <data name="FacilityNotFound" xml:space="preserve">
     <value>Facility Not Found</value>
   </data>

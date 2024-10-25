@@ -5,6 +5,7 @@ namespace Booking.Domain.Dto.Room
         long Id,
         string RoomName,
         decimal RoomPrice,
-        decimal Cancellation
+        decimal Cancellation,
+        int FixedDays
     );
 }

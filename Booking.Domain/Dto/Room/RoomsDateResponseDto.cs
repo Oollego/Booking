@@ -16,6 +16,7 @@ namespace Booking.Domain.Dto.Room
         public string RoomName { get; set; } = null!;
         public decimal Price { get; set; }
         public decimal CancelationPrice { get; set; }
+        public int FixedDays { get; set; }
         public string CurrencyChar { get; set; } = DefaultValues.DefaultCurrancyChar;
         public int RoomsQuantity { get; set; }
         public int FreeRoomsQuantity { get; set; }

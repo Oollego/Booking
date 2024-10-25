@@ -80,6 +80,7 @@ namespace Booking.Application.Services
                 RoomName = dto.RoomName,
                 RoomPrice = dto.RoomPrice,
                 Cancellation = dto.CancellationPrice,
+                FixedDays = dto.FixedDays,
                 HotelId = dto.HotelId,
             };
 
@@ -147,6 +148,7 @@ namespace Booking.Application.Services
                    RoomName = x.RoomName,
                    Price = x.RoomPrice,
                    CancelationPrice = x.Cancellation,
+                   FixedDays = x.FixedDays,
                    Adults = x.BedTypes.Sum(x => x.Adult),
                    Children = x.BedTypes.Sum(x => x.Children),
                    RoomsQuantity = x.RoomQuantity,
@@ -235,6 +237,7 @@ namespace Booking.Application.Services
                      RoomName = x.RoomName,
                      Price = x.RoomPrice,
                      CancelationPrice = x.Cancellation,
+                     FixedDays = x.FixedDays,
                      Adults = x.BedTypes.Sum(x => x.Adult),
                      Children = x.BedTypes.Sum(x => x.Children),
                      RoomsQuantity = x.RoomQuantity,
@@ -328,6 +331,7 @@ namespace Booking.Application.Services
                     RoomName = x.RoomName,
                     Price = x.RoomPrice,
                     CancelationPrice = x.Cancellation,
+                    FixedDays = x.FixedDays,
                     Adults = x.BedTypes.Sum(x => x.Adult),
                     Children = x.BedTypes.Sum( x => x.Children ),
                     RoomsQuantity = x.RoomQuantity,
@@ -415,6 +419,7 @@ namespace Booking.Application.Services
             room.RoomName = dto.RoomName;
             room.RoomPrice = dto.RoomPrice;
             room.Cancellation = dto.Cancellation;
+            room.FixedDays = dto.FixedDays;
 
 
             var updatedRoom = _roomRepository.Update(room);

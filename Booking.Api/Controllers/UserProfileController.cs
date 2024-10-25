@@ -270,7 +270,7 @@ namespace Booking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<CollectionResult<FacilityDto>>> DeleteUserFacility([FromForm] IdFacilityDto dto)
+        public async Task<ActionResult<CollectionResult<UserFacilityDto>>> DeleteUserFacility([FromForm] IdFacilityDto dto)
         {
             var email = GetUserEmail();
 
@@ -295,7 +295,7 @@ namespace Booking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<CollectionResult<FacilityDto>>> CreateUserFacility([FromForm] IdFacilityDto dto)
+        public async Task<ActionResult<CollectionResult<UserFacilityDto>>> CreateUserFacility([FromForm] IdFacilityDto dto)
         {
             var email = GetUserEmail();
 

@@ -36,14 +36,14 @@ namespace Booking.Application.Services
             _facilityRepository = facilityRepository;
         }
 
-        public async Task<CollectionResult<FacilityDto>> CreateRangeUserFacilityAsync(IdFacilityDto dto, string? email)
+        public async Task<CollectionResult<UserFacilityDto>> CreateRangeUserFacilityAsync(IdFacilityDto dto, string? email)
         {
             foreach (var id in dto.FacilityId)
             {
                 if (id <= 0)
                 {
                     _logger.Warning(ErrorMessage.InvalidParameters);
-                    return new CollectionResult<FacilityDto>
+                    return new CollectionResult<UserFacilityDto>
                     {
                         ErrorCode = (int)ErrorCodes.InvalidParameters,
                         ErrorMessage = ErrorMessage.InvalidParameters
@@ -59,7 +59,7 @@ namespace Booking.Application.Services
             if(dto.FacilityId.Count != facilities.Count())
             {
                 _logger.Warning(ErrorMessage.SomeOfFacilitiesNotFound);
-                return new CollectionResult<FacilityDto>
+                return new CollectionResult<UserFacilityDto>
                 {
                     ErrorCode = (int)ErrorCodes.SomeOfFacilitiesNotFound,
                     ErrorMessage = ErrorMessage.SomeOfFacilitiesNotFound
@@ -75,7 +75,7 @@ namespace Booking.Application.Services
             if (user == null)
             {
                 _logger.Warning(ErrorMessage.AuthenticationRequired);
-                return new CollectionResult<FacilityDto>
+                return new CollectionResult<UserFacilityDto>
                 {
                     ErrorCode = (int)ErrorCodes.AuthenticationRequired,
                     ErrorMessage = ErrorMessage.AuthenticationRequired
@@ -117,27 +117,27 @@ namespace Booking.Application.Services
 
             var resultFacilities = facilities
                 .Where(f => deletedfacilities.Any(x => x.FacilityId == f.FacilityId))
-                .Select(x => new FacilityDto
+                .Select(x => new UserFacilityDto
                 {
                     Id = x.FacilityId,
                     FacilityName = x.FacilityName
                 }).ToList(); ;
 
-            return new CollectionResult<FacilityDto>()
+            return new CollectionResult<UserFacilityDto>()
             {
                 Count = resultFacilities.Count(),
                 Data = resultFacilities
             };
         }
 
-        public async Task<CollectionResult<FacilityDto>> DeleteRangeUserFacilitAsync(IdFacilityDto dto, string? email)
+        public async Task<CollectionResult<UserFacilityDto>> DeleteRangeUserFacilitAsync(IdFacilityDto dto, string? email)
         {
             foreach(var id in dto.FacilityId)
             {
                 if (id <= 0)
                 {
                     _logger.Warning(ErrorMessage.InvalidParameters);
-                    return new CollectionResult<FacilityDto>
+                    return new CollectionResult<UserFacilityDto>
                     {
                         ErrorCode = (int)ErrorCodes.InvalidParameters,
                         ErrorMessage = ErrorMessage.InvalidParameters
@@ -153,7 +153,7 @@ namespace Booking.Application.Services
             if(dto.FacilityId.Count != facilities.Count())
             {
                 _logger.Warning(ErrorMessage.SomeOfFacilitiesNotFound);
-                return new CollectionResult<FacilityDto>
+                return new CollectionResult<UserFacilityDto>
                 {
                     ErrorCode = (int)ErrorCodes.SomeOfFacilitiesNotFound,
                     ErrorMessage = ErrorMessage.SomeOfFacilitiesNotFound
@@ -171,7 +171,7 @@ namespace Booking.Application.Services
             if (userfacilities == null || userfacilities.Count == 0)
             {
                 _logger.Warning(ErrorMessage.FacilityNotFound);
-                return new CollectionResult<FacilityDto>
+                return new CollectionResult<UserFacilityDto>
                 {
                     ErrorCode = (int)ErrorCodes.FacilityNotFound,
                     ErrorMessage = ErrorMessage.FacilityNotFound
@@ -179,7 +179,7 @@ namespace Booking.Application.Services
             }
 
             var deletedfacilities = _userFacilityRepository.RemoveRange(userfacilities)
-                .Select(x =>  new FacilityDto
+                .Select(x =>  new UserFacilityDto
             {
                     Id = x.FacilityId,
                     FacilityName = x.Facility.FacilityName
@@ -188,7 +188,7 @@ namespace Booking.Application.Services
             await _userFacilityRepository.SaveChangesAsync();
 
 
-            return new CollectionResult<FacilityDto>()
+            return new CollectionResult<UserFacilityDto>()
             {
                 Count = userfacilities.Count(),
                 Data = deletedfacilities
@@ -219,7 +219,7 @@ namespace Booking.Application.Services
                     GroupId = g.Key.Id,
                     GroupName = g.Key.FacilityGroupName,
                     GroupIcon = g.Key.FacilityGroupIcon ?? "",
-                    Facilities = g.Select(uf => new FacilityDto
+                    Facilities = g.Select(uf => new UserFacilityDto
                     {
                         Id = uf.Facility.Id,
                         FacilityName = uf.Facility.FacilityName
@@ -268,11 +268,11 @@ namespace Booking.Application.Services
                     GroupId = g.Key.Id,
                     GroupName = g.Key.FacilityGroupName,
                     GroupIcon = g.Key.FacilityGroupIcon ?? "",
-                    Facilities = g.Select(uf => new FacilityDto
+                    Facility = g.Select(uf => new UserFacilityDto
                     {
                         Id = uf.Facility.Id,
                         FacilityName = uf.Facility.FacilityName
-                    }).FirstOrDefault()?? new FacilityDto()
+                    }).FirstOrDefault()?? new UserFacilityDto()
                 }).FirstOrDefaultAsync();
 
             if ( facility == null)

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Dto.Facility
 {
-    public class FacilityDto
+    public class CreateFacilityDto
     {
-        public long Id { get; set; }
         public string FacilityName { get; set; } = null!;
         public long FacilityGroupId { get; set; }
     }

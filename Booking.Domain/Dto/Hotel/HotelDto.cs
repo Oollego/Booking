@@ -14,7 +14,6 @@ namespace Booking.Domain.Dto.Hotel
         public string HotelImage { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int Star { get; set; } 
-        public int FixedDays { get; set; }
         public double Rating { get; set; }
         public int ReviewQty { get; set; }
         public decimal RoomPrice { get; set; }

@@ -132,7 +132,7 @@ namespace Booking.Application.Services
                 };
             }
 
-            _logger.Warning(ErrorMessage.TopicNotFound);
+            _logger.Warning(ErrorMessage.StorageServerError);
             return new BaseResult<TopicDto>
             {
                 ErrorCode = (int)ErrorCodes.StorageServerError,

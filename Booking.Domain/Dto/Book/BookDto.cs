@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Domain.Entity
+namespace Booking.Domain.Dto.Book
 {
-    public class Book
+    public class BookDto
     {
         public long Id { get; set; }
         public string? BookComment { get; set; } = null!;
@@ -17,13 +17,9 @@ namespace Booking.Domain.Entity
         public int RoomQuantity { get; set; }
         public bool IsPhoneCall { get; set; } = false;
         public bool IsEmail { get; set; } = false;
-        public decimal RoomPrice {  get; set; }
-        public DateTime? DateUntilChange { get; set; }
-        public DateTime BookDate { get; set; } = DateTime.Now;
+        public decimal RoomPrice { get; set; }
+      //public DateTime? DateUntilChange { get; set; }
         public long RoomId { get; set; }
-        public Room Room { get; set; } = null!;
         public long UserId { get; set; }
-        public User User { get; set; } = null!;
-
     }
 }

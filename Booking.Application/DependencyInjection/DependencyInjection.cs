@@ -64,6 +64,8 @@ namespace Booking.Application.DependencyInjection
             services.AddScoped<IPayMethodService, PayMethodService>();
             services.AddScoped<IUserProfileFacilityService, UserProfileFacilityService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<IFacilityGroupService, FacilityGroupService>();
+            services.AddScoped<IBookService, BookService>();
         }
 
         public static void InitMapping(this IServiceCollection services)

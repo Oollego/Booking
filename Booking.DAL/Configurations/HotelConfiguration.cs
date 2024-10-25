@@ -19,7 +19,6 @@ namespace Booking.DAL.Configurations
             builder.Property(x => x.Description).HasMaxLength(3000).HasDefaultValue("");
             builder.Property(x => x.CityGuide).HasMaxLength(1200).HasDefaultValue("");
             builder.Property(x => x.Stars).HasDefaultValue(0);
-            builder.Property(x => x.FixedDays).HasDefaultValue(0);
             builder.Property(x => x.IsPet).HasDefaultValue(false);
             builder.Property(x => x.CityId).IsRequired();
             builder.Property(x => x.HotelChainId).HasDefaultValue(1);
@@ -64,7 +63,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Located on the beautiful Barcelona beachfront.",
                     Description = "Hotel Azure offers comfort with a view of the Mediterranean Sea.",
                     Stars = 4,
-                    FixedDays = 5,
                     HotelTypeId = 1,
                     HotelChainId = 8,
                     IsPet = true,
@@ -80,7 +78,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "A peaceful retreat surrounded by the lush parks of Madrid.",
                     Description = "Greenwood Hotel is a perfect escape to nature in Spain's capital.",
                     Stars = 5,
-                    FixedDays = 3,
                     HotelTypeId = 2,
                     HotelChainId = 3,
                     IsPet = false,
@@ -96,7 +93,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Located in the vibrant heart of Berlin, ideal for business and leisure.",
                     Description = "Urban Central combines luxury with the bustling energy of Berlin.",
                     Stars = 5,
-                    FixedDays = 2,
                     HotelTypeId = 3,
                     HotelChainId = 2,
                     IsPet = false,
@@ -112,7 +108,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Nestled in the Bavarian Alps, perfect for ski enthusiasts.",
                     Description = "Mountain Retreat offers stunning views of the Zugspitze.",
                     Stars = 4,
-                    FixedDays = 4,
                     HotelTypeId = 4,
                     HotelChainId = 4,
                     IsPet = true,
@@ -128,7 +123,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Overlooking the Mediterranean, perfect for a seaside holiday.",
                     Description = "Coastal Escape provides luxury on the famous French Riviera.",
                     Stars = 4,
-                    FixedDays = 7,
                     HotelTypeId = 5,
                     HotelChainId = 7,
                     IsPet = true,
@@ -144,7 +138,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Located in the heart of Kyiv, overlooking Independence Square.",
                     Description = "Hotel Royal combines modern luxury with Ukrainian hospitality.",
                     Stars = 5,
-                    FixedDays = 6,
                     HotelTypeId = 6,
                     HotelChainId = 6,
                     IsPet = true,
@@ -160,7 +153,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Situated along the Dnipro River, offering serene views.",
                     Description = "Riverside Hotel is a tranquil escape in the city of Dnipro.",
                     Stars = 4,
-                    FixedDays = 5,
                     HotelTypeId = 7,
                     HotelChainId = 5,
                     IsPet = false,
@@ -176,7 +168,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "In the center of Kyiv, perfect for business and leisure.",
                     Description = "Central Park Hotel offers luxury and comfort in the capital.",
                     Stars = 5,
-                    FixedDays = 3,
                     HotelTypeId = 8,
                     HotelChainId = 2,
                     IsPet = true,
@@ -192,7 +183,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Located on the beautiful beaches of Alicante.",
                     Description = "Seaside Hotel offers breathtaking views of the Mediterranean.",
                     Stars = 4,
-                    FixedDays = 6,
                     HotelTypeId = 9,
                     HotelChainId = 2,
                     IsPet = false,
@@ -208,7 +198,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "A historic hotel located on the iconic Unter den Linden boulevard.",
                     Description = "The Grand Hotel blends historic charm with modern luxury.",
                     Stars = 5,
-                    FixedDays = 4,
                     HotelTypeId = 2,
                     HotelChainId = 9,
                     IsPet = true,
@@ -224,7 +213,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Situated near the historic Andriyivskyy Descent.",
                     Description = "City Palace offers luxury accommodation in a cultural setting.",
                     Stars = 5,
-                    FixedDays = 2,
                     HotelTypeId = 4,
                     HotelChainId = 3,
                     IsPet = true,
@@ -240,7 +228,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Located on the vibrant Gran Via, perfect for shopping and dining.",
                     Description = "Boutique Hotel Madrid combines style with central convenience.",
                     Stars = 4,
-                    FixedDays = 5,
                     HotelTypeId = 1,
                     IsPet = false,
                     CityId = 196
@@ -255,7 +242,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Overlooking the Alster Lake, offering serene views in Hamburg.",
                     Description = "Lakeview Inn is a peaceful retreat in the heart of Hamburg.",
                     Stars = 4,
-                    FixedDays = 6,
                     HotelTypeId = 2,
                     IsPet = true,
                     CityId = 84
@@ -270,7 +256,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Located in the business district of Madrid.",
                     Description = "Ocean Breeze Hotel offers modern luxury with excellent amenities.",
                     Stars = 4,
-                    FixedDays = 4,
                     HotelTypeId = 7,
                     IsPet = false,
                     CityId = 196
@@ -285,7 +270,6 @@ namespace Booking.DAL.Configurations
                     CityGuide = "Nestled in the Bavarian countryside, ideal for a peaceful retreat.",
                     Description = "Countryside Inn offers a rustic experience with modern comforts.",
                     Stars = 3,
-                    FixedDays = 7,
                     HotelTypeId = 8,
                     IsPet = true,
                     CityId = 86

@@ -14,7 +14,7 @@ namespace Booking.Domain.Interfaces.Services
     {
         Task<CollectionResult<GroupFacilitiesDto>> GetAllUserFacilitiesAsync(string? email);
         Task<BaseResult<GroupFacilityDto>> GetUserFacilityByIdAsync(long facilityId, string? email);
-        Task<CollectionResult<FacilityDto>> CreateRangeUserFacilityAsync(IdFacilityDto dto, string? email);
-        Task<CollectionResult<FacilityDto>> DeleteRangeUserFacilitAsync(IdFacilityDto dto, string? email);
+        Task<CollectionResult<UserFacilityDto>> CreateRangeUserFacilityAsync(IdFacilityDto dto, string? email);
+        Task<CollectionResult<UserFacilityDto>> DeleteRangeUserFacilitAsync(IdFacilityDto dto, string? email);
     }
 }
