@@ -29,7 +29,7 @@ namespace Booking.Application.Services
         public async Task<BaseResult<PayMethodDto>> CreatUserPayMethodAsync(CreatePayMethodDto dto, string? email)
         {
 
-            if (dto.CardDate > DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId < 0)
+            if (dto.CardDate < DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId < 0)
             {
                 _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<PayMethodDto>
@@ -207,7 +207,7 @@ namespace Booking.Application.Services
 
         public async Task<BaseResult<PayMethodDto>> UpdatePayMethodAsync(PayMethodDto dto, string? email)
         {
-            if (dto.CardDate > DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId < 0 || dto.Id < 0)
+            if (dto.CardDate < DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId < 0 || dto.Id < 0)
             {
                 _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<PayMethodDto>
