@@ -29,7 +29,7 @@ namespace Booking.Application.Services
         public async Task<BaseResult<PayMethodDto>> CreatUserPayMethodAsync(CreatePayMethodDto dto, string? email)
         {
 
-            if (dto.CardDate < DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId <= 0)
+            if (dto.CardDate > DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId < 0)
             {
                 _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<PayMethodDto>
@@ -67,12 +67,13 @@ namespace Booking.Application.Services
                     ErrorMessage = ErrorMessage.AuthenticationRequired
                 };
             }
-
+            
             var newPayMethod = new PayMethod()
             {
                 CardNumber = dto.CardNumber,
                 CardDate = dto.CardDate,
                 CardTypeId = dto.CardTypeId,
+                UserProfileId = user.UserProfile.Id
             };
 
             newPayMethod = await _payMethodRepository.CreateAsync(newPayMethod);
@@ -206,7 +207,7 @@ namespace Booking.Application.Services
 
         public async Task<BaseResult<PayMethodDto>> UpdatePayMethodAsync(PayMethodDto dto, string? email)
         {
-            if (dto.CardDate < DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId <= 0 || dto.Id <= 0)
+            if (dto.CardDate > DateTime.UtcNow || dto.CardNumber.Length != 16 || dto.CardTypeId < 0 || dto.Id < 0)
             {
                 _logger.Warning(ErrorMessage.InvalidParameters);
                 return new BaseResult<PayMethodDto>
