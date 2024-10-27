@@ -205,6 +205,7 @@ namespace Booking.Application.Services
                 .Where(ut => ut.TopicId == id)
                 .Select(ut => new TopicDto
                 {
+                    Id = ut.TopicId,
                     TopicTitel = ut.Topic.TopicTitel,
                     TopicText = ut.Topic.TopicText,
                     TopicImage = _imageToLinkConverter.ConvertImageToLink(ut.Topic.TopicImage, S3Folders.TopicImg)
