@@ -5,6 +5,7 @@ using Booking.Domain.Dto.Topic;
 using Booking.Domain.Dto.UserTopicDto;
 using Booking.Domain.Entity;
 using Booking.Domain.Enum;
+using Booking.Domain.Interfaces.Converters;
 using Booking.Domain.Interfaces.Repositories;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Result;
@@ -23,13 +24,15 @@ namespace Booking.Application.Services
         private readonly ILogger _logger;
         private readonly IBaseRepository<UserProfileTopic> _userTopicRepository;
         private readonly IBaseRepository<UserProfile> _userProfileRepository;
+        private readonly IImageToLinkConverter _imageToLinkConverter;
 
         public UserTopicService(ILogger logger, IBaseRepository<UserProfileTopic> userTopicRepository,
-            IBaseRepository<UserProfile> userProfileRepository)
+            IBaseRepository<UserProfile> userProfileRepository, IImageToLinkConverter imageToLinkConverter)
         {
             _logger = logger;
             _userTopicRepository = userTopicRepository;
             _userProfileRepository = userProfileRepository;
+            _imageToLinkConverter = imageToLinkConverter;
         }
 
         public async Task<BaseResult<UserTopicDto>> CreatUserTopicAsync(long topicId, string? email)
@@ -150,16 +153,17 @@ namespace Booking.Application.Services
                 };
             }
 
-            var topics = await _userTopicRepository.GetAll()
+            var topics = await _userTopicRepository.GetAll().AsNoTracking()
                 .Include(ut => ut.Topic)
                 .Include(ut => ut.UserProfile)
                     .ThenInclude(up => up.User)
                 .Where(ut => ut.UserProfile.User.UserEmail == email)
                 .Select(ut => new TopicDto
                 {
+                    Id = ut.TopicId,
                     TopicTitel = ut.Topic.TopicTitel,
                     TopicText = ut.Topic.TopicText,
-                    TopicImage = ut.Topic.TopicImage
+                    TopicImage = _imageToLinkConverter.ConvertImageToLink(ut.Topic.TopicImage, S3Folders.TopicImg)
                 }).ToListAsync();
 
 
@@ -203,7 +207,7 @@ namespace Booking.Application.Services
                 {
                     TopicTitel = ut.Topic.TopicTitel,
                     TopicText = ut.Topic.TopicText,
-                    TopicImage = ut.Topic.TopicImage
+                    TopicImage = _imageToLinkConverter.ConvertImageToLink(ut.Topic.TopicImage, S3Folders.TopicImg)
                 }).FirstOrDefaultAsync();
  
             if ( topic == null)

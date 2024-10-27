@@ -6,6 +6,7 @@ using Booking.Domain.Dto.Topic;
 using Booking.Domain.Dto.UserTopicDto;
 using Booking.Domain.Entity;
 using Booking.Domain.Enum;
+using Booking.Domain.Interfaces.Converters;
 using Booking.Domain.Interfaces.Repositories;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Result;
@@ -26,14 +27,17 @@ namespace Booking.Application.Services
         private readonly IBaseRepository<UserProfileFacility> _userFacilityRepository;
         private readonly IBaseRepository<UserProfile> _userProfileRepository;
         private readonly IBaseRepository<Facility> _facilityRepository;
+        private readonly IImageToLinkConverter _imageToLinkConverter;
 
-
-        public UserProfileFacilityService(ILogger logger, IBaseRepository<UserProfileFacility> userFacilityRepository, IBaseRepository<UserProfile> userProfileRepository, IBaseRepository<Facility> facilityRepository)
+        public UserProfileFacilityService(ILogger logger, IBaseRepository<UserProfileFacility> userFacilityRepository, 
+            IBaseRepository<UserProfile> userProfileRepository, IBaseRepository<Facility> facilityRepository, 
+            IImageToLinkConverter imageToLinkConverter)
         {
             _logger = logger;
             _userFacilityRepository = userFacilityRepository;
             _userProfileRepository = userProfileRepository;
             _facilityRepository = facilityRepository;
+            _imageToLinkConverter = imageToLinkConverter;
         }
 
         public async Task<CollectionResult<UserFacilityDto>> CreateRangeUserFacilityAsync(IdFacilityDto dto, string? email)
@@ -218,7 +222,7 @@ namespace Booking.Application.Services
                 {
                     GroupId = g.Key.Id,
                     GroupName = g.Key.FacilityGroupName,
-                    GroupIcon = g.Key.FacilityGroupIcon ?? "",
+                    GroupIcon = _imageToLinkConverter.ConvertImageToLink(g.Key.FacilityGroupIcon ?? "", S3Folders.FacilitiesImg),
                     Facilities = g.Select(uf => new UserFacilityDto
                     {
                         Id = uf.Facility.Id,
@@ -267,7 +271,7 @@ namespace Booking.Application.Services
                 {
                     GroupId = g.Key.Id,
                     GroupName = g.Key.FacilityGroupName,
-                    GroupIcon = g.Key.FacilityGroupIcon ?? "",
+                    GroupIcon = _imageToLinkConverter.ConvertImageToLink(g.Key.FacilityGroupIcon ?? "", S3Folders.FacilitiesImg),
                     Facility = g.Select(uf => new UserFacilityDto
                     {
                         Id = uf.Facility.Id,

@@ -143,7 +143,7 @@ namespace Booking.Application.Services
         }
         public async Task<CollectionResult<TopicDto>> GetAllTopicsAsync()
         {
-            var topics = await _topicRepository.GetAll().Select(x => new TopicDto
+            var topics = await _topicRepository.GetAll().AsNoTracking().Select(x => new TopicDto
             {
                 Id = x.Id,
                 TopicTitel = x.TopicTitel,

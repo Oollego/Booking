@@ -81,8 +81,7 @@ namespace Booking.Application.DependencyInjection
                     typeof(ReasonMapping),
                     typeof(TopicMapping),
                     typeof(CurrencyMapping),
-                    typeof(PayMethodMapping),
-                    typeof(UserProfileMapping)
+                    typeof(PayMethodMapping)
                 );
         }
 

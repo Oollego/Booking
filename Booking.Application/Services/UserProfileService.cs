@@ -160,6 +160,18 @@ namespace Booking.Application.Services
             var userProfile = await _userProfileRepository.GetAll()
                  .Include(up => up.User)
                  .Where(up => up.User.UserEmail == email)
+                 .Select(up => new UserProfileDto
+                 {
+                     UserName = up.UserName,
+                     UserSurname = up.UserSurname,
+                     Avatar = _imageToLinkConverter.ConvertImageToLink(up.Avatar ?? "", S3Folders.AvatarImg),
+                     UserPhone = up.UserPhone,
+                     DateOfBirth = up.DateOfBirth,
+                     IsUserPet = up.IsUserPet,
+                     CurrencyCodeId = up.CurrencyCodeId ?? "UAH",
+                     TravelReasonId = up.TravelReasonId,
+                     CityId = up.CityId
+                })
                  .FirstOrDefaultAsync();
 
             if (userProfile == null)
@@ -174,7 +186,7 @@ namespace Booking.Application.Services
 
             return new BaseResult<UserProfileDto>
             {
-                Data = _mapper.Map<UserProfileDto>(userProfile)
+                Data = userProfile
             };
         }
 
