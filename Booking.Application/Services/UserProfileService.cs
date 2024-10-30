@@ -190,6 +190,41 @@ namespace Booking.Application.Services
             };
         }
 
+        public async Task<BaseResult> UpdateUserPhoneNumber(string phoneNumber, string? email)
+        {
+            if(phoneNumber == null || phoneNumber.Count() < 0)
+            {
+                _logger.Warning(ErrorMessage.InvalidParameters);
+                return new BaseResult<TopicDto>
+                {
+                    ErrorCode = (int)ErrorCodes.InvalidParameters,
+                    ErrorMessage = ErrorMessage.InvalidParameters
+                };
+            }
+
+            var userProfile = await _userProfileRepository.GetAll()
+                 .Include(up => up.User)
+                 .Where(up => up.User.UserEmail == email)
+                 .FirstOrDefaultAsync();
+
+            if(userProfile == null)
+            {
+                _logger.Warning(ErrorMessage.UserProfileNotFound);
+                return new BaseResult
+                {
+                    ErrorCode = (int)ErrorCodes.UserProfileNotFound,
+                    ErrorMessage = ErrorMessage.UserProfileNotFound
+                };
+            }
+
+            userProfile.UserPhone = phoneNumber;
+
+            userProfile = _userProfileRepository.Update(userProfile);
+            await _userProfileRepository.SaveChangesAsync();
+
+            return new BaseResult();
+        }
+
         public async Task<BaseResult> UpdateUserProfileAsync(FileUserProfileDto dto, string? email)
         {
           //  var validator = _userProfileValidator.FileUserProfileDtoValidator(dto);

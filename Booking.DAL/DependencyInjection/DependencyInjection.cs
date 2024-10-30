@@ -6,6 +6,7 @@ using Booking.DAL.Repositories;
 using Booking.DAL.UnitOfWork;
 using Booking.Domain.Entity;
 using Booking.Domain.Interfaces.Repositories;
+using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Interfaces.UnitsOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -49,6 +50,8 @@ namespace Booking.DAL.DependencyInjection
             services.AddScoped<IBaseRepository<UserProfileFacility>,  BaseRepository<UserProfileFacility>>();
             services.AddScoped<IBaseRepository<Facility>, BaseRepository<Facility>>();
             services.AddScoped<IBaseRepository<FacilityGroup>, BaseRepository<FacilityGroup>>();
+            services.AddScoped<IBaseRepository<Book>, BaseRepository<Book>>();
+            services.AddScoped<IBaseRepository<Faq>, BaseRepository<Faq>>();
 
             services.AddScoped<IRoleUnitOfWork, RoleUnitOfWork>();
             services.AddScoped<IHotelUnitOfWork, HotelUnitOfWork>();

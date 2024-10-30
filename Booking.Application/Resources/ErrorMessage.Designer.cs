@@ -70,6 +70,24 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to BookingAlreadyExists.
+        /// </summary>
+        public static string BookingAlreadyExists {
+            get {
+                return ResourceManager.GetString("BookingAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Booking not found.
+        /// </summary>
+        public static string BookingNotFound {
+            get {
+                return ResourceManager.GetString("BookingNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Card type already exists.
         /// </summary>
         public static string CardTypeAlreadyExists {
@@ -187,6 +205,24 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Faq already exists.
+        /// </summary>
+        public static string FaqAlreadyExists {
+            get {
+                return ResourceManager.GetString("FaqAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Faq not found.
+        /// </summary>
+        public static string FaqNotFound {
+            get {
+                return ResourceManager.GetString("FaqNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hotel already exists.
         /// </summary>
         public static string HotelAlreadyExists {
@@ -241,6 +277,15 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid score parametr.
+        /// </summary>
+        public static string InvalidScoreParametr {
+            get {
+                return ResourceManager.GetString("InvalidScoreParametr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid token.
         /// </summary>
         public static string InvalidToken {
@@ -255,6 +300,15 @@ namespace Booking.Application.Resources {
         public static string NearPlaceNotFound {
             get {
                 return ResourceManager.GetString("NearPlaceNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No available rooms.
+        /// </summary>
+        public static string NoAvailableRooms {
+            get {
+                return ResourceManager.GetString("NoAvailableRooms", resourceCulture);
             }
         }
         
@@ -318,6 +372,15 @@ namespace Booking.Application.Resources {
         public static string RegistrationCodeNotFound {
             get {
                 return ResourceManager.GetString("RegistrationCodeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Review already exists.
+        /// </summary>
+        public static string ReviewAlreadyExists {
+            get {
+                return ResourceManager.GetString("ReviewAlreadyExists", resourceCulture);
             }
         }
         

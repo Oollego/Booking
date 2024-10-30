@@ -10,6 +10,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,10 +23,12 @@ namespace Booking.Application.Services
         private readonly IBaseRepository<Book> _bookRepository;
         private readonly ILogger _logger;
 
-        public BookService(IBaseRepository<User> userRepository, ILogger logger)
+        public BookService(IBaseRepository<User> userRepository, ILogger logger, IBaseRepository<Room> roomRepository, IBaseRepository<Book> bookRepository)
         {
             _userRepository = userRepository;
             _logger = logger;
+            _roomRepository = roomRepository;
+            _bookRepository = bookRepository;
         }
 
         public async Task<BaseResult<long>> AddUserBooking(CreateBookDto dto, string? email)
@@ -35,6 +38,7 @@ namespace Booking.Application.Services
 
             if (user == null)
             {
+                _logger.Warning(ErrorMessage.UserNotFound);
                 return new BaseResult<long>
                 {
                     ErrorMessage = ErrorMessage.UserNotFound,
@@ -42,19 +46,36 @@ namespace Booking.Application.Services
                 };
             }
 
-           // var book = await _bookRepository.GetAll().AsNoTracking()
-
-
             var room = await _roomRepository.GetAll().AsNoTracking()
                 .Where(r => r.Id == dto.RoomId).FirstOrDefaultAsync();
 
             if (room == null)
             {
+                _logger.Warning(ErrorMessage.RoomNotFound);
                 return new BaseResult<long>
                 {
                     ErrorMessage = ErrorMessage.RoomNotFound,
                     ErrorCode = (int)ErrorCodes.RoomNotFound
                 };
+            }
+
+            var boockedRooms = await _bookRepository.GetAll().AsNoTracking()
+               .Where(b => b.RoomId == dto.RoomId)
+               .Where(b => dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)
+               .GroupBy(b => b.RoomQuantity)
+               .CountAsync();
+
+            if((room.RoomQuantity - boockedRooms) < 0)
+            {
+                if (room == null)
+                {
+                    _logger.Warning(ErrorMessage.NoAvailableRooms);
+                    return new BaseResult<long>
+                    {
+                        ErrorMessage = ErrorMessage.NoAvailableRooms,
+                        ErrorCode = (int)ErrorCodes.NoAvailableRooms
+                    };
+                }
             }
 
             var newBook = new Book()
@@ -68,42 +89,104 @@ namespace Booking.Application.Services
                 IsPhoneCall = dto.IsPhoneCall,
                 IsEmail = dto.IsEmail,
                 DateUntilChange = dto.CheckIn.AddDays( -room.FixedDays ),
-                RoomPrice = dto.RoomPrice,
+                RoomPrice = room.RoomPrice,
                 RoomId = dto.RoomId,
-                UserId = user.Id
+                UserId = user.Id,
+                BookDate = DateTime.Now,
             };
 
-            //public long Id { get; set; }
-            //public string? BookComment { get; set; } = null!;
-            //public DateTime CheckIn { get; set; }
-            //public DateTime CheckOut { get; set; }
-            //public int Adult { get; set; }
-            //public int? Children { get; set; }
-            //public int RoomQuantity { get; set; }
-            //public bool IsPhoneCall { get; set; } = false;
-            //public bool IsEmail { get; set; } = false;
-            //public decimal RoomPrice { get; set; }
-            //public DateTime? DateUntilChange { get; set; }
-            //public DateTime BookDate { get; set; } = DateTime.Now;
-            //public long RoomId { get; set; }
-            //public Room Room { get; set; } = null!;
-            //public long UserId { get; set; }
-            //public User User { get; set; } = null!;
+            newBook = await _bookRepository.CreateAsync( newBook );
+            await _bookRepository.SaveChangesAsync();
 
             return new BaseResult<long>
             {
-                Data = 0
+                Data = newBook.Id
             };
         }
 
-        public Task<CollectionResult<BookDto>> GetAllUserBooks(string? email)
+        public async Task<CollectionResult<BookDto>> GetAllUserBooks(string? email)
         {
-            throw new NotImplementedException();
+          
+            var books = await _bookRepository.GetAll()
+                .AsNoTracking()
+                .Include(b => b.User)
+                .Where(b => b.User.UserEmail == email)
+                .Select(b => new BookDto
+                {
+                    Id = b.Id,
+                    BookComment = b.BookComment,
+                    CheckIn = b.CheckIn,
+                    CheckOut = b.CheckOut,
+                    Adult = b.Adult,
+                    Children = b.Children,
+                    RoomQuantity = b.RoomQuantity,
+                    IsPhoneCall = b.IsPhoneCall,
+                    IsEmail = b.IsEmail,
+                    RoomPrice = b.RoomPrice,
+                    DateUntilChange = b.DateUntilChange,
+                    RoomId = b.RoomId,
+                    UserId = b.UserId
+
+                }).ToListAsync();
+
+            if(books == null || books.Count == 0)
+            {
+                _logger.Warning(ErrorMessage.BookingNotFound);
+                return new CollectionResult<BookDto>
+                {
+                    ErrorMessage = ErrorMessage.BookingNotFound,
+                    ErrorCode = (int)ErrorCodes.BookingNotFound
+                };
+            }
+
+            return new CollectionResult<BookDto>
+            {
+                Data = books,
+                Count = books.Count
+            };
+ 
         }
 
-        public Task<BaseResult<BookDto>> GetBookById(long id, string? email)
+        public async Task<BaseResult<BookDto>> GetBookById(long id, string? email)
         {
-            throw new NotImplementedException();
+            var booking = await _bookRepository.GetAll()
+              .AsNoTracking()
+              .Include(b => b.User)
+              .Where(b => b.User.UserEmail == email)
+              .Where(b => b.Id == id)
+              .Select(b => new BookDto
+              {
+                  Id = b.Id,
+                  BookComment = b.BookComment,
+                  CheckIn = b.CheckIn,
+                  CheckOut = b.CheckOut,
+                  Adult = b.Adult,
+                  Children = b.Children,
+                  RoomQuantity = b.RoomQuantity,
+                  IsPhoneCall = b.IsPhoneCall,
+                  IsEmail = b.IsEmail,
+                  RoomPrice = b.RoomPrice,
+                  DateUntilChange = b.DateUntilChange,
+                  RoomId = b.RoomId,
+                  UserId = b.UserId
+
+              }).FirstOrDefaultAsync();
+
+            if (booking == null)
+            {
+                _logger.Warning(ErrorMessage.BookingNotFound);
+                return new BaseResult<BookDto>
+                {
+                    ErrorMessage = ErrorMessage.BookingNotFound,
+                    ErrorCode = (int)ErrorCodes.BookingNotFound
+                };
+            }
+
+            return new BaseResult<BookDto>
+            {
+                Data = booking,
+               
+            };
         }
     }
 }

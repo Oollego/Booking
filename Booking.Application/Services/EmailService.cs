@@ -39,7 +39,17 @@ namespace Booking.Application.Services
             string subject = "Confirm your email";
             string message = "<p>Hello,</p> <p>Just one more step before you get started.</p>" +
                 $"<p>You must confirm your identity using the one-time pass code : <strong style=\"color:blue;\">{confirmCode}</strong></p>" +
-                "<p>Note : This code will expire in 10 minutes.</p><div>Sincerely,</div> <div>BookingCl Team.</div>";
+                "<p>Note : This code will expire in 5 minutes.</p><div>Sincerely,</div> <div>BookingCl Team.</div>";
+
+            await SendEmail(email, subject, message);
+        }
+
+        public async Task SendUpdatedConfirmationEmailAsync(string email, string confirmCode)
+        {
+            string subject = "Confirm your email";
+            string message = "<p>Hello," +
+                $"<p>Please confirm your identity using the one-time pass code : <strong style=\"color:blue;\">{confirmCode}</strong></p>" +
+                "<p>Note : This code will expire in 5 minutes.</p><div>Sincerely,</div> <div>BookingCl Team.</div>";
 
             await SendEmail(email, subject, message);
         }

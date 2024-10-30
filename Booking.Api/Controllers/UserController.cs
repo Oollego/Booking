@@ -1,5 +1,5 @@
-﻿using Booking.Domain.Dto.Hotel;
-using Booking.Domain.Dto.Review;
+﻿using Booking.Domain.Dto.PayMethod;
+using Booking.Domain.Dto.User;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Result;
 using Microsoft.AspNetCore.Http;
@@ -13,60 +13,29 @@ namespace Booking.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class ReviewController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IReviewService _reviewService;
+        private readonly IUserService _userService;
+        private readonly IUserProfileService _userProfileService;
 
         /// <summary>
         /// 
         /// </summary>
-        public ReviewController(IReviewService reviewService)
+        public UserController(IUserService userService, IUserProfileService userProfileService)
         {
-            _reviewService = reviewService;
+            _userService = userService;
+            _userProfileService = userProfileService;
         }
 
+        
         /// <summary>
-        /// Получить последние отзывы.
+        /// Изменение почты пользователя.
         /// </summary>
-        [HttpGet("last_reviews")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult<HotelReviewDto>>> GetLastReviews(int qty)
-        {
-            var response = await _reviewService.GetLastReviewsAsync(qty);
-
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
-        }
-
-        /// <summary>
-        /// Получить отзыв по Id.
-        /// </summary>
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult<ReviewResponseDto>>> GetReview(long id)
-        {
-            var response = await _reviewService.GetReviewByIdAsync(id);
-
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
-        }
-
-        /// <summary>
-        /// Изменить отзыв.
-        /// </summary>
-        [HttpPut()]
+        [HttpPut("update_email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<BaseResult<ReviewDto>>> UpdateReview(ReviewDto dto)
+        public async Task<ActionResult<BaseResult>> UpdateEmail([FromBody] string newEmail)
         {
             var email = GetUserEmail();
 
@@ -75,7 +44,7 @@ namespace Booking.Api.Controllers
                 return Unauthorized();
             }
 
-            var response = await _reviewService.UpdateReviewAsync(dto, email);
+            var response = await _userService.UpdateUserEmailAsync(newEmail, email);
 
             if (response.IsSuccess)
             {
@@ -85,13 +54,13 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// Добавить отзыв.
+        /// Подтверждение кода, который пришел на почту.
         /// </summary>
-        [HttpPost()]
+        [HttpPut("confirm_email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<BaseResult<ReviewDto>>> CreateReview(CreateReviewDto dto)
+        public async Task<ActionResult<BaseResult>> ConfirmEmail(ConfirmRegisterDto dto)
         {
             var email = GetUserEmail();
 
@@ -100,7 +69,7 @@ namespace Booking.Api.Controllers
                 return Unauthorized();
             }
 
-            var response = await _reviewService.CreateReviewAsync(dto, email);
+            var response = await _userService.ConfirmNewEmailAsync(dto, email);
 
             if (response.IsSuccess)
             {
@@ -110,13 +79,13 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// Удалить отзыв.
+        /// Изменение пароля.
         /// </summary>
-        [HttpDelete()]
+        [HttpPut("update_pasword")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<BaseResult<ReviewDto>>> DeleteReview(long id)
+        public async Task<ActionResult<BaseResult>> UpdatePass(PassDto dto)
         {
             var email = GetUserEmail();
 
@@ -125,7 +94,32 @@ namespace Booking.Api.Controllers
                 return Unauthorized();
             }
 
-            var response = await _reviewService.DeleteReviewAsync(id, email);
+            var response = await _userService.ChangeUserPasswordAsync(dto, email);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
+        /// Изменение телефона.
+        /// </summary>
+        [HttpPut("update_phone")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<BaseResult>> UpdatePhone([FromBody] string phone)
+        {
+            var email = GetUserEmail();
+
+            if (email == null)
+            {
+                return Unauthorized();
+            }
+
+            var response = await _userProfileService.UpdateUserPhoneNumber(phone, email);
 
             if (response.IsSuccess)
             {

@@ -70,6 +70,15 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 5.
+        /// </summary>
+        internal static string LifeOfEmailConfirmationCode {
+            get {
+                return ResourceManager.GetString("LifeOfEmailConfirmationCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://localhost.
         /// </summary>
         internal static string ServerDomain {

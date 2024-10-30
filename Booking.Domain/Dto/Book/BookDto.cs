@@ -18,7 +18,7 @@ namespace Booking.Domain.Dto.Book
         public bool IsPhoneCall { get; set; } = false;
         public bool IsEmail { get; set; } = false;
         public decimal RoomPrice { get; set; }
-      //public DateTime? DateUntilChange { get; set; }
+        public DateTime? DateUntilChange { get; set; }
         public long RoomId { get; set; }
         public long UserId { get; set; }
     }

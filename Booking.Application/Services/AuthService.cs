@@ -191,7 +191,7 @@ namespace Booking.Application.Services
                     ErrorCode = (int)ErrorCodes.UserIsNotMatched
                 };
             }
-
+         
             var user = await _unitOfWork.Users.GetAll().FirstOrDefaultAsync(x => x.UserEmail == dto.email);
 
             if (user != null)
@@ -356,7 +356,7 @@ namespace Booking.Application.Services
                 PasswordSalt = salt,
                 PasswordDk = dk
             };
-            _memoryCache.Set(id, userCache, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
+            _memoryCache.Set(id, userCache, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(Convert.ToInt32(AppSource.LifeOfEmailConfirmationCode))));
         }
 
         private bool IsVerifyPassword(string UserPasswordDk, string userSalt, string userPassword)

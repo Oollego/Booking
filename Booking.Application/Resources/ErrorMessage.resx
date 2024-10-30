@@ -120,6 +120,12 @@
   <data name="AuthenticationRequired" xml:space="preserve">
     <value>Authentication required</value>
   </data>
+  <data name="BookingAlreadyExists" xml:space="preserve">
+    <value>BookingAlreadyExists</value>
+  </data>
+  <data name="BookingNotFound" xml:space="preserve">
+    <value>Booking not found</value>
+  </data>
   <data name="CardTypeAlreadyExists" xml:space="preserve">
     <value>Card type already exists</value>
   </data>
@@ -159,6 +165,12 @@
   <data name="FacilityNotFound" xml:space="preserve">
     <value>Facility Not Found</value>
   </data>
+  <data name="FaqAlreadyExists" xml:space="preserve">
+    <value>Faq already exists</value>
+  </data>
+  <data name="FaqNotFound" xml:space="preserve">
+    <value>Faq not found</value>
+  </data>
   <data name="HotelAlreadyExists" xml:space="preserve">
     <value>Hotel already exists</value>
   </data>
@@ -177,11 +189,17 @@
   <data name="InvalidParameters" xml:space="preserve">
     <value>Invalid parameters</value>
   </data>
+  <data name="InvalidScoreParametr" xml:space="preserve">
+    <value>Invalid score parametr</value>
+  </data>
   <data name="InvalidToken" xml:space="preserve">
     <value>Invalid token</value>
   </data>
   <data name="NearPlaceNotFound" xml:space="preserve">
     <value>Near place not found</value>
+  </data>
+  <data name="NoAvailableRooms" xml:space="preserve">
+    <value>No available rooms</value>
   </data>
   <data name="PasswordIsWrong" xml:space="preserve">
     <value>Password is wrong</value>
@@ -203,6 +221,9 @@
   </data>
   <data name="RegistrationCodeNotFound" xml:space="preserve">
     <value>Registration code not found</value>
+  </data>
+  <data name="ReviewAlreadyExists" xml:space="preserve">
+    <value>Review already exists</value>
   </data>
   <data name="ReviewNotFound" xml:space="preserve">
     <value>Review not found</value>

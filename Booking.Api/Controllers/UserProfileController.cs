@@ -442,13 +442,13 @@ namespace Booking.Api.Controllers
         private string? GetUserEmail()
         {
             var user = HttpContext.User.Identity as ClaimsIdentity;
-            string? email = null;
-            
-            if (user is not null && user.IsAuthenticated)
+
+            if (user != null && user.IsAuthenticated)
             {
-                email = user.Claims.Where(x => x.Type.Contains("emailaddress")).Select(x => x.Value).FirstOrDefault();
+                return user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             }
-            return email;
+
+            return null;
         }
     }
 }

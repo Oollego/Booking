@@ -37,6 +37,10 @@ namespace Booking.DAL.Configurations
                 .WithOne(x => x.Hotel)
                 .HasForeignKey(x => x.HotelId)
                 .HasPrincipalKey(x => x.Id);
+            builder.HasMany<Faq>(x => x.Faqs)
+               .WithOne(x => x.Hotel)
+               .HasForeignKey(x => x.HotelId)
+               .HasPrincipalKey(x => x.Id);
             //builder.HasMany<Facility>(x => x.Facilities)
             //    .WithMany(x => x.Hotels)
             //    .UsingEntity("HotelFacilities");

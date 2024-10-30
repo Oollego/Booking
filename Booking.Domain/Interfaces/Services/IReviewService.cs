@@ -13,5 +13,10 @@ namespace Booking.Domain.Interfaces.Services
     {
         Task<CollectionResult<HotelReviewDto>> GetHotelReviewsAsync(long hotelId, int qty);
         Task<CollectionResult<HotelReviewDto>> GetLastReviewsAsync(int qty);
+        Task<BaseResult<ReviewDto>> CreateReviewAsync(CreateReviewDto dto, string? email);
+        Task<BaseResult<ReviewDto>> UpdateReviewAsync(ReviewDto dto, string? email);
+        Task<BaseResult> DeleteReviewAsync(long id, string? email);
+        Task<BaseResult<ReviewResponseDto>> GetReviewByIdAsync(long reviewId);
+
     }
 }

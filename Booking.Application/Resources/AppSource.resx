@@ -120,6 +120,9 @@
   <data name="ImgBucket" xml:space="preserve">
     <value>booking-img</value>
   </data>
+  <data name="LifeOfEmailConfirmationCode" xml:space="preserve">
+    <value>5</value>
+  </data>
   <data name="ServerDomain" xml:space="preserve">
     <value>http://localhost</value>
   </data>

@@ -32,6 +32,8 @@ namespace Booking.Domain.Enum
         HotelAlreadyExists = 42,
 
         ReviewNotFound = 51,
+        ReviewAlreadyExists = 52,
+        InvalidScoreParametr = 53,
 
         FacilityNotFound = 61,
         FacilityAlreadyExists = 62,
@@ -70,6 +72,13 @@ namespace Booking.Domain.Enum
         UserProfileNotFound = 172,
 
         FacilityGroupAlreadyExists = 181,
-        FacilityGroupNotFound = 182
+        FacilityGroupNotFound = 182,
+
+        BookingAlreadyExists = 191,
+        BookingNotFound = 192,
+        NoAvailableRooms = 193,
+
+        FaqAlreadyExists = 201,
+        FaqNotFound = 202
     }
 }

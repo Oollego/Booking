@@ -14,6 +14,7 @@ namespace Booking.Domain.Interfaces.Services
         Task<BaseResult<UserProfileDto>> GetUserProfileAsync(string? email);
         Task<BaseResult> UpdateUserProfileAsync(FileUserProfileDto dto, string? email);
         Task<BaseResult> CreateUserProfileAsync(FileUserProfileDto dto, string? email);
+        Task<BaseResult> UpdateUserPhoneNumber(string phoneNumber, string? email);
       //Task<BaseResult> DeleteUserProfileAsync(long id, string? email);
     }
 }

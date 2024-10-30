@@ -33,15 +33,15 @@ namespace Booking.Application.Services
 {
     public class HotelService : IHotelService
     {
-        private readonly IBaseRepository<Hotel> _hotelRepository = null!;
-        private readonly IBaseRepository<User> _userRepository = null!;
-        private readonly IBaseRepository<Room> _roomRepository = null!;
-        private readonly IMapper _mapper = null!;
-        private readonly IHotelUnitOfWork _hotelUnitOfWork = null!;
-        private readonly IHotelCreateUpdateValidator _hotelCreateUpdateValidator = null!;
-        private readonly IImageToLinkConverter _imageToLinkConverter = null!;
+        private readonly IBaseRepository<Hotel> _hotelRepository; 
+        private readonly IBaseRepository<User> _userRepository;
+        private readonly IBaseRepository<Room> _roomRepository;
+        private readonly IMapper _mapper;
+        private readonly IHotelUnitOfWork _hotelUnitOfWork;
+        private readonly IHotelCreateUpdateValidator _hotelCreateUpdateValidator;
+        private readonly IImageToLinkConverter _imageToLinkConverter;
 
-        private readonly ILogger _logger = null!;
+        private readonly ILogger _logger;
 
         public HotelService(IBaseRepository<Hotel> hotelRepository, IBaseRepository<User> userRepository,
             IBaseRepository<Room> roomRepository, IMapper mapper, IHotelUnitOfWork hotelUnitOfWork, ILogger logger,
