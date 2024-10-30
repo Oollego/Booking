@@ -163,7 +163,7 @@ namespace Booking.Application.Services
                 };
             }
 
-            await _emailService.SendConfirmationEmailAsync(newEmail, confirmCode);
+            await _emailService.SendUpdatedConfirmationEmailAsync(newEmail, confirmCode);
 
             return new BaseResult();
         }

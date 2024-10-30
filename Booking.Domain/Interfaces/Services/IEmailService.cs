@@ -10,5 +10,6 @@ namespace Booking.Domain.Interfaces.Services
     {
         Task SendBookEmailAsync(string email);
         Task SendConfirmationEmailAsync(string email, string confirmCode);
+        Task SendUpdatedConfirmationEmailAsync(string email, string confirmCode);
     }
 }
