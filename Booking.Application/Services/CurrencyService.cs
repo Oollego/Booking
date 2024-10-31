@@ -137,6 +137,7 @@ namespace Booking.Application.Services
 
             return new CollectionResult<CurrencyDto>()
             {
+                Count = currencies.Count,
                 Data = currencies
             };
         }

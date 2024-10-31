@@ -167,16 +167,6 @@ namespace Booking.Application.Services
                 }).ToListAsync();
 
 
-            if (topics.Count == 0 || topics == null)
-            {
-                _logger.Warning(ErrorMessage.TopicNotFound);
-                return new CollectionResult<TopicDto>()
-                {
-                    ErrorMessage = ErrorMessage.TopicNotFound,
-                    ErrorCode = (int)ErrorCodes.TopicNotFound
-                };
-            }
-
             return new CollectionResult<TopicDto>()
             {
                 Data = topics,

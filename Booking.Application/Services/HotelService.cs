@@ -416,7 +416,7 @@ namespace Booking.Application.Services
 
             //   //h.Rooms.Count(r => !r.Books.Any(b => dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)) >= dto.Rooms
             //   );
-            var queryHotels = _hotelRepository.GetAllAsSplitQuery().AsNoTracking()
+            var queryHotels = await _hotelRepository.GetAllAsSplitQuery().AsNoTracking()
                .Include(h => h.Rooms)
                    .ThenInclude(r => r.BedTypes)
                .Include(h => h.Rooms)
@@ -425,6 +425,9 @@ namespace Booking.Application.Services
                    .ThenInclude(c => c.Country)
                .Include(h => h.HotelData)
                .Include(h => h.HotelLabelTypes)
+               .Include(h => h.Facilities)
+               .Include(h => h.HotelChain)
+               .Include(h => h.HotelType)
                .Include(h => h.NearObjects)
                    .ThenInclude(ns => ns.NearObjectName)
                 .Where(h =>
@@ -432,68 +435,85 @@ namespace Booking.Application.Services
                  .Where(h => h.Rooms.Any(r => (r.BedTypes.Sum(bd => bd.Adult) * dto.Rooms) >= dto.Adults && (r.BedTypes.Sum(bd => bd.Children) * dto.Rooms) >= dto.Children ||
                                (r.BedTypes.Sum(bd => bd.Adult) * dto.Rooms) >= (dto.Adults + dto.Children)))
                 .Where(h => h.Rooms.Any(r => r.RoomQuantity - r.Books.Count(b => b.RoomId == r.Id && dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn) >= dto.Rooms))
-                .Where(h => h.Rooms.Count(r => !r.Books.Any(b => dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)) >= dto.Rooms);
+                .Where(h => h.Rooms.Count(r => !r.Books.Any(b => dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)) >= dto.Rooms)
+                .ToListAsync();
 
+            if(queryHotels.Count == 0)
+            {
+                return new BaseResult<SearchFilterResponseDto>()
+                {
+                    Data = new SearchFilterResponseDto
+                    {
+                        //Ratings = new List<RatingFilterDto>(),
+                        //Labels = new List<LabelFilterDto>(),
+                        //Stars = new List<StarFilterDto>(),
+                        //NearPlaces = new List<NearPlaceFilterDto>(),
+                        //Facilities = new List<FacilityFilterDto>(),
+                        //HotelTypes = new List<HotelTypeFilterDto>(),
+                        //HotelChains = new List<HotelChainFilterDto>()
+                    }
+                };
+            }
 
-            var minPrice = await queryHotels.Select(h => h.HotelData.HotelMinRoomPrice).MinAsync();
-            var maxPrice = await queryHotels.Select(h => h.HotelData.HotelMinRoomPrice).MaxAsync();
+            var minPrice = queryHotels.Select(h => h.HotelData.HotelMinRoomPrice).Min();
+            var maxPrice = queryHotels.Select(h => h.HotelData.HotelMinRoomPrice).Max();
 
-            var rating = await queryHotels.GroupBy(h => Math.Floor(h.HotelData.Rating))
+            var rating = queryHotels.GroupBy(h => Math.Floor(h.HotelData.Rating))
                 .Select(g => new RatingFilterDto
                 {
                     Rating = g.Key,
                     Matches = g.Count()
-                }).OrderByDescending(x => x.Rating).ToListAsync();
+                }).OrderByDescending(x => x.Rating).ToList();
 
-            var labels = await queryHotels.SelectMany(h => h.HotelLabelTypes)
+            var labels = queryHotels.SelectMany(h => h.HotelLabelTypes)
                 .GroupBy(l => l)
                 .Select(g => new LabelFilterDto
                 {
                     Id = g.Key.Id,
                     LabelName = g.Key.LabelName,
                     Matches = g.Count()
-                }).OrderBy(x => x.LabelName).ToListAsync();
+                }).OrderBy(x => x.LabelName).ToList();
 
-            var stars = await queryHotels.GroupBy(h => h.Stars)
+            var stars = queryHotels.GroupBy(h => h.Stars)
                 .Select(g => new StarFilterDto
                 {
                     Star = g.Key,
                     Matches = g.Count()
-                }).OrderByDescending(x => x.Star).ToListAsync();
+                }).OrderByDescending(x => x.Star).ToList();
 
-            var nearPlaces = await queryHotels.SelectMany(h => h.NearObjects)
+            var nearPlaces = queryHotels.SelectMany(h => h.NearObjects)
                 .GroupBy(ns => ns.NearObjectName)
                 .Select(g => new NearPlaceFilterDto
                 {
                     Id = g.Key.Id,
                     PlaceName = g.Key.Name,
                     Matches = g.Count()
-                }).OrderBy(x => x.PlaceName).ToListAsync();
+                }).OrderBy(x => x.PlaceName).ToList();
 
-            var facilities = await queryHotels.SelectMany(h => h.Facilities)
+            var facilities = queryHotels.SelectMany(h => h.Facilities)
                 .GroupBy(f => f)
                 .Select(g => new FacilityFilterDto
                 {
                     Id = g.Key.Id,
                     FacilityName = g.Key.FacilityName,
                     Matches = g.Count()
-                }).OrderBy(x => x.FacilityName).ToListAsync();
+                }).OrderBy(x => x.FacilityName).ToList();
 
-            var hotelTypes = await queryHotels.GroupBy(h => h.HotelType)
+            var hotelTypes = queryHotels.GroupBy(h => h.HotelType)
                 .Select(g => new HotelTypeFilterDto
                 {
                     Id = g.Key.Id,
                     TypeName = g.Key.HotelTypeName,
                     Matches = g.Count()
-                }).OrderBy(x => x.TypeName).ToListAsync();
+                }).OrderBy(x => x.TypeName).ToList();
 
-            var chains = await queryHotels.GroupBy(f => f.HotelChain)
+            var chains = queryHotels.GroupBy(f => f.HotelChain)
                 .Select(g => new HotelChainFilterDto
                 {
                     Id = g.Key.Id,
                     ChainName = g.Key.HotelChainName,
                     Matches = g.Count()
-                }).OrderBy(x => x.ChainName).ToListAsync();
+                }).OrderBy(x => x.ChainName).ToList();
 
             var filters = new SearchFilterResponseDto();
 
@@ -655,28 +675,28 @@ namespace Booking.Application.Services
 
             var hotels = await queryHotels.Skip((dto.Page - 1) * dto.HotelQty).Take(dto.HotelQty).ToListAsync();
 
-            if (hotels.Count == 0)
-            {
-                _logger.Warning(ErrorMessage.HotelNotFound, hotels.Count);
-                return new BaseResult<SearchHotelResponseDto>()
-                {
-                    ErrorMessage = ErrorMessage.HotelNotFound,
-                    ErrorCode = (int)ErrorCodes.HotelNotFound
-                };
-            }
+            //if (hotels.Count == 0)
+            //{
+            //    _logger.Warning(ErrorMessage.HotelNotFound, hotels.Count);
+            //    return new BaseResult<SearchHotelResponseDto>()
+            //    {
+            //        ErrorMessage = ErrorMessage.HotelNotFound,
+            //        ErrorCode = (int)ErrorCodes.HotelNotFound
+            //    };
+            //}
 
-            if (hotels == null)
-            {
-                _logger.Warning(ErrorMessage.HotelNotFound);
-                return new BaseResult<SearchHotelResponseDto>()
-                {
-                    ErrorMessage = ErrorMessage.HotelNotFound,
-                    ErrorCode = (int)ErrorCodes.HotelNotFound
-                };
-            }
+            //if (hotels == null)
+            //{
+            //    _logger.Warning(ErrorMessage.HotelNotFound);
+            //    return new BaseResult<SearchHotelResponseDto>()
+            //    {
+            //        ErrorMessage = ErrorMessage.HotelNotFound,
+            //        ErrorCode = (int)ErrorCodes.HotelNotFound
+            //    };
+            //}
 
 
-            if (email != null)
+            if (email != null && hotels.Count > 0)
             {
                 var currancy = await GetUserCurrencyAsync(email);
 

@@ -126,16 +126,7 @@ namespace Booking.Application.Services
                 })
                 .ToListAsync();
 
-            if (faqs.Count == 0)
-            {
-                _logger.Warning(ErrorMessage.FaqNotFound);
-                return new CollectionResult<FaqDto>()
-                {
-                    ErrorMessage = ErrorMessage.FaqNotFound,
-                    ErrorCode = (int)ErrorCodes.FaqNotFound
-                };
-            }
-
+        
             return new CollectionResult<FaqDto>()
             {
                 Data = faqs

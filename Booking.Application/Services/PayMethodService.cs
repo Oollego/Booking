@@ -144,17 +144,7 @@ namespace Booking.Application.Services
                     CardTypeId = pm.CardTypeId,
                 })
                 .ToListAsync();
-
-            if (payMethods == null)
-            {
-                _logger.Warning(ErrorMessage.PayMethodNotFound);
-                return new CollectionResult<PayMethodDto>
-                {
-                    ErrorCode = (int)ErrorCodes.PayMethodNotFound,
-                    ErrorMessage = ErrorMessage.PayMethodNotFound
-                };
-            }
-
+ 
             return new CollectionResult<PayMethodDto>()
             {
                 Count = payMethods.Count,

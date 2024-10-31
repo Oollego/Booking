@@ -133,7 +133,7 @@ namespace Booking.Application.Services
                 })
                 .ToListAsync();
 
-            if (cities == null || cities.Count == 0)
+            if (cities == null)
             {
                 return new CollectionResult<CityDto>
                 {

@@ -117,7 +117,7 @@ namespace Booking.Application.Services
                     })
                 .ToListAsync();
 
-            if (cardTypes == null || cardTypes.Count == 0 )
+            if (cardTypes == null )
             {
                 _logger.Warning(ErrorMessage.CardTypeNotFound);
                 return new CollectionResult<CardTypeDto>()
@@ -129,6 +129,7 @@ namespace Booking.Application.Services
 
             return new CollectionResult<CardTypeDto>
             {
+                Count = cardTypes.Count,
                 Data = cardTypes
             };
         }

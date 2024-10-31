@@ -157,7 +157,7 @@ namespace Booking.Application.Services
                 FacilityGroupIcon = _imageToLinkConverter.ConvertImageToLink(x.FacilityGroupIcon, S3Folders.FacilitiesImg)
             }).ToListAsync();
 
-            if (groups == null || groups.Count == 0)
+            if (groups == null)
             {
                 _logger.Warning(ErrorMessage.FacilityGroupNotFound);
                 return new CollectionResult<FacilityGroupDto>
@@ -169,6 +169,7 @@ namespace Booking.Application.Services
 
             return new CollectionResult<FacilityGroupDto>
             {
+                Count = groups.Count,
                 Data = groups
             };
         }

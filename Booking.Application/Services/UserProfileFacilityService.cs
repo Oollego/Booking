@@ -230,16 +230,7 @@ namespace Booking.Application.Services
                     }).ToList()
                 }).ToListAsync();
 
-            if (facilities.Count == 0 || facilities == null)
-            {
-                _logger.Warning(ErrorMessage.FacilityNotFound);
-                return new CollectionResult<GroupFacilitiesDto>()
-                {
-                    ErrorMessage = ErrorMessage.FacilityNotFound,
-                    ErrorCode = (int)ErrorCodes.FacilityNotFound
-                };
-            }
-
+           
             return new CollectionResult<GroupFacilitiesDto>()
             {
                 Data = facilities,

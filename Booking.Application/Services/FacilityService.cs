@@ -147,30 +147,13 @@ namespace Booking.Application.Services
                     }).ToList()
                 }).ToListAsync();
 
-            if (facilities == null || facilities.Count == 0)
-            {
-                return new CollectionResult<GroupFacilitiesDto>
-                {
-                    ErrorCode = (int)ErrorCodes.FacilityNotFound,
-                    ErrorMessage = ErrorMessage.FacilityNotFound
-                };
-            }
+           
 
             return new CollectionResult<GroupFacilitiesDto>
             {
                 Count = facilities.Count,
                 Data = facilities
             };
-
-            //.Select(f =>
-            //    f..GroupBy(f => new { f.FacilityGroup.FacilityGroupName, f.FacilityGroup.FacilityGroupIcon })
-            //    .Select(g => new FacilityInfoDto
-            //    {
-            //        GroupName = g.Key.FacilityGroupName,
-            //        GroupIcon = _imageToLinkConverter.ConvertImageToLink(g.Key.FacilityGroupIcon ?? "", S3Folders.FacilitiesImg),
-            //        Facilities = g.Select(f => f.FacilityName).OrderBy(f => f).ToList()
-            //    }).OrderBy(g => g.GroupName).ToList()
-            //).FirstOrDefaultAsync();
 
         }
 
@@ -287,15 +270,15 @@ namespace Booking.Application.Services
                 };
             }
 
-            if (fasilities.Count() == 0)
-            {
-                _logger.Warning(ErrorMessage.FacilityNotFound, fasilities.Count());
-                return new CollectionResult<FacilityInfoDto>()
-                {
-                    ErrorMessage = ErrorMessage.FacilityNotFound,
-                    ErrorCode = (int)ErrorCodes.FacilityNotFound
-                };
-            }
+            //if (fasilities.Count() == 0)
+            //{
+            //    _logger.Warning(ErrorMessage.FacilityNotFound, fasilities.Count());
+            //    return new CollectionResult<FacilityInfoDto>()
+            //    {
+            //        ErrorMessage = ErrorMessage.FacilityNotFound,
+            //        ErrorCode = (int)ErrorCodes.FacilityNotFound
+            //    };
+            //}
 
             return new CollectionResult<FacilityInfoDto>()
             {

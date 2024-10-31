@@ -109,7 +109,7 @@ namespace Booking.Application.Services
                 Reason = r.Reason,
             }).ToListAsync();
 
-            if (reasons == null || reasons.Count == 0)
+            if (reasons == null)
             {
                 _logger.Warning(ErrorMessage.ReasonNotFound);
                 return new CollectionResult<ReasonDto>

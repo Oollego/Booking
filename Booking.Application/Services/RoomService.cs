@@ -263,15 +263,7 @@ namespace Booking.Application.Services
                  })
                  .ToListAsync();
 
-            if (rooms.Count == 0)
-            {
-                _logger.Warning(ErrorMessage.RoomsNotFound, rooms!.Count);
-                return new CollectionResult<RoomsDateResponseDto>()
-                {
-                    ErrorMessage = ErrorMessage.RoomsNotFound,
-                    ErrorCode = (int)ErrorCodes.RoomsNotFound
-                };
-            }
+           
             if (rooms == null)
             {
                 _logger.Warning(ErrorMessage.RoomsNotFound);

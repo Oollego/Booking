@@ -129,16 +129,6 @@ namespace Booking.Application.Services
 
                 }).ToListAsync();
 
-            if(books == null || books.Count == 0)
-            {
-                _logger.Warning(ErrorMessage.BookingNotFound);
-                return new CollectionResult<BookDto>
-                {
-                    ErrorMessage = ErrorMessage.BookingNotFound,
-                    ErrorCode = (int)ErrorCodes.BookingNotFound
-                };
-            }
-
             return new CollectionResult<BookDto>
             {
                 Data = books,
@@ -185,7 +175,6 @@ namespace Booking.Application.Services
             return new BaseResult<BookDto>
             {
                 Data = booking,
-               
             };
         }
     }

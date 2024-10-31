@@ -151,7 +151,7 @@ namespace Booking.Application.Services
                 TopicImage = _imageToLinkConverter.ConvertImageToLink(x.TopicImage, S3Folders.TopicImg)
             }).ToListAsync();
 
-            if (topics == null || topics.Count == 0)
+            if (topics == null)
             {
                 _logger.Warning(ErrorMessage.TopicNotFound);
                 return new CollectionResult<TopicDto>
@@ -163,6 +163,7 @@ namespace Booking.Application.Services
 
             return new CollectionResult<TopicDto>
             {
+                Count = topics.Count,
                 Data = topics
             };
         }
