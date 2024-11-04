@@ -18,6 +18,6 @@ namespace Booking.Domain.Dto.Book
         public bool IsEmail { get; set; } = false;
         //public DateTime? DateUntilChange { get; set; }
         public long RoomId { get; set; }
-
+        public string BookingEmail { get; set; } = null!;
     }
 }

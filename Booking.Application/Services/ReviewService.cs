@@ -68,6 +68,8 @@ namespace Booking.Application.Services
                     Comment = x.ReviewComment,
                     Avatar = _imageToLinkConverter.ConvertImageToLink(x.User.UserProfile.Avatar!, S3Folders.AvatarImg),
                     Date = x.ReviewDate.Date.ToString(),
+                    HotelId = x.HotelId,
+                    HotelName = x.Hotel.HotelName,
                     FacilityScore = x.FacilityScore,
                     StaffScore = x.StaffScore,
                     CleanlinessScore = x.CleanlinessScore,
@@ -131,6 +133,8 @@ namespace Booking.Application.Services
                     Comment = x.ReviewComment,
                     Avatar = _imageToLinkConverter.ConvertImageToLink(x.User.UserProfile.Avatar!, S3Folders.AvatarImg),
                     Date = x.ReviewDate.Date.ToString(),
+                    HotelId = x.HotelId,
+                    HotelName = x.Hotel.HotelName,
                     FacilityScore = x.FacilityScore,
                     StaffScore = x.StaffScore,
                     CleanlinessScore = x.CleanlinessScore,
@@ -358,6 +362,51 @@ namespace Booking.Application.Services
 
             return new BaseResult();
         }
+        public async Task<CollectionResult<ReviewResponseDto>> GetUsersReviewsAsync(string? email)
+        {
+            var reviews = await _reviewRepository.GetAll().AsNoTracking()
+                .Include(r => r.User)
+                    .ThenInclude(u => u.UserProfile)
+                    .ThenInclude(p => p.City)
+                    .ThenInclude(c => c!.Country)
+                .Where(r => r.User.UserEmail == email)
+                .Select(r => new ReviewResponseDto
+                {
+                    Id = r.Id,
+                    UserName = r.User.UserProfile.UserName,
+                    UserSurname = r.User.UserProfile.UserSurname ?? "",
+                    ReviewComment = r.ReviewComment,
+                    Avatar = _imageToLinkConverter.ConvertImageToLink(r.User.UserProfile.Avatar!, S3Folders.AvatarImg),
+                    ReviewDate = r.ReviewDate.Date.ToString(),
+                    HotelId = r.HotelId,
+                    HotelName = r.Hotel.HotelName,
+                    FacilityScore = r.FacilityScore,
+                    StaffScore = r.StaffScore,
+                    CleanlinessScore = r.CleanlinessScore,
+                    ComfortScore = r.ComfortScore,
+                    LocationScore = r.LocationScore,
+                    ValueScore = r.ValueScore,
+                    Country = (r.User.UserProfile.City != null && r.User.UserProfile.City.Country != null)
+                                ? r.User.UserProfile.City.Country.CountryName
+                                : ""
+                })
+                .ToListAsync();
+
+            if (reviews == null)
+            {
+                return new CollectionResult<ReviewResponseDto>
+                {
+                    ErrorMessage = ErrorMessage.ReviewNotFound,
+                    ErrorCode = (int)ErrorCodes.ReviewNotFound
+                };
+            }
+
+            return new CollectionResult<ReviewResponseDto>
+            {
+                Data = reviews
+            };
+
+        }
         public async Task<BaseResult<ReviewResponseDto>> GetReviewByIdAsync(long id)
         {
             if (id < 0)
@@ -383,6 +432,8 @@ namespace Booking.Application.Services
                     ReviewComment = r.ReviewComment,
                     Avatar = _imageToLinkConverter.ConvertImageToLink(r.User.UserProfile.Avatar!, S3Folders.AvatarImg),
                     ReviewDate = r.ReviewDate.Date.ToString(),
+                    HotelId = r.HotelId,
+                    HotelName = r.Hotel.HotelName,
                     FacilityScore = r.FacilityScore,
                     StaffScore = r.StaffScore,
                     CleanlinessScore = r.CleanlinessScore,

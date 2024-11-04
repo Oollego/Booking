@@ -14,6 +14,8 @@ namespace Booking.Domain.Dto.Review
         public string Comment { get; set; } = null!;
         public string Avatar { get; set; } = null!;
         public string Date { get; set; } = null!;
+        public long HotelId { get; set; }
+        public string HotelName { get; set; } = null!;
         public int FacilityScore { get; set; }
         public int StaffScore { get; set; }
         public int CleanlinessScore { get; set; }
@@ -21,5 +23,6 @@ namespace Booking.Domain.Dto.Review
         public int LocationScore { get; set; }
         public int ValueScore { get; set; }
         public int ReviewsCount { get; set; }
+
     }
 }

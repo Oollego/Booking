@@ -29,6 +29,7 @@ namespace Booking.Application.DependencyInjection
             var domainName = configuration.GetSection("DomainName").Value ?? "";
 
             services.AddScoped<IImageToLinkConverter, ImageToLinkConverter>(x => new ImageToLinkConverter(domainName));
+            services.AddScoped<IUniqueCodeGenerator, UniqueCodeGenerator>();
 
             services.AddScoped<IEmailService, EmailService>( x => 
                     new EmailService(smtpServer, smtpPort, useSsl, login, password)
@@ -41,7 +42,6 @@ namespace Booking.Application.DependencyInjection
 
         public static void InitServices(this IServiceCollection services) 
         {
-
             services.AddScoped<IHashService, HashService>();
            
             services.AddScoped<IRoomService, RoomService>();

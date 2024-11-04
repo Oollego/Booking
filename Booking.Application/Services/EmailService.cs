@@ -54,6 +54,15 @@ namespace Booking.Application.Services
             await SendEmail(email, subject, message);
         }
 
+        public async Task SendConfirmationBookingEmailAsync(string email, string bookingCode)
+        {
+            string subject = "Booking confirmation";
+            string message = "<p>Hello," +
+                $"<p>Your booking is confirmed : <strong style=\"color:blue;\">{bookingCode}</strong></p>";
+
+            await SendEmail(email, subject, message);
+        }
+
         private async Task SendEmail(string email, string subject, string message) 
         {
             using var emailMessage = new MimeMessage();

@@ -14,5 +14,16 @@ namespace Booking.Domain.Dto.SearchFilter
         public int Adults { get; set; }
         public int Children { get; set; }
         public int Rooms { get; set; }
+        public int MinPrice { get; set; }
+        public int MaxPrice { get; set; }
+        public List<int>? Stars { get; set; } = null!;
+        public List<double>? Rating { get; set; } = null!;
+        public List<long>? HotelLabels { get; set; } = null!;
+        public List<long>? NearPlaces { get; set; } = null!;
+        public List<long>? Facilities { get; set; } = null!;
+        public List<long>? HotelTypes { get; set; } = null!;
+        public List<long>? HotelChains { get; set; } = null!;
     }
+
+
 }

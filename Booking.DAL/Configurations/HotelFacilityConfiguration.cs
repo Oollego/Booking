@@ -36,7 +36,7 @@ namespace Booking.DAL.Configurations
                     if (i % 2 == 0) j = 3;
                 }
                 
-                for(; j <= 58; j++ )
+                for(; j <= 56; j++ )
                 {
                     hotelFacilities.Add(new HotelFacility
                     {

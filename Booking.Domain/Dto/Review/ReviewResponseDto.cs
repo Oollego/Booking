@@ -13,6 +13,8 @@ namespace Booking.Domain.Dto.Review
         public string UserSurname { get; set; } = null!;
         public string Avatar { get; set; } = null!;
         public string Country { get; set; } = null!;
+        public string HotelName { get; set;} = null!;
+
 
     }
 }

@@ -2,6 +2,7 @@
 using Booking.Domain.Dto.Book;
 using Booking.Domain.Entity;
 using Booking.Domain.Enum;
+using Booking.Domain.Interfaces.Converters;
 using Booking.Domain.Interfaces.Repositories;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Result;
@@ -21,14 +22,19 @@ namespace Booking.Application.Services
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<Room> _roomRepository;
         private readonly IBaseRepository<Book> _bookRepository;
+        private readonly IUniqueCodeGenerator _uniqueCodeGenerator;
+        private readonly IEmailService _emailService;
         private readonly ILogger _logger;
 
-        public BookService(IBaseRepository<User> userRepository, ILogger logger, IBaseRepository<Room> roomRepository, IBaseRepository<Book> bookRepository)
+        public BookService(IBaseRepository<User> userRepository, ILogger logger, IBaseRepository<Room> roomRepository, 
+            IBaseRepository<Book> bookRepository, IUniqueCodeGenerator uniqueCodeGenerator, IEmailService emailService)
         {
             _userRepository = userRepository;
             _logger = logger;
             _roomRepository = roomRepository;
             _bookRepository = bookRepository;
+            _uniqueCodeGenerator = uniqueCodeGenerator;
+            _emailService = emailService;
         }
 
         public async Task<BaseResult<long>> AddUserBooking(CreateBookDto dto, string? email)
@@ -78,9 +84,13 @@ namespace Booking.Application.Services
                 }
             }
 
+            string bookingCode = GetBookingCode(10);
+
             var newBook = new Book()
             {
+                BookingEmail = dto.BookingEmail,
                 BookComment = dto.BookComment,
+                BookingCode = bookingCode,
                 CheckIn = dto.CheckIn,
                 CheckOut = dto.CheckOut,
                 Adult = dto.Adult,
@@ -98,6 +108,13 @@ namespace Booking.Application.Services
             newBook = await _bookRepository.CreateAsync( newBook );
             await _bookRepository.SaveChangesAsync();
 
+            if (dto.IsEmail)
+            {
+                string confirmationEmail = dto.BookingEmail ?? user.UserEmail;
+
+                await _emailService.SendConfirmationBookingEmailAsync(confirmationEmail, bookingCode);
+            }
+
             return new BaseResult<long>
             {
                 Data = newBook.Id
@@ -110,23 +127,32 @@ namespace Booking.Application.Services
             var books = await _bookRepository.GetAll()
                 .AsNoTracking()
                 .Include(b => b.User)
+                .Include(b => b.Room)
+                    .ThenInclude(r => r.Hotel)
+                        .ThenInclude(h => h.City)
+                .Include(b => b.User)
                 .Where(b => b.User.UserEmail == email)
                 .Select(b => new BookDto
                 {
                     Id = b.Id,
+                    BookingCode = b.BookingCode,
                     BookComment = b.BookComment,
                     CheckIn = b.CheckIn,
                     CheckOut = b.CheckOut,
                     Adult = b.Adult,
                     Children = b.Children,
                     RoomQuantity = b.RoomQuantity,
+                    BookingEmail = b.BookingEmail,
                     IsPhoneCall = b.IsPhoneCall,
                     IsEmail = b.IsEmail,
                     RoomPrice = b.RoomPrice,
                     DateUntilChange = b.DateUntilChange,
+                    CityId = b.Room.Hotel.CityId,
+                    CityName = b.Room.Hotel.City.CityName,
+                    HotelId = b.Room.Hotel.Id,
+                    HotelName = b.Room.Hotel.HotelName,
                     RoomId = b.RoomId,
                     UserId = b.UserId
-
                 }).ToListAsync();
 
             return new CollectionResult<BookDto>
@@ -141,25 +167,33 @@ namespace Booking.Application.Services
         {
             var booking = await _bookRepository.GetAll()
               .AsNoTracking()
+              .Include(b => b.Room)
+                    .ThenInclude(r => r.Hotel)
+                        .ThenInclude(h => h.City)
               .Include(b => b.User)
               .Where(b => b.User.UserEmail == email)
               .Where(b => b.Id == id)
               .Select(b => new BookDto
               {
                   Id = b.Id,
+                  BookingCode = b.BookingCode,
                   BookComment = b.BookComment,
                   CheckIn = b.CheckIn,
                   CheckOut = b.CheckOut,
                   Adult = b.Adult,
                   Children = b.Children,
                   RoomQuantity = b.RoomQuantity,
+                  BookingEmail = b.BookingEmail,
                   IsPhoneCall = b.IsPhoneCall,
                   IsEmail = b.IsEmail,
                   RoomPrice = b.RoomPrice,
                   DateUntilChange = b.DateUntilChange,
+                  CityId = b.Room.Hotel.CityId,
+                  CityName = b.Room.Hotel.City.CityName,
+                  HotelId = b.Room.Hotel.Id,
+                  HotelName = b.Room.Hotel.HotelName,
                   RoomId = b.RoomId,
                   UserId = b.UserId
-
               }).FirstOrDefaultAsync();
 
             if (booking == null)
@@ -176,6 +210,26 @@ namespace Booking.Application.Services
             {
                 Data = booking,
             };
+        }
+
+        public string GetBookingCode(int times)
+        {
+            string code = _uniqueCodeGenerator.GenerateUniqueBookingCode();
+
+            var booking = _bookRepository.GetAll().AsNoTracking()
+                .Where(b => b.BookingCode == code).FirstOrDefault();
+
+            if (booking  != null)
+            {
+                times++;
+                if (times < 0)
+                {
+                    return "";
+                }
+                code = GetBookingCode(times);
+            }
+
+            return code;
         }
     }
 }

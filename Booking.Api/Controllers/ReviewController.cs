@@ -60,6 +60,31 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
+        /// Получить отзывы пользователя
+        /// </summary>
+        [HttpGet("users_reviews")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<CollectionResult<ReviewResponseDto>>> GetUsersReviews()
+        {
+            var email = GetUserEmail();
+
+            if (email == null)
+            {
+                return Unauthorized();
+            }
+
+            var response = await _reviewService.GetUsersReviewsAsync(email);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
         /// Изменить отзыв.
         /// </summary>
         [HttpPut()]
