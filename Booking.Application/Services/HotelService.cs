@@ -314,6 +314,7 @@ namespace Booking.Application.Services
             }
 
 
+
             var queryHotels = await _hotelRepository.GetAllAsSplitQuery().AsNoTracking()
                 .Include(h => h.Rooms)
                     .ThenInclude(r => r.BedTypes)
@@ -326,6 +327,8 @@ namespace Booking.Application.Services
                 .Include(h => h.HotelType)
                 .Include(h => h.HotelChain)
                 .Include(h => h.HotelLabelTypes)
+                .Include(h => h.NearPlaces)
+                    .ThenInclude(np => np.NearPlacesGroup)
                 .Include(h => h.NearObjects)
                     .ThenInclude(ns => ns.NearObjectName)
                 .Where(h =>
@@ -333,6 +336,7 @@ namespace Booking.Application.Services
                     .Where(h => h.Rooms.Any(r => (r.BedTypes.Sum(bd => bd.Adult) * dto.Rooms) >= dto.Adults && (r.BedTypes.Sum(bd => bd.Children) * dto.Rooms) >= dto.Children ||
                                 (r.BedTypes.Sum(bd => bd.Adult) * dto.Rooms) >= (dto.Adults + dto.Children))
                 )
+                .Where(h => dto.Attractions == null || dto.Attractions.Count == 0 || dto.Attractions[0] == "string" || h.NearPlaces.Any(np => np.NearPlacesGroup.Id == 1 && dto.Attractions.Contains(np.PlaceName)))
                 .Where(h => h.Rooms.Any(r => r.RoomQuantity - r.Books.Count(b => b.RoomId == r.Id && dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn) >= dto.Rooms))
                 .Where(h => h.Rooms.Count(r => !r.Books.Any(b => dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)) >= dto.Rooms)
                 .Where(h => (dto.Stars == null || dto.Stars.Count == 0 || dto.Stars[0] == 0 || dto.Stars.Contains(h.Stars)))
@@ -355,6 +359,17 @@ namespace Booking.Application.Services
 
             var minPrice = queryHotels.Select(h => h.HotelData.HotelMinRoomPrice).Min();
             var maxPrice = queryHotels.Select(h => h.HotelData.HotelMinRoomPrice).Max();
+
+            var attractions = queryHotels
+               .SelectMany(h => h.NearPlaces
+                   .Where(np => np.NearPlacesGroupId == 1))
+               .GroupBy(np => np.PlaceName)
+               .Select(g => new AttractionFilterDto
+               {
+                   AttractionName = g.Key,
+                   Matches = g.Count()
+               })
+               .ToList();
 
             var rating = queryHotels.GroupBy(h => Math.Floor(h.HotelData.Rating))
                 .Select(g => new RatingFilterDto
@@ -418,7 +433,7 @@ namespace Booking.Application.Services
             filters.MinPrice = Math.Round(minPrice, 2);
             filters.MaxPrice = Math.Round(maxPrice, 2);
 
-
+            filters.Attractions = attractions;
             filters.Ratings = rating;
             filters.Labels = labels;
             filters.NearPlaces = nearPlaces;
@@ -768,17 +783,15 @@ namespace Booking.Application.Services
                 .Include(h => h.HotelLabelTypes)
                 .Include(h => h.NearObjects)
                     .ThenInclude(ns => ns.NearObjectName)
+                .Include(h => h.NearPlaces)
+                    .ThenInclude(np => np.NearPlacesGroup)
                  .Where(h =>
                     (dto.Place == null || dto.Place == "" || h.City.CityName == dto.Place || h.City.Country.CountryName == dto.Place))
                   .Where(h => h.Rooms.Any(r => (r.BedTypes.Sum(bd => bd.Adult) * dto.Rooms) >= dto.Adults && (r.BedTypes.Sum(bd => bd.Children) * dto.Rooms) >= dto.Children ||
-                                (r.BedTypes.Sum(bd => bd.Adult) * dto.Rooms) >= (dto.Adults + dto.Children))
-                        //(r.BedTypes.Sum(bd => bd.Adult) >= dto.Adults && r.BedTypes.Sum(bd => bd.Children) >= dto.Children) ||
-                        //r.BedTypes.Sum(bd => bd.Adult) >= (dto.Adults + dto.Children))
-                 )
-                // .Where(r => r.RoomQuantity - r.Books.Count(b => b.RoomId == r.Id && dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn) >= dto.Rooms)
+                                (r.BedTypes.Sum(bd => bd.Adult) * dto.Rooms) >= (dto.Adults + dto.Children)))
+                 .Where(h => dto.Attractions == null || dto.Attractions.Count == 0 || dto.Attractions[0] == "string" ||  h.NearPlaces.Any(np => np.NearPlacesGroup.Id == 1 && dto.Attractions.Contains(np.PlaceName)))
                  .Where(h => h.Rooms.Any(r => r.RoomQuantity - r.Books.Count(b => b.RoomId == r.Id && dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn) >= dto.Rooms))
                  .Where(h => h.Rooms.Count(r => !r.Books.Any(b => dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)) >= dto.Rooms)
-                // .Where(r => r.RoomQuantity - r.Books.Count(b => b.RoomId == r.Id && dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn) >= dto.Rooms)
                  .Where(h => (dto.Stars == null || dto.Stars.Count == 0 || dto.Stars[0] == 0 || dto.Stars.Contains(h.Stars)))
                  .Where(h => dto.Facilities == null || dto.Facilities.Count == 0 || dto.Facilities[0] == 0 || h.Facilities.Any(f => dto.Facilities.Contains(f.Id)))
                  .Where(h => dto.Rating == null || dto.Rating.Count == 0 || dto.Rating[0] == 0 || (h.HotelData != null && dto.Rating.Contains(Math.Floor(h.HotelData.Rating))))

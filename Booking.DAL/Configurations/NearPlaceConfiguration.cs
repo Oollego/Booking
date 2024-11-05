@@ -27,12 +27,13 @@ namespace Booking.DAL.Configurations
         {
             var nearPlaces = new List<NearPlace>();
             int id = 1;
-
-            int[] s = {1, 2, 9, 12, 14};
+            int[] sb = { 1 };
+            int[] sv = { 9 };
+            int[] sm = {2, 12, 14};
             int[] g = { 3, 4, 10, 13, 15 };
             int[] u = { 5, 6, 7, 8, 11 };
 
-            foreach (int i in s) 
+            foreach (int i in sb) 
             {
                 var temp = new List<NearPlace>{
                     new NearPlace { Id = id++, PlaceName = "The city center", Distance = 800, DistanceMetric = false, NearPlacesGroupId = 1, HotelId = i },
@@ -70,6 +71,90 @@ namespace Booking.DAL.Configurations
 
                     new NearPlace { Id = id++, PlaceName = "Barceloneta Beach", Distance = 700, DistanceMetric = false, NearPlacesGroupId = 5, HotelId = i }
                 };
+
+                nearPlaces = nearPlaces.Concat(temp).ToList();
+            }
+
+            foreach (int i in sv)
+            {
+                var temp = new List<NearPlace>{
+                    new NearPlace { Id = id++, PlaceName = "City of Arts and Sciences", Distance = 1.5, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Oceanogràfic Valencia", Distance = 2.1, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Valencia Cathedral", Distance = 0.8, DistanceMetric = false, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Plaza de la Virgen", Distance = 0.9, DistanceMetric = false, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Malvarrosa Beach", Distance = 4.2, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "La Lonja de la Seda", Distance = 0.7, DistanceMetric = false, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Turia Gardens", Distance = 1.3, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Bioparc Valencia", Distance = 3.5, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Central Market of Valencia", Distance = 0.6, DistanceMetric = false, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Estación del Norte", Distance = 1.0, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Museu de Belles Arts de Valencia", Distance = 1.1, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Palacio del Marqués de Dos Aguas", Distance = 0.9, DistanceMetric = false, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Plaza del Ayuntamiento", Distance = 0.8, DistanceMetric = false, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Royal Gardens", Distance = 2.3, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Bullring of Valencia", Distance = 1.1, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Tickets Tapas Bar", Distance = 2.5, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Cervecería Catalana", Distance = 2.1, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Can Culleretes", Distance = 1.7, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "7 Portes", Distance = 1.4, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Quimet & Quimet", Distance = 2.9, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "El Xampanyet", Distance = 1.3, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "La Paradeta", Distance = 900, DistanceMetric = false, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Bar Mut", Distance = 2.6, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Passeig de Gràcia Metro", Distance = 2.3, DistanceMetric = true, NearPlacesGroupId = 3, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Barceloneta Metro", Distance = 800, DistanceMetric = false, NearPlacesGroupId = 3, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Barcelona El Prat Airport", Distance = 13.0, DistanceMetric = true, NearPlacesGroupId = 4, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Sants Train Station", Distance = 4.0, DistanceMetric = true, NearPlacesGroupId = 6, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Barceloneta Beach", Distance = 700, DistanceMetric = false, NearPlacesGroupId = 5, HotelId = i }
+                };
+
+                nearPlaces = nearPlaces.Concat(temp).ToList();
+            }
+
+            foreach (int i in sm)
+            {
+                var temp = new List<NearPlace>
+                {
+                    new NearPlace { Id = id++, PlaceName = "The city center", Distance = 1200, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Plaza Mayor", Distance = 1.0, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Royal Palace of Madrid", Distance = 1.5, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Puerta del Sol", Distance = 0.8, DistanceMetric = false, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Temple of Debod", Distance = 2.0, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Retiro Park", Distance = 2.5, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Gran Vía", Distance = 1.2, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Almudena Cathedral", Distance = 1.6, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Prado Museum", Distance = 2.3, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Santiago Bernabéu Stadium", Distance = 4.5, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Plaza de Cibeles", Distance = 1.8, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Reina Sofía Museum", Distance = 2.7, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Casa de Campo", Distance = 3.5, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "El Rastro", Distance = 1.4, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Calle de Alcalá", Distance = 2.0, DistanceMetric = true, NearPlacesGroupId = 1, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Tickets Tapas Bar", Distance = 2.5, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Cervecería Catalana", Distance = 2.1, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Can Culleretes", Distance = 1.7, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "7 Portes", Distance = 1.4, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Quimet & Quimet", Distance = 2.9, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "El Xampanyet", Distance = 1.3, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "La Paradeta", Distance = 900, DistanceMetric = false, NearPlacesGroupId = 2, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Bar Mut", Distance = 2.6, DistanceMetric = true, NearPlacesGroupId = 2, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Passeig de Gràcia Metro", Distance = 2.3, DistanceMetric = true, NearPlacesGroupId = 3, HotelId = i },
+                    new NearPlace { Id = id++, PlaceName = "Barceloneta Metro", Distance = 800, DistanceMetric = false, NearPlacesGroupId = 3, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Barcelona El Prat Airport", Distance = 13.0, DistanceMetric = true, NearPlacesGroupId = 4, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Sants Train Station", Distance = 4.0, DistanceMetric = true, NearPlacesGroupId = 6, HotelId = i },
+
+                    new NearPlace { Id = id++, PlaceName = "Barceloneta Beach", Distance = 700, DistanceMetric = false, NearPlacesGroupId = 5, HotelId = i }
+                };
+
 
                 nearPlaces = nearPlaces.Concat(temp).ToList();
             }

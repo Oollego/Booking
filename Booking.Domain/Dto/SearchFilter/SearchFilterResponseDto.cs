@@ -10,6 +10,7 @@ namespace Booking.Domain.Dto.SearchFilter
     {
         public decimal MinPrice { get; set; }
         public decimal MaxPrice { get; set; }
+        public List<AttractionFilterDto> Attractions { get; set; } = null!;
         public List<RatingFilterDto> Ratings { get; set; } = null!;
         public List<LabelFilterDto> Labels { get; set; } = null!;
         public List<StarFilterDto> Stars { get; set; } = null!;

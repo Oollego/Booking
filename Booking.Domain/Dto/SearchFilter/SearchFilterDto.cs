@@ -16,6 +16,7 @@ namespace Booking.Domain.Dto.SearchFilter
         public int Rooms { get; set; }
         public int MinPrice { get; set; }
         public int MaxPrice { get; set; }
+        public List<string> Attractions { get; set; } = null!;
         public List<int>? Stars { get; set; } = null!;
         public List<double>? Rating { get; set; } = null!;
         public List<long>? HotelLabels { get; set; } = null!;

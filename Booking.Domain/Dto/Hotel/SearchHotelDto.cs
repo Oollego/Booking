@@ -18,6 +18,7 @@ namespace Booking.Domain.Dto.Hotel
         public int HotelQty { get; set; }
         public int MinPrice { get; set; }
         public int MaxPrice { get; set; }
+        public List<string> Attractions { get; set; } = null!;
         public List<int>? Stars { get; set; } = null!;
         public List<double>? Rating { get; set; } = null!;
         public List<long>? HotelLabels { get; set; } = null!;
@@ -25,6 +26,5 @@ namespace Booking.Domain.Dto.Hotel
         public List<long>? Facilities { get; set; } = null!;
         public List<long>? HotelTypes { get; set; } = null!;
         public List<long>? HotelChains { get; set; } = null!;
-
     }
 }
