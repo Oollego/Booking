@@ -22,6 +22,7 @@ namespace Booking.DAL.Configurations
             builder.Property(x => x.IsPet).HasDefaultValue(false);
             builder.Property(x => x.CityId).IsRequired();
             builder.Property(x => x.HotelChainId).HasDefaultValue(1);
+            builder.Property(x => x.OwnerProfileId).IsRequired();
             builder.Property(x => x.HotelTypeId).IsRequired();
             builder.ToTable(t => t.HasCheckConstraint("Stars", "Stars >= 0 AND Stars <= 5"));
 
@@ -70,7 +71,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 1,
                     HotelChainId = 8,
                     IsPet = true,
-                    CityId = 197
+                    CityId = 197,
+                    OwnerProfileId = 1,
                 },
                 new Hotel
                 {
@@ -85,7 +87,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 2,
                     HotelChainId = 3,
                     IsPet = false,
-                    CityId = 196
+                    CityId = 196,
+                    OwnerProfileId = 2,
                 },
                 new Hotel
                 {
@@ -100,7 +103,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 3,
                     HotelChainId = 2,
                     IsPet = false,
-                    CityId = 81
+                    CityId = 81,
+                    OwnerProfileId = 3,
                 },
                 new Hotel
                 {
@@ -115,7 +119,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 4,
                     HotelChainId = 4,
                     IsPet = true,
-                    CityId = 84
+                    CityId = 84,
+                    OwnerProfileId = 1,
                 },
                 new Hotel
                 {
@@ -130,7 +135,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 5,
                     HotelChainId = 7,
                     IsPet = true,
-                    CityId = 218
+                    CityId = 218,
+                    OwnerProfileId = 2,
                 },
                 new Hotel
                 {
@@ -145,7 +151,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 6,
                     HotelChainId = 6,
                     IsPet = true,
-                    CityId = 216
+                    CityId = 216,
+                    OwnerProfileId = 3,
                 },
                 new Hotel
                 {
@@ -160,7 +167,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 7,
                     HotelChainId = 5,
                     IsPet = false,
-                    CityId = 220
+                    CityId = 220,
+                    OwnerProfileId = 1,
                 },
                 new Hotel
                 {
@@ -175,7 +183,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 8,
                     HotelChainId = 2,
                     IsPet = true,
-                    CityId = 216
+                    CityId = 216,
+                    OwnerProfileId = 2,
                 },
                 new Hotel
                 {
@@ -190,7 +199,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 9,
                     HotelChainId = 2,
                     IsPet = false,
-                    CityId = 199
+                    CityId = 199,
+                    OwnerProfileId = 3
                 },
                 new Hotel
                 {
@@ -205,7 +215,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 2,
                     HotelChainId = 9,
                     IsPet = true,
-                    CityId = 81
+                    CityId = 81,
+                    OwnerProfileId = 1
                 },
                 new Hotel
                 {
@@ -220,7 +231,8 @@ namespace Booking.DAL.Configurations
                     HotelTypeId = 4,
                     HotelChainId = 3,
                     IsPet = true,
-                    CityId = 216
+                    CityId = 216,
+                    OwnerProfileId = 2
                 },
                 new Hotel
                 {
@@ -234,7 +246,8 @@ namespace Booking.DAL.Configurations
                     Stars = 4,
                     HotelTypeId = 1,
                     IsPet = false,
-                    CityId = 196
+                    CityId = 196,
+                    OwnerProfileId = 3
                 },
                 new Hotel
                 {
@@ -248,7 +261,8 @@ namespace Booking.DAL.Configurations
                     Stars = 4,
                     HotelTypeId = 2,
                     IsPet = true,
-                    CityId = 84
+                    CityId = 84,
+                    OwnerProfileId = 1
                 },
                 new Hotel
                 {
@@ -262,7 +276,8 @@ namespace Booking.DAL.Configurations
                     Stars = 4,
                     HotelTypeId = 7,
                     IsPet = false,
-                    CityId = 196
+                    CityId = 196,
+                    OwnerProfileId = 2
                 },
                 new Hotel
                 {
@@ -276,7 +291,8 @@ namespace Booking.DAL.Configurations
                     Stars = 3,
                     HotelTypeId = 8,
                     IsPet = true,
-                    CityId = 86
+                    CityId = 86,
+                    OwnerProfileId = 3
                 }
             });
         }

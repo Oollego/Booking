@@ -22,6 +22,12 @@ namespace Booking.DAL.Configurations
                 .WithOne(x => x.CardType)
                 .HasForeignKey(x => x.CardTypeId)
                 .HasPrincipalKey(x => x.Id);
+
+            builder.HasMany<OwnerPayMethod>(x => x.OwnerPayMethods)
+                .WithOne(x => x.CardType)
+                .HasForeignKey(x => x.CardTypeId)
+                .HasPrincipalKey(x => x.Id);
+
             builder.HasData(new List<CardType>()
             {
                 new CardType()
@@ -34,7 +40,6 @@ namespace Booking.DAL.Configurations
                     Id = 2,
                     CardName = "MasterCard",
                 }
-
             });
         }
     }

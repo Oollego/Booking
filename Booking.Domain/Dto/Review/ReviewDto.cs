@@ -9,6 +9,5 @@ namespace Booking.Domain.Dto.Review
     public class ReviewDto: CreateReviewDto
     {
         public long Id { get; set; }
-  
     }
 }

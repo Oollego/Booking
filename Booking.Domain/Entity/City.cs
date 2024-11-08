@@ -14,5 +14,6 @@ namespace Booking.Domain.Entity
         public Country Country { get; set; } = null!;
         public List<UserProfile> UserProfiles { get; set; } = null!;
         public List<Hotel> Hotels { get; set; } = null!;
+        public List<OwnerProfile> OwnerProfiles { get; set; } = null!;
     }
 }

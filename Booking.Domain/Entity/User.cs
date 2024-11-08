@@ -16,6 +16,7 @@ namespace Booking.Domain.Entity
         public DateTime? DeletedAt { get; set; }
         public long UpdatedBy {  get; set; }
         public UserProfile UserProfile { get; set; } = null!;
+        public OwnerProfile OwnerProfile { get; set; } = null!;
         public UserToken UserToken { get; set; } = null!;
         public List<Role> Roles { get; set; } = null!;
         public List<Book> Books { get; set; } = null!;

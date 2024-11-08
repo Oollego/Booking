@@ -13,6 +13,8 @@ namespace Booking.Domain.Entity
         public string Description { get; set; } = null!;
         public int Stars { get; set; }
         public bool IsPet { get; set; }
+        public long OwnerProfileId { get; set; }
+        public OwnerProfile OwnerProfile { get; set; } = null!;
         public long CityId { get; set; }
         public City City { get; set; } = null!;
         public long HotelTypeId { get; set; }

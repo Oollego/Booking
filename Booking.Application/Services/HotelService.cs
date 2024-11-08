@@ -295,7 +295,6 @@ namespace Booking.Application.Services
                 Count = hotels.Count
             };
         }
-
         public async Task<BaseResult<SearchFilterResponseDto>> GetSearchFiltersAsync(SearchFilterDto dto)
         {
             if (dto.CheckIn.Date < DateTime.UtcNow.Date || dto.CheckIn > dto.CheckOut ||
@@ -812,6 +811,7 @@ namespace Booking.Application.Services
                      Rating = x.HotelData.Rating,
                      ReviewQty = x.HotelData.ReviewCount,
                      RoomPrice = x.HotelData.HotelMinRoomPrice,
+                     OwnerProfileId = x.OwnerProfileId,
                      HotelLabels = x.HotelLabelTypes.Select(hct => new HotelInfoLabelDto
                      {
                          LabelName = hct.LabelName,
@@ -868,6 +868,7 @@ namespace Booking.Application.Services
             {
                 Matches = queryHotels.Count(),
                 Count = hotels.Count(),
+                Suppliers = queryHotels.GroupBy(g => g.OwnerProfileId).Count(),
                 Hotels = hotels
             };
 

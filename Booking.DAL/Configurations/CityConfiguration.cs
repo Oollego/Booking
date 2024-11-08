@@ -18,6 +18,10 @@ namespace Booking.DAL.Configurations
                 .WithOne(x => x.City)
                 .HasForeignKey(x => x.CityId)
                 .HasPrincipalKey(x => x.Id);
+            builder.HasMany<OwnerProfile>(x => x.OwnerProfiles)
+                .WithOne(x => x.City)
+                .HasForeignKey(x => x.CityId)
+                .HasPrincipalKey(x => x.Id);
             builder.HasMany<Hotel>(x => x.Hotels)
                 .WithOne(x => x.City)
                 .HasForeignKey(x => x.CityId)

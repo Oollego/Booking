@@ -24,15 +24,20 @@ namespace Booking.DAL.Configurations
                     Id = 1,
                     RoleName = "User"
                 },
-                new Role()
+                new Role() 
                 {
                     Id = 2,
-                    RoleName = "Admin"
+                    RoleName = "Hotel_owner"
                 },
                 new Role()
                 {
                     Id = 3,
-                    RoleName = "Moderator"
+                    RoleName = "Admin"
+                },
+                new Role()
+                {
+                    Id = 4,
+                    RoleName = "Manager"
                 }
             });
         }

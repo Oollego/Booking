@@ -19,6 +19,12 @@ namespace Booking.DAL.Configurations
                 .WithOne(x => x.Currency)
                 .HasForeignKey(x => x.CurrencyCodeId)
                 .HasPrincipalKey(x => x.CurrencyCode);
+
+            builder.HasMany<OwnerProfile>(x => x.OwnerProfiles)
+                .WithOne(x => x.Currency)
+                .HasForeignKey(x => x.CurrencyCodeId)
+                .HasPrincipalKey(x => x.CurrencyCode);
+
             builder.HasData(new List<Currency>
             {
                 new Currency()

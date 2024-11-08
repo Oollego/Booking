@@ -11,5 +11,6 @@ namespace Booking.Domain.Entity
         public long Id { get; set; }
         public string CardName { get; set; } = null!;
         public List<PayMethod> PayMethods { get; set; } = null!;
+        public List<OwnerPayMethod> OwnerPayMethods { get; set; } = null!;
     }
 }
