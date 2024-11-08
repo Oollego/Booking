@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /sets/booking-key.pem
 /docker-compose.yml
 /Booking.Api/appsettings.json
+/conf.d/nginx.conf
