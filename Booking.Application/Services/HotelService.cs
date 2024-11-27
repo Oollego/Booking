@@ -1,8 +1,7 @@
 ﻿using Amazon.S3.Model;
 using AutoMapper;
 using Booking.Application.Resources;
-using Booking.Application.Services.ServiceEntity;
-using Booking.Domain.Dto.City;
+using Booking.Application.Services.ServiceDto;
 using Booking.Domain.Dto.Hotel;
 using Booking.Domain.Dto.HotelComfort;
 using Booking.Domain.Dto.NearObject;
@@ -18,16 +17,6 @@ using Booking.Domain.Interfaces.Validations;
 using Booking.Domain.Result;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace Booking.Application.Services
 {

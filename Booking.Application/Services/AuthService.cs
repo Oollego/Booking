@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Booking.Application.Resources;
 using Booking.Domain.Dto;
-using Booking.Domain.Dto.Room;
 using Booking.Domain.Dto.User;
 using Booking.Domain.Entity;
 using Booking.Domain.Enum;
@@ -11,18 +10,11 @@ using Booking.Domain.Result;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Security.Claims;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using Booking.Domain.Interfaces.UnitsOfWork;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Caching.Memory;
 using Booking.Application.Cashe;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Org.BouncyCastle.Crypto.Parameters;
+using Booking.Domain.Interfaces.Services.ServiceDto;
 
 namespace Booking.Application.Services
 {
@@ -34,14 +26,14 @@ namespace Booking.Application.Services
         private readonly IBaseRepository<UserToken> _userTokenRepository = null!;
         private readonly ITokenService _tokenService;
         private readonly IBaseRepository<Role> _roleRepository = null!;
-        private readonly IRoleUnitOfWork _unitOfWork = null!;
+        private readonly IAuthUnitOfWork _unitOfWork = null!;
         private readonly IHashService _hashService = null!;
         private readonly IMemoryCache _memoryCache = null!;
         private readonly IEmailService _emailService = null!;
 
         public AuthService(IBaseRepository<User> userRepository, ILogger logger, IMapper mapper,
             IBaseRepository<UserToken> userTokenRepository, ITokenService tokenService,
-            IBaseRepository<Role> roleRepository, IRoleUnitOfWork unitOfWork, IHashService hashService, 
+            IBaseRepository<Role> roleRepository, IAuthUnitOfWork unitOfWork, IHashService hashService, 
             IMemoryCache memoryCache, IEmailService emailService )
         {
             _userRepository = userRepository;
@@ -79,8 +71,6 @@ namespace Booking.Application.Services
                 };
             }
             
- 
-           // var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.UserEmail == dto.Email);
             var user = await _unitOfWork.Users.GetAll().FirstOrDefaultAsync(x => x.UserEmail == dto.Email);
 
             if(user != null)
@@ -112,64 +102,6 @@ namespace Booking.Application.Services
             {
                 Data = new UserDto(dto.Email)
             };
-
-
-            //var hashUserPassword = HashPassword(dto.Password);
-
-            //using (var transaction = await _unitOfWork.BeginTransactionAsync())
-            //{
-            //    try
-            //    {
-            //        user = new User()
-            //        {
-            //            UserEmail = dto.Email,
-            //            PasswordDk = hashUserPassword,
-            //            PasswordSalt = hashUserPassword,
-            //        };
-            //        await _unitOfWork.Users.CreateAsync(user);
-            //        await _unitOfWork.SaveChangesAsync();
-
-            //        var role = await _roleRepository.GetAll().FirstOrDefaultAsync(x => x.RoleName == nameof(Roles.User));
-            //        if (role == null)
-            //        {
-            //            return new BaseResult<UserDto>()
-            //            {
-            //                ErrorMessage = ErrorMessage.RoleNotFound,
-            //                ErrorCode = (int)ErrorCodes.RoleNotFound
-            //            };
-            //        }
-
-            //        UserRole userRole = new UserRole()
-            //        {
-            //            UserId = user.Id,
-            //            RoleId = role.Id
-            //        };
-
-            //        await _unitOfWork.UserRoles.CreateAsync(userRole);
-
-            //        await _unitOfWork.SaveChangesAsync();
-
-            //        await transaction.CommitAsync();
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        await transaction.RollbackAsync();
-
-            //        _logger.Error(ex, ex.Message);
-            //        return new BaseResult<UserDto>()
-            //        {
-            //            ErrorMessage = ErrorMessage.UserWasntCreated,
-            //            ErrorCode = (int)ErrorCodes.UserWasNotCreated
-            //        };
-            //    }
-            //}
-
-            //return new BaseResult<UserDto>()
-            //{
-            //    Data = _mapper.Map<UserDto>(user)
-            //};
-
         }
         public async Task<BaseResult<UserDto>> ConfirmRegister(ConfirmRegisterDto dto)
         {
@@ -216,7 +148,7 @@ namespace Booking.Application.Services
                     await _unitOfWork.Users.CreateAsync(user);
                     await _unitOfWork.SaveChangesAsync();
 
-                    var role = await _roleRepository.GetAll().FirstOrDefaultAsync(x => x.RoleName == nameof(Roles.User));
+                    var role = await _unitOfWork.Roles.GetAll().FirstOrDefaultAsync(x => x.RoleName == nameof(Roles.User));
                     if (role == null)
                     {
                         return new BaseResult<UserDto>()
@@ -259,7 +191,15 @@ namespace Booking.Application.Services
         }
         public async Task<BaseResult<TokenDto>> Login(LoginUserDto dto)
         {
- 
+            if (dto.Password == null || dto.Password == "")
+            {
+                return new BaseResult<TokenDto>()
+                {
+                    ErrorMessage = ErrorMessage.InvalidParameters,
+                    ErrorCode = (int)ErrorCodes.InvalidParameters
+                };
+            }
+
             var user = await _userRepository.GetAll()
                 .Include(x => x.Roles)
                 .FirstOrDefaultAsync(x => x.UserEmail == dto.Email);
@@ -271,7 +211,7 @@ namespace Booking.Application.Services
                     ErrorCode = (int)ErrorCodes.UserNotFound
                 };
             }
-                
+
             if (!IsVerifyPassword(user.PasswordDk, user.PasswordSalt, dto.Password)) 
             {
                 return new BaseResult<TokenDto>()
@@ -318,6 +258,89 @@ namespace Booking.Application.Services
                 }
             };
  
+        }
+        public async Task<BaseResult<TokenDto>> SocialAuth(UserAuth userAuth)
+        {
+
+            var user = await _unitOfWork.Users.GetAll().Include(u => u.Roles)
+                        .FirstOrDefaultAsync(u => u.UserEmail == userAuth.Email);
+
+            if (user == null)
+            {
+                using (var transaction = await _unitOfWork.BeginTransactionAsync())
+                {
+                   
+                    var role = await _unitOfWork.Roles.GetAll().FirstOrDefaultAsync(r => r.RoleName == nameof(Roles.User));
+
+                    if (role == null)
+                    {
+                        return new BaseResult<TokenDto>
+                        {
+                            ErrorMessage = ErrorMessage.RoleNotFound,
+                            ErrorCode = (int)ErrorCodes.RoleNotFound
+                        };
+                    }
+
+                    user = new User
+                    {
+                        UserEmail = userAuth.Email,
+                        RegisteredAt = DateTime.UtcNow,
+                        Roles = new List<Role> { role }
+                    };
+
+                    user = await _unitOfWork.Users.CreateAsync(user);
+                    await _unitOfWork.Users.SaveChangesAsync();
+
+                    UserProfile userProfile = new UserProfile()
+                    {
+                        UserName = userAuth.Name,
+                        UserSurname = userAuth.Surname,
+                        Avatar = userAuth.AvatarUrl,
+                        UserId = user.Id
+                    };
+
+                    await _unitOfWork.UserProfiles.CreateAsync(userProfile);
+
+                    await _unitOfWork.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+                }
+            }
+
+            var claims = user.Roles.Select(r => new Claim(ClaimTypes.Role, r.RoleName)).ToList();
+            claims.Add(new Claim(ClaimTypes.Email, user.UserEmail));
+
+            var accessToken = _tokenService.GenerateAccessToken(claims);
+            var refreshToken = _tokenService.GenerateRefreshToken();
+
+            var userToken = await _unitOfWork.UserTokens.GetAll().FirstOrDefaultAsync(t => t.UserId == user.Id);
+            if (userToken == null)
+            {
+                userToken = new UserToken
+                {
+                    UserId = user.Id,
+                    RefreshToken = refreshToken,
+                    RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(10)
+                };
+                await _unitOfWork.UserTokens.CreateAsync(userToken);
+            }
+            else
+            {
+                userToken.RefreshToken = refreshToken;
+                userToken.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(10);
+                _unitOfWork.UserTokens.Update(userToken);
+            }
+
+            await _unitOfWork.UserTokens.SaveChangesAsync();
+
+            return new BaseResult<TokenDto>
+            {
+                Data = new TokenDto
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                }
+            };
         }
 
         private string? CheckAndSetUserToCache( string email, string salt, string dk , int times)

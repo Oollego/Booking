@@ -1,4 +1,6 @@
-﻿using Booking.Application.Resources;
+﻿using Booking.Application.Converters;
+using Booking.Application.Resources;
+using Booking.Application.Services.ServiceDto;
 using Booking.Domain.Dto.Book;
 using Booking.Domain.Entity;
 using Booking.Domain.Enum;
@@ -8,12 +10,6 @@ using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Result;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Booking.Application.Services
 {
@@ -23,11 +19,13 @@ namespace Booking.Application.Services
         private readonly IBaseRepository<Room> _roomRepository;
         private readonly IBaseRepository<Book> _bookRepository;
         private readonly IUniqueCodeGenerator _uniqueCodeGenerator;
+        private readonly IImageToLinkConverter _imageToLinkConverter;
         private readonly IEmailService _emailService;
         private readonly ILogger _logger;
 
-        public BookService(IBaseRepository<User> userRepository, ILogger logger, IBaseRepository<Room> roomRepository, 
-            IBaseRepository<Book> bookRepository, IUniqueCodeGenerator uniqueCodeGenerator, IEmailService emailService)
+        public BookService(IBaseRepository<User> userRepository, ILogger logger, IBaseRepository<Room> roomRepository,
+            IBaseRepository<Book> bookRepository, IUniqueCodeGenerator uniqueCodeGenerator, IEmailService emailService, 
+            IImageToLinkConverter imageToLinkConverter)
         {
             _userRepository = userRepository;
             _logger = logger;
@@ -35,6 +33,7 @@ namespace Booking.Application.Services
             _bookRepository = bookRepository;
             _uniqueCodeGenerator = uniqueCodeGenerator;
             _emailService = emailService;
+            _imageToLinkConverter = imageToLinkConverter;
         }
 
         public async Task<BaseResult<long>> AddUserBooking(CreateBookDto dto, string? email)
@@ -53,6 +52,8 @@ namespace Booking.Application.Services
             }
 
             var room = await _roomRepository.GetAll().AsNoTracking()
+                .Include(r => r.Hotel)
+                    .ThenInclude(h => h.City)
                 .Where(r => r.Id == dto.RoomId).FirstOrDefaultAsync();
 
             if (room == null)
@@ -111,8 +112,22 @@ namespace Booking.Application.Services
             if (dto.IsEmail)
             {
                 string confirmationEmail = dto.BookingEmail ?? user.UserEmail;
-
-                await _emailService.SendConfirmationBookingEmailAsync(confirmationEmail, bookingCode);
+                ConfirmationEmailData data = new ConfirmationEmailData
+                {
+                    Address = room.Hotel.HotelAddress,
+                    City = room.Hotel.City.CityName,
+                    Code = newBook.BookingCode,
+                    Email = newBook.BookingEmail ?? user.UserEmail,
+                    CheckIn = newBook.CheckIn,
+                    CheckOut = newBook.CheckOut,
+                    ChangeDate = newBook.DateUntilChange ?? newBook.CheckIn,
+                    RoomQuantity = newBook.RoomQuantity,
+                    RoomPrice = newBook.RoomPrice,
+                    Adults = newBook.Adult,
+                    Children = newBook.Children ?? 0,
+                    Image = _imageToLinkConverter.ConvertImageToLink(room.Hotel.HotelImage, S3Folders.HotelsImg)
+                };
+                await _emailService.SendConfirmationBookingEmailAsync(confirmationEmail, bookingCode, data);
             }
 
             return new BaseResult<long>

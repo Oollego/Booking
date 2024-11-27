@@ -24,10 +24,10 @@ namespace Booking.Application.Services
         private readonly IBaseRepository<User> _userRepository = null!;
         private readonly IBaseRepository<UserRole> _userRoleRepository = null!;
         private readonly IMapper _mapper;
-        private readonly IRoleUnitOfWork _unitOfWork = null!;
+        private readonly IAuthUnitOfWork _unitOfWork = null!;
 
         public RoleService(IBaseRepository<Role> roleRepository, IBaseRepository<User> userRepository, 
-            IMapper mapper, IBaseRepository<UserRole> userRoleRepository, IRoleUnitOfWork unitOfWork)
+            IMapper mapper, IBaseRepository<UserRole> userRoleRepository, IAuthUnitOfWork unitOfWork)
         {
             _roleRepository = roleRepository;
             _userRepository = userRepository;

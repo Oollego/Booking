@@ -6,7 +6,6 @@ using Booking.DAL.Repositories;
 using Booking.DAL.UnitOfWork;
 using Booking.Domain.Entity;
 using Booking.Domain.Interfaces.Repositories;
-using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Interfaces.UnitsOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -53,10 +52,11 @@ namespace Booking.DAL.DependencyInjection
             services.AddScoped<IBaseRepository<Book>, BaseRepository<Book>>();
             services.AddScoped<IBaseRepository<Faq>, BaseRepository<Faq>>();
 
-            services.AddScoped<IRoleUnitOfWork, RoleUnitOfWork>();
+            services.AddScoped<IAuthUnitOfWork, AuthUnitOfWork>();
             services.AddScoped<IHotelUnitOfWork, HotelUnitOfWork>();
 
             services.AddScoped<IS3BucketRepository, S3BucketRepository>();
+            services.AddScoped<IHttpClientRepository, HttpClientRepository>();
         }
 
         private static void AddDbMySQL(this IServiceCollection services, IConfiguration configuration)

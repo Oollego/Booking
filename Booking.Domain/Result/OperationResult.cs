@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Result
 {
-    public class S3OperationResult<T>
+    public class OperationResult<T>
     {
         public bool Success  => ErrorMessage == null;
         public T? Data { get; set; }

@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Interfaces.UnitsOfWork
 {
-    public interface IRoleUnitOfWork : IStateSaveChanges
+    public interface IAuthUnitOfWork : IStateSaveChanges
     {
         Task<IDbContextTransaction> BeginTransactionAsync();
         IBaseRepository<User> Users { get; set; }
         IBaseRepository<Role> Roles { get; set; }
         IBaseRepository<UserRole> UserRoles { get; set; }
+        IBaseRepository<UserProfile> UserProfiles { get; set; }
+        IBaseRepository<UserToken> UserTokens { get; set; }
     }
 }

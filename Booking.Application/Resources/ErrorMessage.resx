@@ -171,6 +171,9 @@
   <data name="FaqNotFound" xml:space="preserve">
     <value>Faq not found</value>
   </data>
+  <data name="GoogleAuthFailed" xml:space="preserve">
+    <value>Google authentication failed.</value>
+  </data>
   <data name="HotelAlreadyExists" xml:space="preserve">
     <value>Hotel already exists</value>
   </data>

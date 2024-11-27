@@ -79,6 +79,8 @@ namespace Booking.Domain.Enum
         NoAvailableRooms = 193,
 
         FaqAlreadyExists = 201,
-        FaqNotFound = 202
+        FaqNotFound = 202,
+
+        GoogleAuthFailed = 211
     }
 }

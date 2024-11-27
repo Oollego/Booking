@@ -1,15 +1,6 @@
-﻿using Booking.Domain.Interfaces.Services;
+﻿using Booking.Application.Services.ServiceDto;
+using Booking.Domain.Interfaces.Services;
 using MimeKit;
-using MailKit.Net.Smtp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
-using Booking.Domain.Dto.User;
-using Booking.Domain.Result;
 
 namespace Booking.Application.Services
 {
@@ -29,11 +20,7 @@ namespace Booking.Application.Services
             _login = login;
             _password = password;
         }
-        public async Task SendBookEmailAsync(string email)
-        {
-            throw new NotImplementedException();
-        }
-
+ 
         public async Task SendConfirmationEmailAsync(string email, string confirmCode)
         {
             string subject = "Confirm your email";
@@ -54,11 +41,12 @@ namespace Booking.Application.Services
             await SendEmail(email, subject, message);
         }
 
-        public async Task SendConfirmationBookingEmailAsync(string email, string bookingCode)
+        public async Task SendConfirmationBookingEmailAsync(string email, string bookingCode, ConfirmationEmailData data )
         {
             string subject = "Booking confirmation";
-            string message = "<p>Hello," +
-                $"<p>Your booking is confirmed : <strong style=\"color:blue;\">{bookingCode}</strong></p>";
+            string message = getConfirmationMessage(data);
+            //string message = "<p>Hello," +
+            //    $"<p>Your booking is confirmed : <strong style=\"color:blue;\">{bookingCode}</strong></p>";
 
             await SendEmail(email, subject, message);
         }
@@ -84,5 +72,48 @@ namespace Booking.Application.Services
             await client.DisconnectAsync(true);
 
         }
+
+        private string getConfirmationMessage(ConfirmationEmailData data)
+        {
+            return "<!DOCTYPE html>" +
+                "<html lang=\"en\">" +
+                "<head>" +
+                "<meta charset=\"UTF-8\">" +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                "<title>Document</title>" +
+                "<style>" +
+                "div {" +
+                "text-align: left;" +
+                " font-size: 16px;" +
+                "font-family:Arial, Helvetica, sans-serif;" +
+                "}" +
+                ".main_body{" +
+                "width: 80vw;" +
+                "margin: auto;" +
+                "}" +
+                ".block_div{" +
+                "display: inline-block;" +
+                "}" +
+                "</style>" +
+                "</head>" +
+                "<div class=\"main_body\">" +
+                "<h2 style=\"color: #581ADB; text-align: left;\">Hotel for you.</h2>" +
+                "<h2 style=\"color: #581ADB; text-align: center;\">Booking Details</h2>" +
+                "<div class=\"block_div\" style=\"float: left; width: calc(100% - 51%);\">" +
+                $"<div>Address: {data.Address}, {data.City}</div>" +
+                $"<div>Booking code confirmation: {data.Code}</div>" +
+                $"<div style=\"text-align: left; margin-bottom: 15px;\">Email address: {data.Email}</div>" +
+                $"<div>Check-in: {data.CheckIn.ToString("MMMM dd, yyyy")}</div>" +
+                $"<div>Check-out: {data.CheckIn.ToString("MMMM dd, yyyy")} December 27, 2024</div>" +
+                $"<div style=\"margin-top: 5px; margin-bottom: 5px; color: #581ADB;\">Date until change: {data.ChangeDate.ToString("MMMM dd, yyyy")}</div>" +
+                $"<div>Room quantity: {data.RoomQuantity}</div>" +
+                $"<div>Room price per night: {data.RoomPrice}</div>" +
+                $"<div>Expected number of people: {data.Adults} adults, {data.Children} children</div>" +
+                "<div style=\"margin-top: 30px; margin-bottom: 30px; color: #581ADB;\">Urban Central is waiting for you</div></div>" +
+                "<div class=\"block_div\" style=\"float: right; width: 40%\">" +
+                $"<img style=\"width:100%; margin:auto\" id=\"hotelImage\" alt=\"Hotel Azure\" src=\"{data.Image}\"></div>" +
+                "</div>" +
+                "</html>";
+        } 
     }
 }

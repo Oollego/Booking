@@ -10,8 +10,8 @@ namespace Booking.Domain.Entity
     {
         public long Id { get; set; }
         public string UserEmail { get; set; } = null!;
-        public string PasswordSalt { get; set; } = null!;
-        public string PasswordDk { get; set;} = null!;
+        public string? PasswordSalt { get; set; } = null!;
+        public string? PasswordDk { get; set;} = null!;
         public DateTime RegisteredAt { get; set; } = DateTime.Now;
         public DateTime? DeletedAt { get; set; }
         public long UpdatedBy {  get; set; }

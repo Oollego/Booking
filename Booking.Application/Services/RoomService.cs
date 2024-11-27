@@ -21,7 +21,7 @@ using Booking.Domain.Dto.Bed;
 using Booking.Domain.Dto.RoomComfort;
 using Booking.Domain.Dto.Hotel;
 using Booking.Domain.Interfaces.Converters;
-using Booking.Application.Services.ServiceEntity;
+using Booking.Application.Services.ServiceDto;
 
 namespace Booking.Application.Services
 {

@@ -38,12 +38,21 @@ namespace Booking.Application.DependencyInjection
             InitServices(services);
             InitMapping(services);
             InitValidators(services);
+
+            
+
+            //services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+            //services.Configure<GoogleAuthConfig>(configuration.GetSection("Google"));
+
         }
 
         public static void InitServices(this IServiceCollection services) 
         {
+
+            services.AddScoped<ISocialAuthService, SocialAuthService>();
             services.AddScoped<IHashService, HashService>();
-           
+
+            services.AddScoped<IGoogleAuthService, GoogleAuthService>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();

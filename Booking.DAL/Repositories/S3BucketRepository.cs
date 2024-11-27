@@ -20,7 +20,7 @@ namespace Booking.DAL.Repositories
         {
             _s3Client = s3Client;
         }
-        public async Task<S3OperationResult<System.Net.HttpStatusCode>> UploadFileAsync(string bucketName, string key, Stream fileStream, string contentType)
+        public async Task<OperationResult<System.Net.HttpStatusCode>> UploadFileAsync(string bucketName, string key, Stream fileStream, string contentType)
         {
             try
             {
@@ -34,21 +34,21 @@ namespace Booking.DAL.Repositories
 
                 var response = await _s3Client.PutObjectAsync(putRequest);
 
-                return new S3OperationResult<System.Net.HttpStatusCode>
+                return new OperationResult<System.Net.HttpStatusCode>
                 {
                     Data = response.HttpStatusCode
                 };
             }
             catch (AmazonS3Exception ex)
             {
-                return new S3OperationResult<System.Net.HttpStatusCode>
+                return new OperationResult<System.Net.HttpStatusCode>
                 {
                     ErrorMessage = ex.Message
                 };
             }
             catch (Exception ex)
             {
-                return new S3OperationResult<System.Net.HttpStatusCode>
+                return new OperationResult<System.Net.HttpStatusCode>
                 {
                     ErrorMessage = $"An error occurred in AWS S3 operation: {ex.Message}"
                 };
@@ -61,7 +61,7 @@ namespace Booking.DAL.Repositories
             return await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
         }
 
-        public async Task<S3OperationResult<Stream>> GetFileAsync(string bucketName, string key)
+        public async Task<OperationResult<Stream>> GetFileAsync(string bucketName, string key)
         {
             try
             {
@@ -79,14 +79,14 @@ namespace Booking.DAL.Repositories
 
                     if (memoryStream.Length > 0) 
                     {
-                        return new S3OperationResult<Stream>
+                        return new OperationResult<Stream>
                         {
                             Data = memoryStream
                         };
                     }
                     else
                     {
-                        return new S3OperationResult<Stream>
+                        return new OperationResult<Stream>
                         {
                             ErrorMessage = $"An error occurred in AWS S3 operation"
                         };
@@ -96,14 +96,14 @@ namespace Booking.DAL.Repositories
             }
             catch (AmazonS3Exception ex)
             {
-                return new S3OperationResult<Stream>
+                return new OperationResult<Stream>
                 {
                     ErrorMessage = $"An error occurred in AWS S3 operation: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new S3OperationResult<Stream>
+                return new OperationResult<Stream>
                 {
                    ErrorMessage = $"An error occurred in AWS S3 operation: {ex.Message}"
                 };
@@ -118,7 +118,7 @@ namespace Booking.DAL.Repositories
         //    return File(s3Object.ResponseStream, s3Object.Headers.ContentType);
         //}
 
-        public async Task<S3OperationResult<bool>> DeleteFileAsync(string bucketName, string key)
+        public async Task<OperationResult<bool>> DeleteFileAsync(string bucketName, string key)
         {
             var deleteRequest = new DeleteObjectRequest
             {
@@ -131,13 +131,13 @@ namespace Booking.DAL.Repositories
             if (response.HttpStatusCode == System.Net.HttpStatusCode.OK ||
                 response.HttpStatusCode == System.Net.HttpStatusCode.NoContent)
             {
-                return new S3OperationResult<bool>
+                return new OperationResult<bool>
                 {
                     Data = true
                 };
             }
 
-            return new S3OperationResult<bool>
+            return new OperationResult<bool>
             {
                 ErrorMessage = "File deletion failed with unexpected status code."
             };

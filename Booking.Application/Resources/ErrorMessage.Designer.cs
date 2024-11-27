@@ -223,6 +223,15 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Google authentication failed..
+        /// </summary>
+        public static string GoogleAuthFailed {
+            get {
+                return ResourceManager.GetString("GoogleAuthFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hotel already exists.
         /// </summary>
         public static string HotelAlreadyExists {
