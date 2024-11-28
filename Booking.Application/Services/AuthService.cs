@@ -103,6 +103,28 @@ namespace Booking.Application.Services
                 Data = new UserDto(dto.Email)
             };
         }
+        public async Task<BaseResult> AuthOut(string? email)
+        {
+            if (email == null)
+            {
+                return new BaseResult();
+            }
+
+            var userToken = await _unitOfWork.UserTokens.GetAll()
+                .Include(ut => ut.User)
+                .Where(ut => ut.User.UserEmail == email)
+                .FirstOrDefaultAsync();
+
+            if(userToken == null)
+            {
+                return new BaseResult();
+            }
+
+            _ = _unitOfWork.UserTokens.Remove(userToken);
+            _ = await _unitOfWork.SaveChangesAsync();
+
+            return new BaseResult();
+        }
         public async Task<BaseResult<UserDto>> ConfirmRegister(ConfirmRegisterDto dto)
         {
             _memoryCache.TryGetValue(dto.confirmCode, out RegisterUserCacheDto? userCache);
@@ -259,90 +281,7 @@ namespace Booking.Application.Services
             };
  
         }
-        public async Task<BaseResult<TokenDto>> SocialAuth(UserAuth userAuth)
-        {
-
-            var user = await _unitOfWork.Users.GetAll().Include(u => u.Roles)
-                        .FirstOrDefaultAsync(u => u.UserEmail == userAuth.Email);
-
-            if (user == null)
-            {
-                using (var transaction = await _unitOfWork.BeginTransactionAsync())
-                {
-                   
-                    var role = await _unitOfWork.Roles.GetAll().FirstOrDefaultAsync(r => r.RoleName == nameof(Roles.User));
-
-                    if (role == null)
-                    {
-                        return new BaseResult<TokenDto>
-                        {
-                            ErrorMessage = ErrorMessage.RoleNotFound,
-                            ErrorCode = (int)ErrorCodes.RoleNotFound
-                        };
-                    }
-
-                    user = new User
-                    {
-                        UserEmail = userAuth.Email,
-                        RegisteredAt = DateTime.UtcNow,
-                        Roles = new List<Role> { role }
-                    };
-
-                    user = await _unitOfWork.Users.CreateAsync(user);
-                    await _unitOfWork.Users.SaveChangesAsync();
-
-                    UserProfile userProfile = new UserProfile()
-                    {
-                        UserName = userAuth.Name,
-                        UserSurname = userAuth.Surname,
-                        Avatar = userAuth.AvatarUrl,
-                        UserId = user.Id
-                    };
-
-                    await _unitOfWork.UserProfiles.CreateAsync(userProfile);
-
-                    await _unitOfWork.SaveChangesAsync();
-
-                    await transaction.CommitAsync();
-                }
-            }
-
-            var claims = user.Roles.Select(r => new Claim(ClaimTypes.Role, r.RoleName)).ToList();
-            claims.Add(new Claim(ClaimTypes.Email, user.UserEmail));
-
-            var accessToken = _tokenService.GenerateAccessToken(claims);
-            var refreshToken = _tokenService.GenerateRefreshToken();
-
-            var userToken = await _unitOfWork.UserTokens.GetAll().FirstOrDefaultAsync(t => t.UserId == user.Id);
-            if (userToken == null)
-            {
-                userToken = new UserToken
-                {
-                    UserId = user.Id,
-                    RefreshToken = refreshToken,
-                    RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(10)
-                };
-                await _unitOfWork.UserTokens.CreateAsync(userToken);
-            }
-            else
-            {
-                userToken.RefreshToken = refreshToken;
-                userToken.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(10);
-                _unitOfWork.UserTokens.Update(userToken);
-            }
-
-            await _unitOfWork.UserTokens.SaveChangesAsync();
-
-            return new BaseResult<TokenDto>
-            {
-                Data = new TokenDto
-                {
-                    AccessToken = accessToken,
-                    RefreshToken = refreshToken
-                }
-            };
-        }
-
+        
         private string? CheckAndSetUserToCache( string email, string salt, string dk , int times)
         {
             string id = new Random().Next(100000, 999999).ToString();

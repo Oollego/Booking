@@ -29,5 +29,7 @@ namespace Booking.Domain.Interfaces.Services
         /// <param name="dto"></param>
         /// <returns></returns>
         Task<BaseResult<TokenDto>> Login(LoginUserDto dto);
+
+        Task<BaseResult> AuthOut(string? email);
     }
 }

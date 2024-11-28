@@ -6,6 +6,7 @@ using Booking.Domain.Dto;
 using Booking.Domain.Interfaces.Services;
 using Booking.Application.Services;
 using Booking.Domain.Dto.Token;
+using System.Security.Claims;
 
 namespace Booking.Api.Controllers
 {
@@ -87,6 +88,35 @@ namespace Booking.Api.Controllers
                 return Ok(response);
             }
             return BadRequest(response);
+        }
+
+        /// <summary>
+        /// Аутентификация пользователя через Google .
+        /// </summary>
+        [HttpPost("AuthOut")]
+        public async Task<ActionResult<BaseResult<TokenDto>>> OutFromAccount()
+        {
+            var email = GetUserEmail();
+
+            var response = await _authService.AuthOut(email);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        private string? GetUserEmail()
+        {
+            var user = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (user != null && user.IsAuthenticated)
+            {
+                return user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            }
+
+            return null;
         }
     }
 }
