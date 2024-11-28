@@ -5,7 +5,6 @@ using Booking.Api;
 using Booking.Domain.Settings;
 using Booking.Api.Middlewares;
 using Microsoft.AspNetCore.HttpOverrides;
-using Amazon.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,5 +57,9 @@ app.UseHttpsRedirection();
 //app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

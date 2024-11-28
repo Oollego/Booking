@@ -1,10 +1,12 @@
 ﻿using Booking.Application.Resources;
+using Booking.Domain.Entity;
 using Booking.Domain.Enum;
 using Booking.Domain.Interfaces.Repositories;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Interfaces.Services.ServiceDto;
 using Booking.Domain.Result;
 using Google.Apis.Auth;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
@@ -23,15 +25,17 @@ namespace Booking.Application.Services
         private readonly IHttpClientRepository _httpClientRepository;
         private readonly IFileService _fileService;
         private readonly IS3BucketRepository _bucketRepository;
+        private readonly IBaseRepository<UserProfile> _userProfileRepository;
 
         public GoogleAuthService(ILogger logger, IConfiguration configuration, IHttpClientRepository httpClientRepository,
-            IFileService fileService, IS3BucketRepository bucketRepository)
+            IFileService fileService, IS3BucketRepository bucketRepository, IBaseRepository<UserProfile> userProfileRepository)
         {
             _configuration = configuration;
             _logger = logger;
             _httpClientRepository = httpClientRepository;
             _fileService = fileService;
             _bucketRepository = bucketRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         async Task<BaseResult<UserAuth>> IGoogleAuthService.ValidateIdTokenAsync(string idToken)
@@ -77,7 +81,17 @@ namespace Booking.Application.Services
 
                 if (s3Responce.Success)
                 {
-                    user.Surname = newfileName;
+                    user.AvatarUrl = newfileName;
+                    var userProfile = await _userProfileRepository.GetAll()
+                        .Include(up => up.User)
+                        .Where(up => up.User.UserEmail == payload.Email)
+                        .FirstOrDefaultAsync();
+
+                    if(userProfile != null && userProfile.Avatar != null)
+                    {
+                        string oldAvatarKey = Path.Combine(S3Folders.AvatarImg, userProfile.Avatar);
+                        _ = await _bucketRepository.DeleteFileAsync(AppSource.ImgBucket, oldAvatarKey);
+                    }
                 } 
             }
 

@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -82,6 +83,36 @@ namespace Booking.Application.Services
 
                     await transaction.CommitAsync();
                 }
+            }
+            else
+            {
+                var userProfile = await _unitOfWork.UserProfiles.GetAll()
+                    .Include(up => up.User)
+                    .Where(up => up.User.UserEmail ==  userAuth.Email)
+                    .FirstOrDefaultAsync();
+
+                if (userProfile == null)
+                {
+                    userProfile = new UserProfile
+                    {
+                        UserId = user.Id,
+                        UserName = userAuth.Name,
+                        UserSurname = userAuth.Surname,
+                        Avatar = userAuth.AvatarUrl,
+                    };
+
+                    _ = await _unitOfWork.UserProfiles.CreateAsync(userProfile);
+                }
+                else
+                {
+                    userProfile.UserName = userAuth.Name;
+                    userProfile.UserSurname = userAuth.Surname;
+                    userProfile.Avatar = userAuth.AvatarUrl;
+
+                    _ = _unitOfWork.UserProfiles.Update(userProfile);
+                }
+
+                await _unitOfWork.SaveChangesAsync();
             }
 
             var claims = user.Roles.Select(r => new Claim(ClaimTypes.Role, r.RoleName)).ToList();
