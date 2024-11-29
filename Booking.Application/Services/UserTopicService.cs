@@ -63,7 +63,9 @@ namespace Booking.Application.Services
             }
 
             var userTopic = await _userTopicRepository.GetAll()
-                .Where(ut => ut.TopicId == topicId)
+                .Include(ut => ut.UserProfile)
+                    .ThenInclude(up => up.User)
+                .Where(ut => ut.TopicId == topicId && ut.UserProfile.User.UserEmail == email)
                 .FirstOrDefaultAsync();
 
 
