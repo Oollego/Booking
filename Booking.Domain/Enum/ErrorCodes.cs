@@ -81,6 +81,9 @@ namespace Booking.Domain.Enum
         FaqAlreadyExists = 201,
         FaqNotFound = 202,
 
-        GoogleAuthFailed = 211
+        GoogleAuthFailed = 211,
+        FaceBookAuthFailed = 212,
+        NoDataAvailableInSocialAuthentication = 213,
+        FailedToGetResponseFromFaceBook = 214,
     }
 }

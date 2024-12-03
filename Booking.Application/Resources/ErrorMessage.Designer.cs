@@ -169,6 +169,15 @@ namespace Booking.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Facebook authentication failed.
+        /// </summary>
+        public static string FaceBookAuthFailed {
+            get {
+                return ResourceManager.GetString("FaceBookAuthFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Facility already exists .
         /// </summary>
         public static string FacilityAlreadyExists {
@@ -201,6 +210,15 @@ namespace Booking.Application.Resources {
         public static string FacilityNotFound {
             get {
                 return ResourceManager.GetString("FacilityNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get response from Facebook.
+        /// </summary>
+        public static string FailedToGetResponseFromFaceBook {
+            get {
+                return ResourceManager.GetString("FailedToGetResponseFromFaceBook", resourceCulture);
             }
         }
         
@@ -318,6 +336,15 @@ namespace Booking.Application.Resources {
         public static string NoAvailableRooms {
             get {
                 return ResourceManager.GetString("NoAvailableRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data available in social authentication.
+        /// </summary>
+        public static string NoDataAvailableInSocialAuthentication {
+            get {
+                return ResourceManager.GetString("NoDataAvailableInSocialAuthentication", resourceCulture);
             }
         }
         

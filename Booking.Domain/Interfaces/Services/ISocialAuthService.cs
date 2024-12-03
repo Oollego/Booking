@@ -11,6 +11,7 @@ namespace Booking.Domain.Interfaces.Services
 {
     public interface ISocialAuthService
     {
-        public Task<BaseResult<TokenDto>> SignInWithGoogle(SocialTokenDto dto);
+        Task<BaseResult<TokenDto>> SignInWithGoogle(SocialTokenDto dto);
+        Task<BaseResult<TokenDto>> SignInWithFaceBook(SocialTokenDto dto);
     }
 }

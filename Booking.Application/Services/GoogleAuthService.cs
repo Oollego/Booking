@@ -72,7 +72,7 @@ namespace Booking.Application.Services
 
             if (httpResult.Success)
             {
-                Stream avatarStream = httpResult.Data!.StreamData;
+                using Stream avatarStream = httpResult.Data!.StreamData;
 
                 string newfileName = _fileService.GetRandomFileName(httpResult.Data.FileName);
                 string key = Path.Combine(S3Folders.AvatarImg, newfileName);

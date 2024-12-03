@@ -153,6 +153,9 @@
   <data name="EmailIsNotCorrect" xml:space="preserve">
     <value>Email is not correct</value>
   </data>
+  <data name="FaceBookAuthFailed" xml:space="preserve">
+    <value>Facebook authentication failed</value>
+  </data>
   <data name="FacilityAlreadyExists" xml:space="preserve">
     <value>Facility already exists </value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="FacilityNotFound" xml:space="preserve">
     <value>Facility Not Found</value>
+  </data>
+  <data name="FailedToGetResponseFromFaceBook" xml:space="preserve">
+    <value>Failed to get response from Facebook</value>
   </data>
   <data name="FaqAlreadyExists" xml:space="preserve">
     <value>Faq already exists</value>
@@ -203,6 +209,9 @@
   </data>
   <data name="NoAvailableRooms" xml:space="preserve">
     <value>No available rooms</value>
+  </data>
+  <data name="NoDataAvailableInSocialAuthentication" xml:space="preserve">
+    <value>No data available in social authentication</value>
   </data>
   <data name="PasswordIsWrong" xml:space="preserve">
     <value>Password is wrong</value>

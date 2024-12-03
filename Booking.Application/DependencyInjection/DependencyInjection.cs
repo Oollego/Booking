@@ -8,9 +8,11 @@ using Booking.Domain.Dto.Room;
 using Booking.Domain.Interfaces.Converters;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Interfaces.Validations;
+using Booking.Domain.Settings;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
 
 namespace Booking.Application.DependencyInjection
 {
@@ -39,11 +41,11 @@ namespace Booking.Application.DependencyInjection
             InitMapping(services);
             InitValidators(services);
 
-            
-
-            //services.AddScoped<IGoogleAuthService, GoogleAuthService>();
-            //services.Configure<GoogleAuthConfig>(configuration.GetSection("Google"));
-
+            services.Configure<FaceBookSettings>(configuration.GetSection("Facebook"));
+            services.AddHttpClient("Facebook", c =>
+            {
+                c.BaseAddress = new Uri(configuration.GetValue<string>("Facebook:BaseUrl") ?? "");
+            });
         }
 
         public static void InitServices(this IServiceCollection services) 
@@ -77,6 +79,7 @@ namespace Booking.Application.DependencyInjection
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IFaqService, FaqService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFaceBookAuthService, FaceBookAuthService>();
         }
 
         public static void InitMapping(this IServiceCollection services)

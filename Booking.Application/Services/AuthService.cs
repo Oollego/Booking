@@ -234,7 +234,7 @@ namespace Booking.Application.Services
                 };
             }
 
-            if (!IsVerifyPassword(user.PasswordDk, user.PasswordSalt, dto.Password)) 
+            if (user.PasswordSalt == null || user.PasswordDk == null || !IsVerifyPassword(user.PasswordDk, user.PasswordSalt, dto.Password)) 
             {
                 return new BaseResult<TokenDto>()
                 {

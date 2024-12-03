@@ -76,12 +76,27 @@ namespace Booking.Api.Controllers
         }
 
         /// <summary>
-        /// Аутентификация пользователя через Google .
+        /// Аутентификация пользователя через Google.
         /// </summary>
         [HttpPost("GoogleAuth")]
         public async Task<ActionResult<BaseResult<TokenDto>>> GoogleAuth([FromBody] SocialTokenDto dto)
         {
             var response = await _socialAuthService.SignInWithGoogle(dto);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
+        /// Аутентификация пользователя через Facebook.
+        /// </summary>
+        [HttpPost("FacebookAuth")]
+        public async Task<ActionResult<BaseResult<TokenDto>>> FaceBookAuth([FromBody] SocialTokenDto dto)
+        {
+            var response = await _socialAuthService.SignInWithFaceBook(dto);
 
             if (response.IsSuccess)
             {

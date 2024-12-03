@@ -1,5 +1,9 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
+using Booking.Application.Resources;
+using Booking.Domain.Entity;
+using Booking.Domain.Interfaces.Repositories;
+using Booking.Domain.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +14,38 @@ namespace Booking.Application.Services
 {
     public class Aws3sService
     {
-        private readonly IAmazonS3 _s3Client;
+        private readonly IS3BucketRepository _bucketRepository;
+        private readonly IFileService _fileService;
 
-        public Aws3sService(IAmazonS3 s3Client)
+        public Aws3sService(IS3BucketRepository bucketRepository, IFileService fileService)
         {
-            _s3Client = s3Client;
+            _bucketRepository = bucketRepository;
+            _fileService = fileService;
         }
 
-        //public async Task<IActionResult> GetImg(string key)
+        //public async Task<bool> SaveUserAvatarToBucket(Stream stream, string fileName)
+        //{
+        //    string newfileName = _fileService.GetRandomFileName(fileName);
+        //    string key = Path.Combine(S3Folders.AvatarImg, newfileName);
+
+        //    var s3Responce = await _bucketRepository.UploadFileAsync(AppSource.ImgBucket, key, avatarStream, httpResult.Data!.ContentType ?? "image/jpeg");
+
+        //    if (s3Responce.Success)
+        //    {
+        //        user.AvatarUrl = newfileName;
+        //        var userProfile = await _userProfileRepository.GetAll()
+        //            .Include(up => up.User)
+        //            .Where(up => up.User.UserEmail == payload.Email)
+        //            .FirstOrDefaultAsync();
+
+        //        if (userProfile != null && userProfile.Avatar != null)
+        //        {
+        //            string oldAvatarKey = Path.Combine(S3Folders.AvatarImg, userProfile.Avatar);
+        //            _ = await _bucketRepository.DeleteFileAsync(AppSource.ImgBucket, oldAvatarKey);
+        //        }
+        //    }
+        //} 
+        ////public async Task<IActionResult> GetImg(string key)
         //{
         //    var bucketExists = await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, "booking-img");
         //    if (!bucketExists) return NotFound($"booking-img does not exist.");

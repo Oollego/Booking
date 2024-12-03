@@ -2,8 +2,14 @@
 
 namespace Booking.Api.Controllers
 {
+    /// <summary>
+    /// FaceBook button test
+    /// </summary>
     public class FaceBookController : Controller
     {
+        /// <summary>
+        /// FaceBook button test
+        /// </summary>
         public async Task Index()
         {
             Response.ContentType = "text/html;charset=utf-8";

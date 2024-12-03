@@ -27,14 +27,16 @@ namespace Booking.Application.Services
         public readonly IGoogleAuthService _googleAuthService;
         public readonly IAuthUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
+        public readonly IFaceBookAuthService _faceBookAuthService;
 
-        public SocialAuthService(ILogger logger, IGoogleAuthService googleAuthService, IAuthUnitOfWork unitOfWork, 
-            ITokenService tokenService)
+        public SocialAuthService(ILogger logger, IGoogleAuthService googleAuthService, IAuthUnitOfWork unitOfWork,
+            ITokenService tokenService, IFaceBookAuthService faceBookAuthService)
         {
             _logger = logger;
             _googleAuthService = googleAuthService;
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
+            _faceBookAuthService = faceBookAuthService;
         }
 
         private async Task<BaseResult<TokenDto>> SocialAuth(UserAuth userAuth)
@@ -151,6 +153,31 @@ namespace Booking.Application.Services
             };
         }
 
+        public async Task<BaseResult<TokenDto>> SignInWithFaceBook(SocialTokenDto dto)
+        {
+            if (dto == null || dto.TokenId == null || dto.TokenId.Length == 0)
+            {
+                return new BaseResult<TokenDto>()
+                {
+                    ErrorMessage = ErrorMessage.InvalidParameters,
+                    ErrorCode = (int)ErrorCodes.InvalidParameters
+                };
+            }
+
+            BaseResult<UserAuth> faceBookResult = await _faceBookAuthService.GetUserFromFacebookTokenAsync(dto.TokenId);
+
+            if (!faceBookResult.IsSuccess)
+            {
+                return new BaseResult<TokenDto>
+                {
+                    ErrorCode = faceBookResult.ErrorCode,
+                    ErrorMessage = faceBookResult.ErrorMessage
+                };
+            }
+
+            return await SocialAuth(faceBookResult.Data!);
+        }
+
         public async Task<BaseResult<TokenDto>> SignInWithGoogle(SocialTokenDto dto)
         {
             if (dto == null || dto.TokenId == null || dto.TokenId.Length == 0)
@@ -175,36 +202,6 @@ namespace Booking.Application.Services
 
             return await SocialAuth(googleResult.Data!);
 
-            //if(googleIdToken == null || googleIdToken.Count() == 0)
-            //{
-            //    return new BaseResult<User>()
-            //    {
-            //        ErrorMessage = ErrorMessage.InvalidParameters,
-            //        ErrorCode = (int) ErrorCodes.InvalidParameters
-            //    };
-            //}
-
-            //GoogleJsonWebSignature.Payload payload;
-            //try
-            //{
-            //    var settings = new GoogleJsonWebSignature.ValidationSettings
-            //    {
-            //        Audience = new List<string> { _clientId }
-            //    };
-
-            //    return await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
-
-            //    payload = await _googleAuthService.ValidateIdTokenAsync(googleIdToken);
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.Error(ex, "Google ID token validation failed");
-            //    return new BaseResult<TokenDto>
-            //    {
-            //        ErrorMessage = ErrorMessage.GoogleAuthFailed,
-            //        ErrorCode = (int)ErrorCodes.GoogleAuthFailed
-            //    };
-            //}
         }
 
     }
