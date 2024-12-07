@@ -20,28 +20,20 @@ namespace Booking.Application.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IBaseRepository<User> _userRepository = null!;
         private readonly ILogger _logger = null!;
         private readonly IMapper _mapper = null!;
-        private readonly IBaseRepository<UserToken> _userTokenRepository = null!;
         private readonly ITokenService _tokenService;
-        private readonly IBaseRepository<Role> _roleRepository = null!;
         private readonly IAuthUnitOfWork _unitOfWork = null!;
         private readonly IHashService _hashService = null!;
         private readonly IMemoryCache _memoryCache = null!;
         private readonly IEmailService _emailService = null!;
 
-        public AuthService(IBaseRepository<User> userRepository, ILogger logger, IMapper mapper,
-            IBaseRepository<UserToken> userTokenRepository, ITokenService tokenService,
-            IBaseRepository<Role> roleRepository, IAuthUnitOfWork unitOfWork, IHashService hashService, 
-            IMemoryCache memoryCache, IEmailService emailService )
+        public AuthService(ILogger logger, IMapper mapper, ITokenService tokenService, IAuthUnitOfWork unitOfWork, 
+            IHashService hashService, IMemoryCache memoryCache, IEmailService emailService )
         {
-            _userRepository = userRepository;
             _logger = logger;
             _mapper = mapper;
-            _userTokenRepository = userTokenRepository;
             _tokenService = tokenService;
-            _roleRepository = roleRepository;
             _unitOfWork = unitOfWork;
             _hashService = hashService;
             _memoryCache = memoryCache;
@@ -50,7 +42,6 @@ namespace Booking.Application.Services
 
         public async Task<BaseResult<UserDto>> Register(RegisterUserDto dto)
         {
-           // throw new UnauthorizedAccessException("UnauthorizedAccessException");
             if(dto.Password != dto.PasswordConfirm)
             {
                 return new BaseResult<UserDto>()
@@ -222,7 +213,7 @@ namespace Booking.Application.Services
                 };
             }
 
-            var user = await _userRepository.GetAll()
+            var user = await _unitOfWork.Users.GetAll()
                 .Include(x => x.Roles)
                 .FirstOrDefaultAsync(x => x.UserEmail == dto.Email);
             if (user == null)
@@ -243,7 +234,7 @@ namespace Booking.Application.Services
                 };
             }
 
-            var userToken = await _userTokenRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var userToken = await _unitOfWork.UserTokens.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
 
             var userRoles = user.Roles;
             var claims = userRoles.Select(x => new Claim(ClaimTypes.Role, x.RoleName)).ToList();
@@ -260,15 +251,15 @@ namespace Booking.Application.Services
                     RefreshToken = refreshToken,
                     RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(10)
                 };
-                await _userTokenRepository.CreateAsync(userToken);
+                await _unitOfWork.UserTokens.CreateAsync(userToken);
             }
             else
             {
                 userToken.RefreshToken = refreshToken;
                 userToken.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(10);
 
-                _userTokenRepository.Update(userToken);
-                await _userTokenRepository.SaveChangesAsync();
+                _unitOfWork.UserTokens.Update(userToken);
+                await _unitOfWork.UserTokens.SaveChangesAsync();
             }
 
             return new BaseResult<TokenDto>()
