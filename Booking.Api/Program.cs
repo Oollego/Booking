@@ -51,7 +51,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-app.UseCors(x => x.WithOrigins("https://urreserve-hotelforu.azurewebsites.net/").AllowAnyMethod().AllowAnyHeader());
+app.UseCors(x => x.WithOrigins("https://urreserve-hotelforu.azurewebsites.net", "http://urreserve-hotelforu.azurewebsites.net").AllowAnyMethod().AllowAnyHeader());
 
 app.UseHttpsRedirection();
 
